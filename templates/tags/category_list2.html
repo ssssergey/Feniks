@@ -1,0 +1,289 @@
+<div class="cat-menu">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-catergory">
+
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Категории</a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                    {% with main_tree as cats %}
+                        {% for c in cats %}
+                            {% if c.0 == 'Корпусная мебель' %}
+                                {% with carcass_furniture as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion"
+                                                       href="#{{ c2.1 }}">{{ c2.0 }}</a>
+                                                </h4>
+                                            </div>
+                                            <div id="{{ c2.1 }}" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <table class="table">
+                                                        {% with carcass_furniture_level2 as cats3 %}
+                                                            {% for c3 in cats3 %}
+                                                                <tr>
+                                                                    <td>
+                                                                        <a href="#" class="category">{{ c3.0 }}</a>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        {% endwith %}
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Мягкая мебель' %}
+                                {% with cushioned_furniture as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+
+                            {% elif c.0 == 'Офисная мебель' %}
+                                {% with office_furniture as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Камины' %}
+                                {% with fireplaces as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Столы' %}
+                                {% with tables as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Матрасы' %}
+                                {% with matrasses as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Садовая мебель' %}
+                                {% with garden_furniture as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Стулья' %}
+                                {% with chairs as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Кухонные уголки' %}
+                                {% with kitchen_corners as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Для баров и ресторанов' %}
+                                {% with bars_restaurants as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% elif c.0 == 'Интерьер' %}
+                                {% with interier as cats2 %}
+                                    {% for c2 in cats2 %}
+                                        <li>
+                                            <div class="btn-group" role="group">
+                                                <div role="button"
+                                                     data-toggle="dropdown"
+                                                     aria-haspopup="true" aria-expanded="false">
+                                                    {{ c2.0 }}
+                                                    <span class="caret"></span>
+                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                    <li><a href="#">Dropdown link</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endwith %}
+
+                            {% endif %}
+                            </div>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+
+            {#                    <table>#}
+            {#                        {% with main_tree as cats %}#}
+            {#                            {% for c in cats %}#}
+            {#                                <tr>#}
+            {#                                    <td>#}
+            {#                                        <a href="#" class="category">{{ c.0 }}</a>#}
+            {#                                    </td>#}
+            {#                                </tr>#}
+            {#                            {% endfor %}#}
+            {#                        {% endwith %}#}
+            {#                    </table>#}
+        </div>
+    </div>
+</div>
+</div>
+{#    <h4>Мальчики</h4>#}
+{#    <ul class="cat_list">#}
+{#        {% with boys_cat as cats %}#}
+{#            {% for c in cats %}#}
+{#                {% if c.name != 'Для самых маленьких' %}#}
+{#                    <li>#}
+{#                        {% ifequal c.get_absolute_url request_path %}#}
+{#                            {{ c.name }}<br/>#}
+{#                        {% else %}#}
+{#                            <a href="{{ c.get_absolute_url_boys }}" class="category">{{ c.name }}</a><br/>#}
+{#                        {% endifequal %}#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        {% endwith %}#}
+{#    </ul>#}
+{#    <h4>Девочки</h4>#}
+{#    <ul class="cat_list">#}
+{#        {% with girls_cat as cats %}#}
+{#            {% for c in cats %}#}
+{#                {% if c.name != 'Для самых маленьких' %}#}
+{#                    <li>#}
+{#                        {% ifequal c.get_absolute_url request_path %}#}
+{#                            {{ c.name }}<br/>#}
+{#                        {% else %}#}
+{#                            <a href="{{ c.get_absolute_url_girls }}" class="category">{{ c.name }}</a><br/>#}
+{#                        {% endifequal %}#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        {% endwith %}#}
+{#    </ul>#}
+
+
+</div>

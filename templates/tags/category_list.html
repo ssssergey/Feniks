@@ -1,0 +1,225 @@
+<div id="MainMenu">
+    <div class="list-group panel">
+        {% for c in main_tree %}
+            <a href="#{{ c.1 }}" class="list-group-item c" data-toggle="collapse"
+               data-parent="#MainMenu">{{ c.0 }} <i class="fa fa-caret-down"></i></a>
+            <div class="collapse" id="{{ c.1 }}">
+                {% if c.0 == 'Корпусная мебель' %}
+                    {% for c2 in carcass_furniture %}
+                        {% if c2.0 == 'Другая мебель' %}
+                            <a href="{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                               data-parent="#{{ c.1 }}">{{ c2.0 }}</a>
+                        {% else %}
+                            <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                               data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                            <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                                {% if c2.0 == 'Горки, стенки, гостинные' %}
+                                    {% for c3 in carcass_furniture_level2 %}
+                                        <a href="{{ c.1 }}-{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+
+                                    <a href="#{{ c.1 }}-{{ c2.1 }}-associated-goods" class="list-group-item c3"
+                                       data-toggle="collapse" data-parent="#{{ c.1 }}-{{ c2.1 }}">Сопутствующие товары
+                                        <i class="fa fa-caret-down"></i></a>
+                                    <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}-associated-goods">
+                                        {% for c4 in associated_goods %}
+                                            <a href="{{ c2.1 }}-associated-goods-{{ c4.1 }}" class="list-group-item c4"
+                                               data-toggle="collapse"
+                                               data-parent="#{{ c.1 }}-{{ c2.1 }}-associated-goods">{{ c4.0 }}</a>
+                                        {% endfor %}
+                                    </div>
+
+                                    <a href="{{ c.1 }}-{{ c2.1 }}-carcass-libraries" class="list-group-item c3"
+                                       data-toggle="collapse"
+                                       data-parent="#{{ c.1 }}-{{ c2.1 }}">Библиотеки</a>
+                                {% elif c2.0 == 'Шкафы' %}
+                                    {% for c3 in cases %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                {% elif c2.0 == 'Кровати' %}
+                                    {% for c3 in beds %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for c3 in carcass_furniture_level2 %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                    <a href="#{{ c.1 }}-{{ c2.1 }}-associated-goods" class="list-group-item c3"
+                                       data-toggle="collapse" data-parent="#{{ c.1 }}-{{ c2.1 }}">Сопутствующие товары
+                                        <i class="fa fa-caret-down"></i></a>
+                                    <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}-associated-goods">
+                                        {% for c4 in associated_goods %}
+                                            <a href="{{ c2.1 }}-associated-goods-{{ c4.1 }}" class="list-group-item c4"
+                                               data-toggle="collapse"
+                                               data-parent="#{{ c.1 }}-{{ c2.1 }}-associated-goods">{{ c4.0 }}</a>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% elif c.0 == 'Мягкая мебель' %}
+                    {% for c2 in cushioned_furniture %}
+                        {% if c2.0 == 'Под заказ' %}
+                            <a href="{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                               data-parent="#{{ c.1 }}">{{ c2.0 }}</a>
+                        {% else %}
+                            <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                               data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                            <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                                {% if c2.0 == 'Комплекты' %}
+                                    {% for c3 in cushioned_furniture_komplekts %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                {% elif c2.0 == 'Угловые' %}
+                                    {% for c3 in cushioned_furniture_corners %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                {% elif c2.0 == 'Диваны' %}
+                                    {% for c3 in cushioned_furniture_sofas %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                {% elif c2.0 == 'Кресла' %}
+                                    {% for c3 in cushioned_furniture_armchairs %}
+                                        <a href="{{ c2.1 }}-{{ c3.1 }}" class="list-group-item c3"
+                                           data-toggle="collapse"
+                                           data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% elif c.0 == 'Офисная мебель' %}
+                    <a href="#{{ c.1 }}-sofas" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Диваны <i class="fa fa-caret-down"></i></a>
+                    <div class="collapse list-group-submenu" id="{{ c.1 }}-sofas">
+                        <a href="#{{ c.1 }}-sofas-strait" class="list-group-item c3" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}-sofas">Прямые</a>
+                        <a href="#{{ c.1 }}-sofas-corner" class="list-group-item c3" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}-sofas">Угловые</a>
+                    </div>
+                    <a href="#{{ c.1 }}-tables" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Столы</a>
+                    <a href="#{{ c.1 }}-cases" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Шкафы</a>
+                    <a href="#{{ c.1 }}-libraries" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Библиотеки</a>
+                    <a href="#{{ c.1 }}-armchairs" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Кресла <i class="fa fa-caret-down"></i></a>
+                    <div class="collapse list-group-submenu" id="{{ c.1 }}-armchairs">
+                        <a href="#{{ c.1 }}-armchairs-chief" class="list-group-item c3" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}-armchairs">Руководителя</a>
+                        <a href="#{{ c.1 }}-armchairs-personel" class="list-group-item c3" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}-armchairs">Персонала</a>
+                        <a href="#{{ c.1 }}-armchairs-managers" class="list-group-item c3" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}-armchairs">Менеджеров</a>
+                    </div>
+                    <a href="#{{ c.1 }}-libraries" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Стулья</a>
+                    <a href="#{{ c.1 }}-divider" class="list-group-item c2" data-toggle="collapse"
+                       data-parent="#{{ c.1 }}">Перегородки <i class="fa fa-caret-down"></i></a>
+                    <div class="collapse list-group-submenu" id="{{ c.1 }}-divider">
+                        <a href="#{{ c.1 }}-divider-reseption" class="list-group-item c3" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}-divider">Ресепшн</a>
+                    </div>
+                {% elif c.0 == 'Камины' %}
+                    {% for c2 in fireplaces %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Столы' %}
+                    {% for c2 in tables %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Стулья' %}
+                    {% for c2 in chairs %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Матрасы' %}
+                    {% for c2 in matrasses %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Садовая мебель' %}
+                    {% for c2 in garden_furniture %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Для баров и ресторанов' %}
+                    {% for c2 in bars_restaurants %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Интерьер' %}
+                    {% for c2 in interier %}
+                        <a href="#{{ c.1 }}-{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }} <i class="fa fa-caret-down"></i></a>
+                        <div class="collapse list-group-submenu" id="{{ c.1 }}-{{ c2.1 }}">
+                            {% for c3 in carcass_furniture_level2 %}
+                                <a href="{{ c3.1 }}" class="list-group-item c3"
+                                   data-parent="#{{ c.1 }}-{{ c2.1 }}">{{ c3.0 }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% elif c.0 == 'Сопутствующие товары' %}
+                    {% for c2 in associated_goods %}
+                        <a href="/{{ c.1 }}/{{ c2.1 }}" class="list-group-item c2" data-toggle="collapse"
+                           data-parent="#{{ c.1 }}">{{ c2.0 }}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

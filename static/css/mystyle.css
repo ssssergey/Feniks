@@ -1,0 +1,199 @@
+body {
+    padding-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+.hero-spacer {
+    margin-top: 20px;
+}
+
+.hero-feature {
+    margin-bottom: 30px;
+}
+
+#id_q {
+    margin: 5px auto;
+}
+
+.navbar {
+    background-color: #DDBC56;
+    border-color: #DDBC56;
+    color: white;
+}
+
+.navbar-brand, .navbar-nav > li > a {
+    color: black !important;
+}
+
+.navbar-brand:hover, .navbar-nav > li > a:hover {
+    color: #6a6a6a !important;
+}
+
+.cat-menu {
+    background-color: #DDBC56;
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+ul {
+    list-style-type: none !important;
+    padding-left: 10px;
+}
+
+li a.category {
+    color: white !important;
+}
+
+li a.category:hover {
+    color: #c6c6c6 !important;
+    text-decoration: none;
+}
+
+footer {
+    margin: 50px 0;
+    text-align: center;
+    background-color: gainsboro;
+    clear: both;
+    padding: 30px;
+}
+
+footer a {
+    margin: 30px;
+}
+
+.title {
+    text-shadow: 0 0 10px #DDBC56;
+    text-align: center;
+}
+
+.product-image {
+    margin-top: 20px;
+    align-content: center;
+    text-align: center;
+}
+
+.product-info {
+    text-align: center;
+    align-content: center;
+}
+
+form#search input.btn {
+    color: black;
+}
+
+#add_review {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+.new_review {
+    background-color: Pink;
+}
+
+.cb {
+    clear: both;
+}
+
+.panel {
+    /*background-color: #DDBC56 !important;*/
+    /*border: solid green 1px;*/
+}
+
+/*.panel-heading {*/
+    /*background-color: #caa952 !important;*/
+    /*border: solid orange 1px!important;*/
+/*}*/
+
+ul.errorlist {
+    background-color: Red;
+    color: White;
+}
+
+/* styles for shopping cart page */
+table#shopping_cart {
+    width: 100%;
+    border-collapse: collapse;
+    color: #616161;
+}
+
+h1, caption {
+    text-align: left;
+    font-size: x-large;
+    margin-bottom: 15px;
+    color: Black;
+}
+
+th, td {
+    text-align: left;
+    padding: 3px;
+}
+
+thead th {
+    color: White;
+    background-color: #616161;
+}
+
+tfoot th {
+    height: 40px;
+}
+
+table#shopping_cart th.right, td.right {
+    text-align: right;
+}
+
+.cart_box {
+    margin: 10px;
+}
+
+.cart_box a {
+    color: black;
+    /*padding: 10px;*/
+}
+
+div.navbar-header a img {
+    margin: 10px;
+}
+
+
+.c {
+    background-color: #DDBC56;
+}
+
+.c2 {
+    background-color: rgb(199, 214, 191);
+}
+
+.c3 {
+    background-color: rgba(174, 189, 170, 0.53);
+}
+
+.c4 {
+    background-color: rgba(189, 91, 77, 0.53);
+}
+
+
+a.c:focus {
+    background-color: #DDBC56;
+    color: white;
+}
+
+a.c2:focus {
+    background-color: rgb(199, 214, 191);
+    color: white;
+}
+
+a.c3:focus {
+    background-color: rgba(174, 189, 170, 0.53);
+    color: white;
+}
+
+a.c4:focus {
+    background-color: rgba(189, 91, 77, 0.53);
+    color: white;
+}
