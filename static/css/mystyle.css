@@ -160,40 +160,50 @@ div.navbar-header a img {
     margin: 10px;
 }
 
+.cat_vertical {
+    background-color: #DDBC56;
+}
 
 .c {
-    background-color: #DDBC56;
+    background-color: #5599dd;
+    color: white!important;
 }
 
 .c2 {
-    background-color: rgb(199, 214, 191);
+    background-color: #dddd55;
 }
 
 .c3 {
-    background-color: rgba(174, 189, 170, 0.53);
+    background-color: #dd7755;
+    color: white!important;
 }
 
 .c4 {
-    background-color: rgba(189, 91, 77, 0.53);
+    background-color: #55dd77;
 }
 
 
-a.c:focus {
+a.cat_vertical:focus {
     background-color: #DDBC56;
     color: white;
 }
 
-a.c2:focus {
-    background-color: rgb(199, 214, 191);
+a.c:focus, a.c:hover {
+    background-color: #5599dd;
+    color: black!important;
+}
+
+a.c2:focus, a.c2:hover {
+    background-color: #dddd55;
     color: white;
 }
 
-a.c3:focus {
-    background-color: rgba(174, 189, 170, 0.53);
-    color: white;
+a.c3:focus, a.c3:hover {
+    background-color: #dd7755;
+    color: black!important;
 }
 
-a.c4:focus {
-    background-color: rgba(189, 91, 77, 0.53);
+a.c4:focus, a.c4:hover {
+    background-color: #55dd77;
     color: white;
 }
