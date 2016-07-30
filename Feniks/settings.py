@@ -13,6 +13,8 @@ LOGIN_REDIRECT_URL = '/'
 
 AUTH_PROFILE_MODULE = 'accounts.userprofile'
 
+# AUTH_USER_MODEL = 'catalog.User'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 # if os.name != 'nt':
 #     DEBUG = False

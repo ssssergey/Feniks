@@ -1,13 +1,16 @@
 <div class="col-md-3 col-sm-4 col-xs-6 hero-feature">
     <div class="thumbnail">
         <a href="{{ p.get_absolute_url }}">
-            <img src="{{ p.thumbnail.url }}" alt="{{ p.name }}" class="bn"/>
-
+            {% if p.image %}
+                <img src="{{ p.image.url_200x200 }}" alt="{{ p.name }}" class="bn"/>
+            {% else %}
+                <img src="http://placehold.it/200x200" alt="{{ p.name }}" class="bn"/>
+            {% endif %}
             <div class="caption">
                 <br/>
                 {{ p.name }}
                 <br>
-                {{ p.price | floatformat:"0" }} руб.
+                {{ p.price }} руб.
             </div>
         </a>
     </div>

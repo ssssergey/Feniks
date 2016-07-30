@@ -80,7 +80,7 @@ cushioned_furniture = (
     (u'Угловые', 'corners'),
     (u'Диваны', 'sofas'),
     (u'Кресла', 'armchairs'),
-    (u'Под заказ', 'on_orders'),
+    (u'Под заказ', 'on_order'),
 )
 
 # Комплекты
@@ -210,10 +210,10 @@ chairs = (
 )
 
 chairs_others = (
-    (u'Ротанг', 'wooden'),
-    (u'Офисные', 'metalkarkas'),
-    (u'Для кинотеатров', 'plastic'),
-    (u'Для посетителей', 'others'),
+    (u'Ротанг', 'rotang'),
+    (u'Офисные', 'office'),
+    (u'Для кинотеатров', 'cinema'),
+    (u'Для посетителей', 'visitors'),
 )
 
 # Кухонные уголки

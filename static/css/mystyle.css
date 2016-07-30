@@ -106,8 +106,8 @@ form#search input.btn {
 }
 
 /*.panel-heading {*/
-    /*background-color: #caa952 !important;*/
-    /*border: solid orange 1px!important;*/
+/*background-color: #caa952 !important;*/
+/*border: solid orange 1px!important;*/
 /*}*/
 
 ul.errorlist {
@@ -160,13 +160,14 @@ div.navbar-header a img {
     margin: 10px;
 }
 
+/*VERTICAL MENU CATEGORIES*/
 .cat_vertical {
     background-color: #DDBC56;
 }
 
 .c {
     background-color: #5599dd;
-    color: white!important;
+    color: white !important;
 }
 
 .c2 {
@@ -175,13 +176,12 @@ div.navbar-header a img {
 
 .c3 {
     background-color: #dd7755;
-    color: white!important;
+    color: white !important;
 }
 
 .c4 {
     background-color: #55dd77;
 }
-
 
 a.cat_vertical:focus {
     background-color: #DDBC56;
@@ -190,7 +190,7 @@ a.cat_vertical:focus {
 
 a.c:focus, a.c:hover {
     background-color: #5599dd;
-    color: black!important;
+    color: black !important;
 }
 
 a.c2:focus, a.c2:hover {
@@ -200,10 +200,19 @@ a.c2:focus, a.c2:hover {
 
 a.c3:focus, a.c3:hover {
     background-color: #dd7755;
-    color: black!important;
+    color: black !important;
 }
 
 a.c4:focus, a.c4:hover {
     background-color: #55dd77;
     color: white;
+}
+
+.list-group.panel > .list-group-item {
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px
+}
+
+.list-group-submenu {
+    margin-left: 5px;
 }

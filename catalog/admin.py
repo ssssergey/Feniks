@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
-from catalog.models import Product, ProductReview
-# from catalogu.forms import ProductAdminForm
+from django.contrib.auth.admin import UserAdmin
+from catalog.models import Product, ProductReview, User
+
+# @admin.register(User)
+# class UserAdmin(UserAdmin):
+#     pass
+
 class ProductAdmin(admin.ModelAdmin):
     # form = ProductAdminForm
     # sets values for how the admin site lists your products
-    list_display = ('name', 'price', 'created_at', 'updated_at',)
+    list_display = ('admin_image', 'name', 'price', 'created_at', 'updated_at',)
     list_display_links = ('name',)
     list_per_page = 50
     ordering = ['-created_at']

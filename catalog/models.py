@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
 from django.db import models
 from django_thumbs.db.models import ImageWithThumbsField
@@ -51,105 +51,38 @@ class ActiveProductReviewManager(models.Manager):
 
 
 class Product(models.Model):
-    # KORP_MEBEL = ((u'Кухни', u'Кухни'), (u'Горки, стенки, гостинные', u'Горки, стенки, гостинные'),
-    #               (u'Спальни', u'Спальни'), (u'Прихожие', u'Прихожие'),
-    #               (u'Детские', u'Детские'), (u'Другая мебель', u'Другая мебель'), (u'Шкафы', u'Шкафы'),
-    #               (u'Кровати', u'Кровати'), (u'ТВ-тумбы', u'ТВ-тумбы'),
-    #               )
-    # korp_mebel = models.CharField(u'КОРПУСНАЯ МЕБЕЛЬ', max_length=100, blank=True, choices=KORP_MEBEL)
-    # SOFT_MEBEL = ((u'Комплекты', u'Комплекты'), (u'Угловые', u'Угловые'),
-    #               (u'Диваны', u'Диваны'), (u'Кресла', u'Кресла'), (u'Под заказ', u'Под заказ'),
-    #               )
-    # soft_mebel = models.CharField(u'МЯГКАЯ МЕБЕЛЬ', max_length=100, blank=True, choices=SOFT_MEBEL)
-    #
-    # OFFICE_MEBEL = ((u'Диваны', u'Диваны'), (u'Столы', u'Столы'), (u'Шкафы', u'Шкафы'), (u'Библиотеки', u'Библиотеки'),
-    #                 (u'Кресла', u'Кресла'), (u'Стулья', u'Стулья'), (u'Перегородки', u'Перегородки'),
-    #                 )
-    # office_mebel = models.CharField(u'Тип ОФИСНОЙ МЕБЕЛИ', max_length=100, blank=True, choices=OFFICE_MEBEL)
-    # CAMINS = ((u'Каминные комплекты', u'Каминные комплекты'), (u'Серии', u'Серии'), (u'Порталы', u'Порталы'),
-    #           (u'Электрокамины', u'Электрокамины'), (u'Печи', u'Печи'), (u'Аксессуары', u'Аксессуары'),
-    #           )
-    # camins = models.CharField(u'Тип КАМИНОВ', max_length=100, blank=True, choices=CAMINS)
-    #
-    # TABLES = ((u'Раскладные', u'Раскладные'), (u'Нераскладные', u'Нераскладные'),
-    #           )
-    # tables = models.CharField(u'Тип СТОЛОВ', max_length=100, blank=True, choices=TABLES)
-    #
-    # CHAIRS = ((u'Деревянные', u'Деревянные'), (u'Металлокаркас', u'Металлокаркас'), (u'Пластиковые', u'Пластиковые'),
-    #           (u'Разные', u'Разные'), (u'Барные', u'Барные'), (u'Складные', u'Складные'),
-    #           )
-    # chairs = models.CharField(u'Тип СТУЛЬЕВ', max_length=100, blank=True, choices=CHAIRS)
-    #
-    # KITCHEN_CONNERS = ((u'Комплекты', u'Комплекты'), (u'Модульно', u'Модульно'),
-    #                    (u'Кухонные + угловые диваны', u'Кухонные + угловые диваны'),
-    #                    (u'Уголки от', u'Уголки от'),
-    #                    )
-    # kitchen_conners = models.CharField(u'Тип КУХОННЫХ УГОЛКОВ', max_length=100, blank=True, choices=KITCHEN_CONNERS)
-    #
-    # MATRAC = (
-    #     (u'Пружинные', u'Пружинные'), (u'Ортопедические', u'Ортопедические'), (u'Анатомические', u'Анатомические'),
-    # )
-    # matrac = models.CharField(u'Тип МАТРАСОВ', max_length=100, blank=True, choices=MATRAC)
-    # GARDEN_MEBEL = (
-    #     (u'Ротанг', u'Ротанг'), (u'Качели', u'Качели'), (u'Раскладушки', u'Раскладушки'), (u'Кресла', u'Кресла'),
-    #     (u'Шезлонги', u'Шезлонги'), (u'Другое', u'Другое'),
-    # )
-    # garden_mebel = models.CharField(u'Тип САДОВОЙ МЕБЕЛИ', max_length=100, blank=True, choices=GARDEN_MEBEL)
-    # FOR_BARS = (
-    #     (u'Столы', u'Столы'), (u'Стулья', u'Стулья'), (u'Диваны', u'Диваны'), (u'Под старину', u'Под старину'),
-    #     (u'Стойки', u'Стойки'),
-    # )
-    # for_bars = models.CharField(u'Для баров и ресторанов', max_length=100, blank=True, choices=FOR_BARS)
-    #
-    # INTERIER = (
-    #     (u'Цветы', u'Цветы'), (u'Статуэтки', u'Статуэтки'), (u'Картины', u'Картины'), (u'Вазы', u'Вазы'),
-    #     (u'Корзины', u'Корзины'),
-    # )
-    # interier = models.CharField(u'Интерьер', max_length=100, blank=True, choices=INTERIER)
-    #
-    # SOPUT_TOVARI = (
-    #     (u'Электротовары', u'Электротовары'), (u'Смесители', u'Смесители'), (u'Плиты', u'Плиты'),
-    #     (u'Холодильники', u'Холодильники'), (u'Мойки', u'Мойки'), (u'Фартуки', u'Фартуки'),
-    # )
-    # soput_tovari = models.CharField(u'Сопутствующие товары', max_length=100, blank=True, choices=SOPUT_TOVARI)
-
-
-
     MODULE_KOMPLEKT = (
         (u'Комплект', u'Комплект'), (u'Модуль', u'Модуль'), (u'Интерьер', u'Интерьер'),
     )
-    module_komplekt = models.CharField(u'Модуль, комплект или интерьер', max_length=100, blank=True,
-                                       choices=MODULE_KOMPLEKT)
+    module_komplekt = models.CharField(u'Модуль, комплект или интерьер', max_length=100, blank=True, choices=MODULE_KOMPLEKT)
 
     KOMPLEKT_MEBEL = (
         (u'Корпусная мебель', u'Корпусная мебель'), (u'Мягкая мебель', u'Мягкая мебель'),
+        (u'Каминный комплект', u'Каминный комплект'),
     )
     komplekt_mebel = models.CharField(u'Тип комплекта', max_length=100, blank=True, choices=KOMPLEKT_MEBEL)
 
     ROOM = (
         (u'Кухня', u'Кухня'), (u'Гостиная(горки, стенки)', u'Гостиная(горки, стенки)'), (u'Прихожие', u'Прихожие'),
-        (u'Детские', u'Детские'),
+        (u'Детские', u'Детские'), (u'Спальня', u'Спальня'),
     )
     room = models.CharField(u'Комната', max_length=100, blank=True, choices=ROOM)
 
     MODULE_MEBEL = (
         (u'Шкаф', u'Шкаф'), (u'Кровать', u'Кровать'), (u'Диван', u'Диван'), (u'Кресло', u'Кресло'), (u'Стул', u'Стул'),
-        (u'Стол', u'Стол'), (u'ТВ-тумба', u'ТВ-тумба'), (u'Библиотека', u'Библиотека'),
-        (u'Перегородка', u'Перегородка'),
+        (u'Стол', u'Стол'), (u'ТВ-тумба', u'ТВ-тумба'), (u'Библиотека', u'Библиотека'), (u'Перегородка', u'Перегородка'),
         (u'Ресепшн', u'Ресепшн'), (u'Кухонный уголок', u'Кухонный уголок'), (u'Стойка', u'Стойка'),
         (u'Прилавок', u'Прилавок'),
     )
     module_mebel = models.CharField(u'Тип модуля мебели', max_length=100, blank=True, choices=MODULE_MEBEL)
 
     MODULE_OTHER = (
-        (u'Камин-портал', u'Камин-портал'), (u'Камин-электрокамин', u'Камин-электрокамин'),
-        (u'Камин-печь', u'Камин-печь'),
+        (u'Камин-портал', u'Камин-портал'), (u'Камин-электрокамин', u'Камин-электрокамин'), (u'Камин-печь', u'Камин-печь'),
         (u'Камин-аксессуар', u'Камин-аксессуар'), (u'Матрас', u'Матрас'), (u'Качели', u'Качели'),
         (u'Раскладушка', u'Раскладушка'), (u'Шезлонг', u'Шезлонг'), (u'Цветы', u'Цветы'), (u'Статуэтка', u'Статуэтка'),
         (u'Картина', u'Картина'), (u'Ваза', u'Ваза'), (u'Корзина', u'Корзина'), (u'Сундук', u'Сундук'),
         (u'Электротовар', u'Электротовар'), (u'Смеситель', u'Смеситель'), (u'Плита', u'Плита'),
-        (u'Холодильник', u'Холодильник'),
-        (u'Мойка', u'Мойка'), (u'Фартук', u'Фартук'), (u'Другое', u'Другое'),
+        (u'Холодильник', u'Холодильник'), (u'Мойка', u'Мойка'), (u'Фартук', u'Фартук'), (u'Разное', u'Разное'),
     )
     module_other = models.CharField(u'Другой тип модуля', max_length=100, blank=True, choices=MODULE_OTHER)
 
@@ -170,8 +103,8 @@ class Product(models.Model):
 
     ARCHITECTURE_TYPE = (
         (u'Выкатные', u'Выкатные'), (u'Раскладные', u'Раскладные'), (u'Классические', u'Классические'),
-        (u'Евро', u'Евро'),
-        (u'Евро-книжка', u'Евро-книжка'), (u'Книжка', u'Книжка'), (u'Мини', u'Мини'), (u'Шкаф-купе', u'Шкаф-купе'),
+        (u'Евро', u'Евро'), (u'Металлокаркас', u'Металлокаркас'), (u'Мини', u'Мини'),
+        (u'Евро-книжка', u'Евро-книжка'), (u'Книжка', u'Книжка'), (u'Стандарт', u'Стандарт'), (u'Шкаф-купе', u'Шкаф-купе'),
         (u'Кресла-кровати', u'Кресла-кровати'), (u'Кресла-качалки', u'Кресла-качалки'), (u'Банкетки', u'Банкетки'),
         (u'Офисные', u'Офисные'), (u'Двухъярусная кровать', u'Двухъярусная кровать'), (u'Пружинные', u'Пружинные'),
         (u'Ортопедические', u'Ортопедические'), (u'Анатомические', u'Анатомические'),
@@ -182,12 +115,12 @@ class Product(models.Model):
         (u'Для руководителя', u'Для руководителя'), (u'Для персонала', u'Для персонала'),
         (u'Для менеджеров', u'Для менеджеров'),
     )
-    armchaire_role = models.CharField(u'Тип кресла', max_length=100, blank=True, choices=ARMCHAIRE_ROLE)
+    armchaire_role = models.CharField(u'Тип офисного кресла', max_length=100, blank=True, choices=ARMCHAIRE_ROLE)
 
     STYLE = (
         (u'Офисные', u'Офисные'), (u'Садовые', u'Садовые'), (u'Для баров и ресторанов', u'Для баров и ресторанов'),
         (u'Банкетка', u'Банкетка'), (u'Для кинотеатров', u'Для кинотеатров'), (u'Для посетителей', u'Для посетителей'),
-        (u'Под старину', u'Под старину'),
+        (u'Под старину', u'Под старину'), (u'Гостиничные номера', u'Гостиничные номера'),
     )
     style = models.CharField(u'Стиль', max_length=100, blank=True, choices=STYLE)
 
@@ -195,10 +128,10 @@ class Product(models.Model):
                 (u'ЛДСП', u'ЛДСП'), (u'Стеклянные', u'Стеклянные'), (u'Натуральный мрамор', u'Натуральный мрамор'),
                 (u'Полимерный камень', u'Полимерный камень'), (u'МДФ', u'МДФ'), (u'Плетеные', u'Плетеные'),
                 (u'Ротанг искусственный', u'Ротанг искусственный'), (u'Ротанг натуральный', u'Ротанг натуральный'))
-    materal = models.CharField(u'Материал', max_length=100, blank=True, choices=MATERIAL)
+    material = models.CharField(u'Материал', max_length=100, blank=True, choices=MATERIAL)
 
     SHAPE = ((u'Круглые', u'Круглые'), (u'Овальные', u'Овальные'), (u'Прямоугольные', u'Прямоугольные'),
-             (u'Угловой', u'Угловой'), (u'Прямой', u'Прямой'),)
+             (u'Угловые', u'Угловые'), (u'Прямые', u'Прямые'),)
     shape = models.CharField(u'Форма', max_length=100, blank=True, choices=SHAPE)
 
     BRAND = (
@@ -216,8 +149,12 @@ class Product(models.Model):
     name = models.CharField(u'Название товара', max_length=255)
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
-    image = ImageWithThumbsField(u'Большое фото', upload_to='images/products/main', blank=True,
+    image = ImageWithThumbsField(u'Фото_1', upload_to='images/products/main', blank=True,
                                  sizes=((125, 125), (200, 200)))
+    image2 = ImageWithThumbsField(u'Фото_2', upload_to='images/products/main', blank=True,
+                                  sizes=((125, 125), (200, 200)))
+    image3 = ImageWithThumbsField(u'Фото_3', upload_to='images/products/main', blank=True,
+                                  sizes=((125, 125), (200, 200)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', default=0)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, default=0)
@@ -253,6 +190,13 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('catalog_product', args=(self.slug,))
 
+    def admin_image(self):
+        if self.image:
+            return u'<img src="%s" width="100"/>' % self.image.url_125x125
+        else:
+            return u'(Нет)'
+    admin_image.allow_tags = True
+
 
 class ProductReview(models.Model):
     RATINGS = ((5, 5), (4, 4), (3, 3), (2, 2), (1, 1),)
@@ -268,3 +212,7 @@ class ProductReview(models.Model):
     class Meta:
         verbose_name = u'Отзыв'
         verbose_name_plural = u'Отзывы'
+
+
+# class User(AbstractUser):
+#     pass
