@@ -11,11 +11,10 @@ ENABLE_SSL = False
 
 LOGIN_REDIRECT_URL = '/'
 
-AUTH_PROFILE_MODULE = 'accounts.userprofile'
+# AUTH_PROFILE_MODULE = 'accounts.userprofile'
 
-# AUTH_USER_MODEL = 'catalog.User'
+AUTH_USER_MODEL = 'accounts.UserProfile'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 # if os.name != 'nt':
 #     DEBUG = False
 # else:

@@ -189,7 +189,7 @@ def cushioned_furniture_sofas(request, type, template_name="catalog/category.htm
     elif type == 'office':
         products = products.filter(Q(architecture_type=u'Офисные') | Q(style=u'Офисные'))
     elif type == 'rotang':
-        products = products.filter(Q(materal__icontains=u'Ротанг') | Q(rotang=True))
+        products = products.filter(Q(materal__icontains=u'Ротанг'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

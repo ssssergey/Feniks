@@ -3,15 +3,15 @@ from django import forms
 from catalog.models import Product, ProductReview
 
 
-class ProductAdminForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
-    def clean_price(self):
-        if self.cleaned_data['price'] <= 0:
-            raise forms.ValidationError(u'Цена должна быть положительным числом.')
-        return self.cleaned_data['price']
+# class ProductAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Product
+#         fields = '__all__'
+#
+#     def clean_price(self):
+#         if self.cleaned_data['price'] <= 0:
+#             raise forms.ValidationError(u'Цена должна быть положительным числом.')
+#         return self.cleaned_data['price']
 
 
 class ProductAddToCartForm(forms.Form):

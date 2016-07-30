@@ -8,12 +8,18 @@
             {% else %}
                 <p><img src="http://placehold.it/500x500" alt="{{ p.name }}" style="width: 100%"/></p>
             {% endif %}
+            {% if p.get_related_modules %}
+                <h4>С данным комплектом сочетаются следующие товары:</h4>
+                {% for module in p.get_related_modules %}
+                    <a href="{{ module.get_absolute_url }}"><img src="{{ module.image.url_125x125 }}" alt="{{ module.name }}" style="float: left;" /></a>
+                {% endfor %}
+            {% endif %}
 
             {#        {{ p.image_caption }}#}
         </div>
 
         <div class="col-md-4 product-info">
-            <h1>{{ p.name }}</h1>
+            <h1 class="product-title">{{ p.name }}</h1>
             <br/><br/>
             {% if p.sale_price %}
                 Было:
@@ -36,10 +42,6 @@
             {% if p.color %}
                 <p>Цвет: {{ p.color }}</p>
                 <br/>
-            {% endif %}
-            {% if p.sizes != '0' %}
-                <h3>Размеры</h3>
-                {{ p.sizes }}
             {% endif %}
             <h3>Описание</h3>
             {{ p.description }}

@@ -6,6 +6,8 @@ from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from django_thumbs.db.models import ImageWithThumbsField
 
+from Feniks import settings
+
 
 class ActiveCategoryManager(models.Manager):
     def get_query_set(self):
@@ -25,29 +27,6 @@ class ActiveProductManager(models.Manager):
 class ActiveProductReviewManager(models.Manager):
     def all(self):
         return super(ActiveProductReviewManager, self).all().filter(is_approved=True)
-
-
-# class Category(models.Model):
-#     name = models.CharField(u'Название категории', max_length=50)
-#     slug = models.SlugField(max_length=50, unique=True,
-#                             help_text='Unique value for product page URL, created from name.')
-#     is_active = models.BooleanField(u'Активна', default=True)
-#     created_at = models.DateTimeField(u'Создана', auto_now_add=True)
-#     updated_at = models.DateTimeField(u'Изменена', auto_now=True)
-#     objects = models.Manager()
-#     active = ActiveCategoryManager()
-#
-#     class Meta:
-#         db_table = 'categories'
-#         ordering = ['-created_at']
-#         verbose_name = u'Категория'
-#         verbose_name_plural = u'Категории'
-#
-#     def __unicode__(self):
-#         return self.name
-#
-#     def get_absolute_url(self):
-#         return reverse('catalog_category', args=(self.slug,))
 
 
 class Product(models.Model):
@@ -87,10 +66,10 @@ class Product(models.Model):
     module_other = models.CharField(u'Другой тип модуля', max_length=100, blank=True, choices=MODULE_OTHER)
 
     DOORS = ((0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6),)
-    doors = models.IntegerField(u'Количество дверей (шкаф)', blank=True, choices=DOORS, default=0)
+    doors = models.IntegerField(u'Количество дверей (шкаф)', blank=True, choices=DOORS, null=True)
 
     LENGTH_BED = ((0, 0), (80, 80), (90, 90), (120, 120), (140, 140), (160, 160), (180, 180),)
-    length = models.IntegerField(u'Длина кровати', blank=True, choices=LENGTH_BED, default=0)
+    length = models.IntegerField(u'Длина кровати', blank=True, choices=LENGTH_BED, null=True)
 
     SOFT_KOMPLEKT = ((u'Диван + 2 кресла-кровати', u'Диван + 2 кресла-кровати'),
                      (u'Диван + 2 кресла + кресло-кровать', u'Диван + 2 кресла + кресло-кровать'),
@@ -127,6 +106,7 @@ class Product(models.Model):
     MATERIAL = ((u'Деревянные', u'Деревянные'), (u'Металлокаркас', u'Металлокаркас'), (u'Пластиковые', u'Пластиковые'),
                 (u'ЛДСП', u'ЛДСП'), (u'Стеклянные', u'Стеклянные'), (u'Натуральный мрамор', u'Натуральный мрамор'),
                 (u'Полимерный камень', u'Полимерный камень'), (u'МДФ', u'МДФ'), (u'Плетеные', u'Плетеные'),
+                (u'Ротанг', u'Ротанг'),
                 (u'Ротанг искусственный', u'Ротанг искусственный'), (u'Ротанг натуральный', u'Ротанг натуральный'))
     material = models.CharField(u'Материал', max_length=100, blank=True, choices=MATERIAL)
 
@@ -142,8 +122,8 @@ class Product(models.Model):
     OCHAG = ((u'Широкий очаг', u'Широкий очаг'), (u'Стандартный очаг', u'Стандартный очаг'),
              (u'Навесной очаг', u'Навесной очаг'),)
     ochag = models.CharField(u'Очаг каминов', max_length=100, blank=True, choices=OCHAG)
-    rotang = models.BooleanField(u'Ротанг', default=False)
-    peace_of = models.ForeignKey('self', limit_choices_to={'module_komplekt': u'Комплект'}, unique=False, null=True,
+    peace_of = models.ForeignKey('self', verbose_name=u'Относится к комплекту', limit_choices_to={'module_komplekt': u'Комплект'},
+                                 unique=False, null=True,
                                  blank=True)
 
     name = models.CharField(u'Название товара', max_length=255)
@@ -156,10 +136,10 @@ class Product(models.Model):
     image3 = ImageWithThumbsField(u'Фото_3', upload_to='images/products/main', blank=True,
                                   sizes=((125, 125), (200, 200)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
-    price = models.IntegerField(u'Цена', default=0)
-    price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, default=0)
-    price_bulk2 = models.IntegerField(u'Оптовая цена 2', blank=True, default=0)
-    price_bulk3 = models.IntegerField(u'Оптовая цена 3', blank=True, default=0)
+    price = models.IntegerField(u'Цена', null=True)
+    price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
+    price_bulk2 = models.IntegerField(u'Оптовая цена 2', blank=True, null=True)
+    price_bulk3 = models.IntegerField(u'Оптовая цена 3', blank=True, null=True)
     # categories = models.ManyToManyField(Category, verbose_name=u'Категории')
     quantity = models.IntegerField(u'Количество', default=1)
     description = models.TextField(u'Описание', blank=True)
@@ -174,6 +154,7 @@ class Product(models.Model):
     meta_keywords = models.CharField(u'Мета ключевые слова', max_length=255,
                                      help_text=u'Разделенные запятой слова для SEO, не более пяти.', blank=True)
     meta_description = models.TextField(u'Мета описание', help_text=u'Для описательного мета-тэга', blank=True)
+
     objects = models.Manager()
     active = ActiveProductManager()
     featured = FeaturedProductManager()
@@ -195,13 +176,18 @@ class Product(models.Model):
             return u'<img src="%s" width="100"/>' % self.image.url_125x125
         else:
             return u'(Нет)'
+
     admin_image.allow_tags = True
+
+    def get_related_modules(self):
+        modules = Product.active.filter(peace_of=self)
+        return modules
 
 
 class ProductReview(models.Model):
     RATINGS = ((5, 5), (4, 4), (3, 3), (2, 2), (1, 1),)
     product = models.ForeignKey(Product, verbose_name=u'Товар')
-    user = models.ForeignKey(User, verbose_name=u'Пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=u'Пользователь')
     date = models.DateTimeField(u'Создан', auto_now_add=True)
     rating = models.PositiveSmallIntegerField(u'Рейтинг', default=5, choices=RATINGS)
     is_approved = models.BooleanField(u'Одобрен', default=True)
@@ -214,5 +200,5 @@ class ProductReview(models.Model):
         verbose_name_plural = u'Отзывы'
 
 
-# class User(AbstractUser):
-#     pass
+        # class User(AbstractUser):
+        #     pass

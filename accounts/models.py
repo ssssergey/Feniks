@@ -2,29 +2,22 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
-# Create your models here.
-class BaseOrderInfo(models.Model):
+class UserProfile(AbstractUser):
+    # user = models.ForeignKey(User, unique=True)
+    patronymic = models.CharField(u'Отчество', max_length=50, blank=True, null=True)
+    city = models.CharField(u'Город', max_length=50, blank=True, null=True)
+    region = models.CharField(u'Край, область, республика', max_length=50, blank=True, null=True)
+    country = models.CharField(u'Страна', max_length=50, default=u'Россия', null=True)
+    telephone_1 = models.IntegerField(u'Телефон 1', blank=True, null=True)
+    telephone_2 = models.IntegerField(u'Телефон 2', blank=True, null=True)
+    telephone_3 = models.IntegerField(u'Телефон 3', blank=True, null=True)
+    skype = models.CharField(u'Скайп', max_length=50, blank=True, null=True)
+
     class Meta:
-        abstract = True
-
-    # contact info
-    email = models.EmailField(max_length=50)
-    phone = models.CharField(max_length=20)
-    # shipping information
-    shipping_name = models.CharField(max_length=50)
-    shipping_address_1 = models.CharField(max_length=50)
-    shipping_address_2 = models.CharField(max_length=50, blank=True)
-    shipping_city = models.CharField(max_length=50)
-    shipping_state = models.CharField(max_length=2)
-    shipping_country = models.CharField(max_length=50)
-    shipping_zip = models.CharField(max_length=10)
-
-
-
-class UserProfile(BaseOrderInfo):
-    user = models.ForeignKey(User, unique=True)
+        verbose_name = u'Пользователь'
+        verbose_name_plural = u'Пользователи'
 
     def __unicode__(self):
-        return 'User Profile for: ' + self.user.username
+        return u'Профиль: ' + self.get_full_name()
