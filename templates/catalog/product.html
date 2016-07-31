@@ -11,25 +11,35 @@
             {% if p.get_related_modules %}
                 <h4>С данным комплектом сочетаются следующие товары:</h4>
                 {% for module in p.get_related_modules %}
-                    <a href="{{ module.get_absolute_url }}"><img src="{{ module.image.url_125x125 }}" alt="{{ module.name }}" style="float: left;" /></a>
+                    <a href="{{ module.get_absolute_url }}"><img src="{{ module.image.url_125x125 }}" alt="{{ module.name }}"
+                                                                 style="float: left;"/></a>
                 {% endfor %}
             {% endif %}
-
-            {#        {{ p.image_caption }}#}
         </div>
 
         <div class="col-md-4 product-info">
             <h1 class="product-title">{{ p.name }}</h1>
-            <br/><br/>
-            {% if p.sale_price %}
-                Было:
-                <del> {{ p.old_price }} руб.</del>
-                <br/>
-                Сейчас: {{ p.price }} руб.
-            {% else %}
-                Цена: {{ p.price }} руб.
+            <h4>Цена:</h4>
+            <h4>{{ p.price }} руб.</h4>
+            {% if torgpred or request.user.is_superuser %}
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Оптовые цены
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right" style="background-color: #2aabd2; color: white">
+                        {% if p.price_bulk1 %}
+                            <li style="margin-left: 10px;">От 5 шт.: {{ p.price_bulk1 }} руб.</li>
+                            <li class="divider"></li>
+                        {% endif %}
+                        {% if p.price_bulk2 %}
+                            <li style="margin-left: 10px;">От 10 шт.: {{ p.price_bulk2 }} руб.</li>
+                            <li class="divider"></li>
+                        {% endif %}
+                        {% if p.price_bulk3 %}
+                            <li style="margin-left: 10px;">От 20 шт.: {{ p.price_bulk3 }} руб.</li>
+                        {% endif %}
+                    </ul>
+                </div>
             {% endif %}
-            <br/>
             <br/>
             {% if p.brand %}
                 <p>Бренд: "{{ p.brand }}"</p>

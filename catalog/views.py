@@ -618,16 +618,20 @@ def show_product(request, product_slug, template_name="catalog/product.html"):
                 request.session.delete_test_cookie()
             url = urlresolvers.reverse('show_cart')
             return HttpResponseRedirect(url)
-    else:
-        # its a GET,create the unbound form. Note request as a kwarg
-        form = ProductAddToCartForm(request=request, label_suffix=':')
-        # assign the hidden input the product slug
+    # its a GET,create the unbound form. Note request as a kwarg
+    form = ProductAddToCartForm(request=request, label_suffix=':')
+    # assign the hidden input the product slug
     form.fields['product_slug'].widget.attrs['value'] = product_slug
     # set the test cookie on our first GET request
     request.session.set_test_cookie()
     stats.log_product_view(request, p)  # add to product view
     product_reviews = ProductReview.approved.filter(product=p).order_by('-date')
     review_form = ProductReviewForm()
+    # check if user is torgpred
+    torgpred = False
+    user = request.user
+    if user.groups.filter(name=u'Торговые представители').exists():
+        torgpred = True
     return render_to_response("catalog/product.html", locals(), context_instance=RequestContext(request))
 
 
