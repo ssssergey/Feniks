@@ -220,3 +220,18 @@ a.c4:focus, a.c4:hover {
 .list-group-submenu {
     margin-left: 5px;
 }
+
+/*register*/
+table#register tr {
+    /*border-bottom: 1px solid black!important;*/
+    border-top: 1px solid #bfbfbf !important;
+
+    /*border-collapse: collapse!important;*/
+}
+
+table#register tr td {
+    height: 60px;
+}
+table#register tr td input {
+    /*outline: 1px solid #666;*/
+}

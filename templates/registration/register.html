@@ -1,10 +1,22 @@
 {% extends "catalog.html" %}
 {% block content %}
     <form action="." method="post" class="form-group">
-    {% csrf_token %}
+        {% csrf_token %}
         <table summary="Register" id="register">
             <caption>Создайте свой аккаунт</caption>
-            {{ form.as_table }}
+            {#            {% for field in form %}#}
+            {#                <div class="fieldWrapper">#}
+            {#                    {{ field.errors }}#}
+            {#                    {{ field.label_tag }} {{ field }}#}
+            {#                    {% if field.help_text %}#}
+            {#                        <p class="help">{{ field.help_text|safe }}</p>#}
+            {#                    {% endif %}#}
+            {#                </div>#}
+            {#                <hr>#}
+            {#            {% endfor %}#}
+            <div class="register-table">
+                {{ form.as_table }}
+            </div>
             <tr>
                 <th></th>
                 <td>

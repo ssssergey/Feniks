@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-
-from forms import RegisterForm
+from forms import RegisterForm, UserLoginForm, UserRegisterForm
 from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect, render
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
+from django.contrib.auth import login, authenticate, logout
 
-
+# CUSTOM REGISTER VIEW
 def register(request, template_name="registration/register.html"):
     if request.method == 'POST':
         postdata = request.POST.copy()
@@ -15,8 +15,6 @@ def register(request, template_name="registration/register.html"):
             form.save()
             un = postdata.get('username', '')
             pw = postdata.get('password1', '')
-            from django.contrib.auth import login, authenticate
-
             new_user = authenticate(username=un, password=pw)
             if new_user and new_user.is_active:
                 login(request, new_user)
@@ -26,6 +24,46 @@ def register(request, template_name="registration/register.html"):
         form = RegisterForm()
     page_title = u'Регистрация пользователя'
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+# ALTERNATIVE CUSTOM REGISTER VIEW
+def register_view(request, template_name="registration/register.html"):
+    print(request.user.is_authenticated())
+    page_title = u'Регистрация'
+    form = UserRegisterForm(request.POST or None)
+    if form.is_valid():
+        user = form.save(commit=False)
+        password = form.cleaned_data.get('password')
+        user.set_password(password)
+        user.save()
+        new_user = authenticate(username=user.username, password=password)
+        login(request, new_user)
+        return redirect('/')
+    context = {'form': form, 'title': page_title}
+    return render(request, "registration/register.html", context)
+
+
+# CUSTOM LOGIN
+def login_view(request):
+    print(request.user.is_authenticated())
+    page_title = u"Вход"
+    form = UserLoginForm(request.POST or None)
+    if form.is_valid():
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return redirect('/')
+    return render(request, "registration/login.html", {"form": form, "page_title": page_title})
+
+
+# CUSTOM LOGOUT
+def logout_view(request):
+    logout(request)
+    return render(request, "catalog/index.html", {})
+
+
+
 
 # from checkout.models import Order, OrderItem
 # from django.contrib.auth.decorators import login_required
