@@ -1,28 +1,15 @@
 {% extends "catalog.html" %}
+{% load bootstrap %}
 {% block content %}
-    <form action="." method="post" class="form-group">
+
+    <form class="form-horizontal" action="." method="post" style="margin-top: 20px">
+        <legend>Регистрация</legend>
         {% csrf_token %}
-        <table summary="Register" id="register">
-            <caption>Создайте свой аккаунт</caption>
-            {#            {% for field in form %}#}
-            {#                <div class="fieldWrapper">#}
-            {#                    {{ field.errors }}#}
-            {#                    {{ field.label_tag }} {{ field }}#}
-            {#                    {% if field.help_text %}#}
-            {#                        <p class="help">{{ field.help_text|safe }}</p>#}
-            {#                    {% endif %}#}
-            {#                </div>#}
-            {#                <hr>#}
-            {#            {% endfor %}#}
-            <div class="register-table">
-                {{ form.as_table }}
+        {{ form|bootstrap_horizontal }}
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
             </div>
-            <tr>
-                <th></th>
-                <td>
-                    <input class="btn btn-info" type="submit" name="submit" value="Зарегистрироваться"/>
-                </td>
-            </tr>
-        </table>
+        </div>
     </form>
 {% endblock %}

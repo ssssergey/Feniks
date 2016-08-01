@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'stats',
     'accounts',
     'cart',
+    'bootstrapform',
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -1,0 +1,79 @@
+{% extends "catalog.html" %}
+{% load catalog_tags %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <h1 class="page-header">Доставка и оплата</h1>
+
+            <h2 class="product-title">Способы доставки</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h3><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;Самовывоз</h3>
+                    <p>Вы можете забрать товар по адресу: Россия, Республика Кабардино-Балкария, г. Прохладный, ул. Свободы
+                        207</p>
+                </li>
+                <li class="list-group-item">
+                    <h3><i class="fa fa-truck" aria-hidden="true"></i>&nbsp;&nbsp;Транспортная компания</h3>
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>Название ТК</th>
+                            <th>Терминал отправления</th>
+                            <th>Сайт ТК</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">ПЭК</th>
+                            <td>Нальчик</td>
+                            <td>nalchik@pecom.ru</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Деловые линии</th>
+                            <td>Пятигорск</td>
+                            <td>pyatigorsk.dellin.ru</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Байкал сервис</th>
+                            <td>Пятигорск</td>
+                            <td>promo.baikalsr.ru</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Кит</th>
+                            <td>Нальчик</td>
+                            <td>tk-kit.ru</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p><i class="fa fa-asterisk" aria-hidden="true"></i> До терминала транспортной компании доставка бесплатно.
+                    </p>
+                </li>
+            </ul>
+            <p><i class="fa fa-asterisk" aria-hidden="true"></i> Внимание! По КБР, Ставропольскому краю и Северной Осетии-Алании
+                при заказе от 150 000 руб доставка и услуги грузчика-бесплатно.</p>
+            <hr>
+            <h2 class="product-title">Способы оплаты</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h3><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;Наличными</h3>
+                </li>
+                <li class="list-group-item">
+                    <h3><i class="fa fa-bank" aria-hidden="true"></i>&nbsp;&nbsp;Банковский перевод</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">Р/с: 40802810560330050335</li>
+                        <li class="list-group-item">Банк: Ставропольского отделения №5230 ПАО Сбербанк г.Ставрополь</li>
+                        <li class="list-group-item">к/с: 30101810907020000615</li>
+                        <li class="list-group-item">БИК: 040702615</li>
+                    </ul>
+                </li>
+                <li class="list-group-item">
+                    <h3><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;&nbsp;Банковская карта</h3>
+                </li>
+            </ul>
+            <hr>
+            <h3>Остальную информацию уточняйте здесь <a href="/contact" class="btn-social btn-outline"><i class="fa fa-book fa-lg" aria-hidden="true"></i></a>.
+            </h3>
+
+        </div>
+    </div>
+{% endblock %}

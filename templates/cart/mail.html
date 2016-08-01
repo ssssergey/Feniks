@@ -6,11 +6,16 @@
 </head>
 <body>
 <p>Дата заказа: {% now "d.m.Y H:i" %}</p>
-
-<p>Номер телефона клиента: {{ phone }}</p>
-{% if email %}
-    <p>Электронная почта: {{ email }}</p>
-{% endif %}
+<p>ФИО покупателя: {{ last_name  }} {{ first_name }} {{ patronymic }}</p>
+<p>Полный адрес: {{ country }}, {{ region }}, {{ city }}, {{ adress }}, {{ index }}</p>
+<p>Номер телефона клиента: {{ telephone_1 }}</p>
+<p>Электронная почта: {{ email }}</p>
+<p>Скайп: {{ skype }}</p>
+<p>Вид доставки: {{ delivery }}</p>
+<p>Вид оплаты: {{ payment }}</p>
+{#{% if email %}#}
+{#    <p>Электронная почта: {{ email }}</p>#}
+{#{% endif %}#}
 
 <table style="width: 100%;" border="1" cellpadding="5">
     <thead>

@@ -3,8 +3,12 @@
 {% block content %}
     <div class="row text-center">
         <h1 class="title">Мебельный магазин "Феникс"</h1>
-{#        <p class="title">г. Прохладный, ул. Свободы, д.207.</p>#}
+        {#        <p class="title">г. Прохладный, ул. Свободы, д.207.</p>#}
         <img class="img-responsive img-rounded" src="/static/images/jumbo.jpg" width="100%">
         <hr>
+        {% product_list recently_viewed 'Недавно Вы смотрели эти товары' %}
+        {% product_list view_recs 'Похожие товары' %}
+        {% product_list featured 'Особые товары' %}
+        {% product_list search_recs 'Рекомендовано Вам' %}
     </div>
 {% endblock %}

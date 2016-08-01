@@ -19,7 +19,7 @@ class RegisterForm(UserCreationForm):
 # ALTERNATIVE REGISTER FORM
 class UserRegisterForm(forms.ModelForm):
     torgpred = forms.BooleanField(label=u'Я хочу быть торговым представителем (ТП)', required=False)
-    username = forms.CharField(label=u'Короткое имя пользователя (логин)', help_text=u'Используйте в этом поле английские буквы')
+    username = forms.CharField(label=u'Логин', help_text=u'Используйте в этом поле английские буквы')
     email = forms.EmailField(required=True)
     # password = forms.CharField(widget=forms.PasswordInput)
     # last_name = forms.CharField(label=u'Фамилия', required = True)

@@ -145,7 +145,6 @@ class Product(models.Model):
     description = models.TextField(u'Описание', blank=True)
     garantee = models.IntegerField(u'Гарантийный срок', blank=True, default=12)
     on_order = models.BooleanField(u'Под заказ', default=False)
-    is_active = models.BooleanField(u'В наличии', default=True)
     is_bestseller = models.BooleanField(u'Хит продаж', default=False)
     is_featured = models.BooleanField(u'Выгодно', default=False)
 
@@ -154,7 +153,7 @@ class Product(models.Model):
     meta_keywords = models.CharField(u'Мета ключевые слова', max_length=255,
                                      help_text=u'Разделенные запятой слова для SEO, не более пяти.', blank=True)
     meta_description = models.TextField(u'Мета описание', help_text=u'Для описательного мета-тэга', blank=True)
-
+    is_active = models.BooleanField(u'Активно', default=True)
     objects = models.Manager()
     active = ActiveProductManager()
     featured = FeaturedProductManager()

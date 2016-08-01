@@ -1,41 +1,42 @@
-<div class="container">
-    <p>Детали уточняйте по телефону:
-        <a href=" tel: 8(917)5013389">8 (917) 501-33-89</a>
-    </p>
+{% extends "catalog.html" %}
+{% load catalog_tags %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <h1 class="page-header">Контакты</h1>
 
-    <p>Доступны по Viber и WhatsApp:
-        <a href="tel: 8(917)5013389">8 (917) 501-33-89</a> и <a href="tel: 8(985)3061343">8 (985) 306-13-43</a>
-    </p>
+            <h3><i class="fa fa-mobile fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Номера телефонов:</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="tel:+79604274925">+7(960)427-49-25</a>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-primary" href="tel:+79604274925" role="button">Позвонить</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="tel:+79286921043">+7(928)692-10-43</a>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-primary" href="tel:+79286921043" role="button">Позвонить</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="tel:+79674286033">+7(967)428-60-33</a>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-primary" href="tel:+79674286033" role="button">Позвонить</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="tel:+78663142160">+7(866)314-21-60</a>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-primary" href="tel:+78663142160" role="button">Позвонить</a>
+                </li>
+            </ul>
+            <hr>
+            <h3><i class="fa fa-at fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Адрес электронной почты:</h3>
+            <a href="mailto:mebelfeniks2016@yandex.ru">mebelfeniks2016@yandex.ru</a>
+            <hr>
+            <h3><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Почтовыый адрес:</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><p>Россия, Кабардино-Балкарская республика, г. Прохладный, ул. Свободы д. 207</p></li>
+                <li class="list-group-item"><p>Индекс: 361045</p></li>
+            </ul>
 
-    <p>Наша страница в Вконтакте: <a href="https://new.vk.com/ladoshkiteremok"><i class="fa fa-vk fa-2x"
-                                                                                  aria-hidden="true"></i></a>
-
-    <p>
-
-    <p>Наша страница в Инстаграм: <a href="https://www.instagram.com/ladoshkizheldor/"><i class="fa fa-instagram fa-2x"
-                                                                                          aria-hidden="true"></i></a>
-
-    <p>
-
-    <p>Местоположение: ТЦ "Теремок", Юбилейная ул. 6 стр.1, Железнодорожный, Балашиха</p>
-</div>
-<div id="map">
-    Google Maps
-</div>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgm2-ORIhtHlegZTKlPt2TqkOS7cQb2iM&callback=initMap"></script>
-<script>
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            mapTypeId: google.maps.MapTypeId.HYBRID,
-            center: {lat: 55.740855, lng: 38.014474},
-            zoom: 13,
-            minZoom: 13,
-            disableDefaultUI: true,
-            scaleControl: true,
-            zoomControl: true,
-            draggable: true,
-            scrollwheel: true,
-        });
-    }
-</script>
-
+            <script type="text/javascript" charset="utf-8" async
+                    src="https://api-maps.yandex.ru/services/constructor/1.0/js/?sid=WXWtIgx-PgZz8qrT7gzArHaIIusjzh9m&amp;width=100%&amp;height=400&amp;lang=ru_RU&amp;sourceType=constructor&amp;scroll=false"></script>
+            <hr>
+        </div>
+    </div>
+{% endblock %}

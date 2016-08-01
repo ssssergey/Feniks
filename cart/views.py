@@ -32,21 +32,21 @@ def confirm_order(request):
     form = ContactForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
-            phone = form.cleaned_data['phone']
-            email = form.cleaned_data['email']
+            # telephone_1 = form.cleaned_data['telephone_1']
+            # email = form.cleaned_data['email']
+
             recipients = ['lse1983@mail.ru']
             # Send email
             plaintext = get_template('cart/mail.txt')
             htmly = get_template('cart/mail.html')
-            d = Context({'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_subtotal': cart_subtotal,
-                         'phone': phone, 'email': email, 'domain_url': domain_url})
+            context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_subtotal': cart_subtotal,
+                         'domain_url': domain_url}
+            context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
+            d = Context(context_dict)
             subject, from_email, to = u'ЗАКАЗ', EMAIL_HOST_USER, recipients
             # text_content = plaintext.render(d)
             html_content = htmly.render(d)
-            text_content = render_to_string('cart/mail.html',
-                                            {'cart_items': cart_items, 'cart_item_count': cart_item_count,
-                                             'cart_subtotal': cart_subtotal,
-                                             'phone': phone, 'email': email, 'domain_url': domain_url})
+            text_content = render_to_string('cart/mail.html', context_dict)
             msg = EmailMultiAlternatives(subject, text_content, from_email, to)
             msg.attach_alternative(html_content, "text/html")
             msg.send()

@@ -1,29 +1,16 @@
 {% extends "catalog.html" %}
+{% load bootstrap %}
 {% block content %}
-    {% if form.errors %}
-        <ul class="errorlist">
-            <li>Вы ввели неверный логин или пароль.</li>
-        </ul>
-        <br/>
-    {% endif %}
-    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-    {% csrf_token %}
-        <table summary="Login" id="login">
-            <caption>Вход</caption>
-            <tr>
-                <td>{{ form.username.label_tag }}:</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}:</td>
-                <td>{{ form.password }}</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="right">
-                    <input class="btn btn-info" type="submit" value="Вход"/>
-                </td>
-            </tr>
-        </table>
-        <input type="hidden" name="next" value="{{ next }}"/>
+
+    <form class="form-horizontal" method="post" action="{% url 'django.contrib.auth.views.login' %}" style="margin-top: 20px">
+        <legend>Вход</legend>
+        {% csrf_token %}
+        {{ form|bootstrap_horizontal }}
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </div>
+        </div>
     </form>
+
 {% endblock %}

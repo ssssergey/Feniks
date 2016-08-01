@@ -107,11 +107,11 @@ individual_orders = [
 
 urlpatterns = [
     url(r'^$', index, {'template_name': 'catalog/index.html'}, 'catalog_home'),
+    url(r'^about$', about, {'template_name': 'flatpages/about.html'}, 'about'),
+    url(r'^contact$', contact, {'template_name': 'flatpages/contact.html'}, 'contact'),
+    url(r'^delivery$', delivery, {'template_name': 'flatpages/delivery.html'}, 'delivery'),
+    url(r'^faq', delivery, {'template_name': 'flatpages/faq.html'}, 'delivery'),
     url(r'^review/product/add/$', add_review),
-    # url(r'^category/(?P<category_slug>[-\w]+)/$', show_category, {'template_name': 'catalog/category.html'},
-    #     name='catalog_category'),
-    # url(r'^category/(?P<category_slug>[-\w]+)/(?P<gender>[-\w]+)/$', show_category, {'template_name': 'catalog/category.html'},
-    #     name='catalog_category'),
     url(r'^product/(?P<product_slug>[-\w]+)/$', show_product, {'template_name': 'catalog/product.html'},
         'catalog_product'),
     url(r'carcass_furniture/', include(carcass_furniture)),

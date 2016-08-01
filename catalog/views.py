@@ -20,13 +20,25 @@ from django.http import HttpResponse
 
 def index(request, template_name="catalog/index.html"):
     page_title = u'Феникс'
-    # search_recs = stats.recommended_from_search(request)
-    # featured = Product.featured.all()[0:PRODUCTS_PER_ROW]
-    # recently_viewed = stats.get_recently_viewed(request)
-    # view_recs = stats.recommended_from_views(request)
+    search_recs = stats.recommended_from_search(request)
+    featured = Product.featured.all()[0:PRODUCTS_PER_ROW]
+    recently_viewed = stats.get_recently_viewed(request)
+    view_recs = stats.recommended_from_views(request)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+def about(request, template_name="catalog/about.html"):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+def contact(request, template_name="catalog/contact.html"):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+def delivery(request, template_name="catalog/delivery.html"):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+def faq(request, template_name="catalog/faq.html"):
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+#################### Catalog list ###############################
 def carcass_furniture_kitchens(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Кухня'))
     if type == 'komplekts':
@@ -520,6 +532,7 @@ def garden_furniture_others(request, template_name="catalog/category.html"):
                                )
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def bars_restaurants(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Для баров и ресторанов'))
     if type == 'tables':
@@ -534,13 +547,16 @@ def bars_restaurants(request, type, template_name="catalog/category.html"):
         products = products.filter(~Q(module_mebel=u'Прилавок'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def case_kupe(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(architecture_type=u'Шкаф-купе'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def hotels(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Гостиничные номера'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 
 def interier(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_komplekt=u'Интерьер'))
@@ -554,6 +570,7 @@ def interier(request, type, template_name="catalog/category.html"):
         products = products.filter(~Q(module_other=u'Сундук'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def interier_vases(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_komplekt=u'Интерьер'))
     products = products.filter(Q(module_other=u'Ваза'))
@@ -563,9 +580,11 @@ def interier_vases(request, type, template_name="catalog/category.html"):
         products = products.filter(Q(module_other=u'Плетеные'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def others(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_other=u'Разное'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 
 def associated_goods(request, type, template_name="catalog/category.html"):
     products = Product.active.all()
@@ -583,20 +602,13 @@ def associated_goods(request, type, template_name="catalog/category.html"):
         products = products.filter(~Q(module_other=u'Фартук'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def individual_orders(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(on_order=True))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-# def show_category(request, category_slug, gender='', template_name="catalog/category.html"):
-#     c = get_object_or_404(Category, slug=category_slug)
-#     gender = gender.upper()
-#     products = c.product_set.all()
-#     if gender:
-#         products = products.filter(Q(gender = gender) | Q(gender = 'UNI'))
-#     page_title = c.name
-#     meta_keywords = c.meta_keywords
-#     meta_description = c.meta_description
-#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+######################################################################
 
 
 def show_product(request, product_slug, template_name="catalog/product.html"):

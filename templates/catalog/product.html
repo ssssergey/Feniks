@@ -4,15 +4,83 @@
     <div class="row">
         <div class="col-md-8 product-image">
             {% if p.image %}
-                <p><img src="{{ p.image.url }}" alt="{{ p.name }}" style="width: 100%"/></p>
+                <a href="#" data-toggle="modal" data-target=".pop-up-1">
+                    <img src="{{ p.image.url }}" alt="{{ p.name }}" style="width: 100%"/>
+                </a>
+                <!--  Modal content for the mixer image example -->
+                <div class="modal fade pop-up-1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="myLargeModalLabel-1">{{ p.name }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ p.image.url }}" class="img-responsive img-rounded center-block" alt="">
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal mixer image -->
             {% else %}
-                <p><img src="http://placehold.it/500x500" alt="{{ p.name }}" style="width: 100%"/></p>
+                <img src="http://placehold.it/500x500" alt="{{ p.name }}" style="width: 100%"/>
             {% endif %}
+            {% if p.image2 %}
+                <a href="#" data-toggle="modal" data-target=".pop-up-2" class="thumbnail" style="float: left;">
+                    <img src="{{ p.image2.url_125x125 }}" alt="{{ p.name }}"/>
+                </a>
+                <!--  Modal content for the mixer image example -->
+                <div class="modal fade pop-up-2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="myLargeModalLabel-1">{{ p.name }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ p.image2.url }}" class="img-responsive img-rounded center-block" alt="">
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal mixer image -->
+            {% endif %}
+            {% if p.image3 %}
+                <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
+                    <img src="{{ p.image3.url_125x125 }}" alt="{{ p.name }}"/>
+                </a>
+                <!--  Modal content for the mixer image example -->
+                <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="myLargeModalLabel-1">{{ p.name }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ p.image3.url }}" class="img-responsive img-rounded center-block" alt="">
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal mixer image -->
+            {% endif %}
+            <hr style="clear:both;">
             {% if p.get_related_modules %}
-                <h4>С данным комплектом сочетаются следующие товары:</h4>
+                <h4>С данным комплектом сочетаются следующие модули:</h4>
                 {% for module in p.get_related_modules %}
-                    <a href="{{ module.get_absolute_url }}"><img src="{{ module.image.url_125x125 }}" alt="{{ module.name }}"
-                                                                 style="float: left;"/></a>
+                    <a href="{{ module.get_absolute_url }}" class="thumbnail" style="float: left;"><img
+                            src="{{ module.image.url_125x125 }}" alt="{{ module.name }}"
+                            /></a>
                 {% endfor %}
             {% endif %}
         </div>
@@ -102,5 +170,6 @@
             {% endfor %}
         </div>
     </div>
+
     <div class="cb"><br/><br/></div>
 {% endblock %}
