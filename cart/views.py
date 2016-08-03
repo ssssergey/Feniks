@@ -55,10 +55,11 @@ def confirm_order(request):
             msg.attach_alternative(html_content, "text/html")
             msg.send()
             # Clear Cart
-            cart.create_order(request)
+            order = cart.create_order(request)
             # cart_items.delete()
             page_title = u'Спасибо за заказ!'
-            return render_to_response("cart/thanks.html", {'request': request, 'page_title': page_title})
+            user = request.user
+            return render_to_response("cart/thanks.html", {'request': request, 'page_title': page_title, 'user': user})
     else:
         if request.user.is_authenticated():
             user = request.user

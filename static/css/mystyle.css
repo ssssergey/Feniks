@@ -77,8 +77,10 @@ li a.category:hover {
 }
 
 .title {
-    text-shadow: 0 0 10px #DDBC56;
+    color: #ffdc48;
+    text-shadow: 0 0 20px black;
     text-align: center;
+    font-size: 3em;
 }
 
 .product-title {

@@ -37,16 +37,15 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     fieldsets = (
         (None, {'fields': ('sku', 'module_komplekt', 'room', 'style', 'material', 'admin_image',)}),
-        (u'Для комплектов', {'fields': ('komplekt_mebel', 'soft_komplekt',)}),
-        (u'Для модулей', {
+        (u'Если это КОМПЛЕКТ', {'fields': ('komplekt_mebel', 'soft_komplekt',)}),
+        (u'Если это МОДУЛЬ', {
             'fields': (
             'peace_of', 'module_mebel', 'module_other', 'doors', 'length', 'architecture_type', 'armchaire_role', 'shape',
             'ochag')
         }),
         (u'Общие', {'fields': (
             'name', 'slug', 'brand', 'country', 'description', 'image', 'image2', 'image3', 'price', 'price_bulk1', 'price_bulk2',
-            'price_bulk3',
-            'quantity', 'garantee', 'on_order', 'is_active', 'is_bestseller', 'is_featured'
+            'price_bulk3', 'quantity', 'garantee', 'on_order', 'is_active', 'is_bestseller', 'is_featured'
         )}),
         (u'Служебные', {
             'fields': ('meta_keywords', 'meta_description',)

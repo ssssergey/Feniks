@@ -46,8 +46,8 @@ class Order(models.Model):
     PROCESSED = 1
     SUBMITTED = 2
     SHIPPED = 3
-    CANCELLED = 4
-    COMPLETED = 5
+    CANCELLED = 0
+    COMPLETED = 4
     # set of possible order statuses
     ORDER_STATUSES = ((PROCESSED, u'В обработке'), (SUBMITTED, u'Принят'), (SHIPPED, u'Отправлен'), (CANCELLED, u'Отменен'),
                       (COMPLETED, u'Завершен'))
@@ -92,7 +92,7 @@ class Order(models.Model):
         verbose_name_plural = u'Заказы'
 
     def __unicode__(self):
-        return u'Заказ #' + str(self.id)
+        return u'Заказ #{}'.format(self.id)
 
     @property
     def total(self):
@@ -134,7 +134,7 @@ class OrderItem(models.Model):
             result = self.product.name + ' (' + self.product.sku + ')'
         else:
             result = self.product.name
-        return result
+        return u'Товар заказа: {}'.format(result)
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()

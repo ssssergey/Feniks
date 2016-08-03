@@ -1,25 +1,105 @@
 {% extends "catalog.html" %}
+{% load catalog_filters %}
 {% block content %}
-    <h1>Личный кабинет</h1>
-    <strong>Привет, {{ name|capfirst }}!</strong>
+    <h1 class="page-header">Личный кабинет</h1>
+    <strong>Здравствуйте, {{ name|capfirst }}!</strong>
     <br/><br/>
-    <fieldset class="my_account">
-        <legend>История заказов</legend>
+    <table class="table table-striped">
+        <caption>История заказов</caption>
+        <thead>
+        <tr>
+            <th>Номер заказа</th>
+            <th>Дата заказа</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
         {% for order in orders %}
-            <a href="{{ order.get_absolute_url }}">
-                Заказ #{{ order.id }} - {{ order.date|date }} (подробнее)
-            </a>
-            <br/>
+            <tr>
+                <td>Заказ #{{ order.id }}</td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.get_status_display }}</td>
+                <td><a href="{{ order.get_absolute_url }}">Подробнее</a></td>
+            </tr>
         {% empty %}
-            Вы еще ничего не купили.
+            <tr>
+                <td>Вы еще ничего не заказывали.</td>
+            </tr>
         {% endfor %}
-    </fieldset>
+        </tbody>
+    </table>
+
+    {% if torgpred %}
+
+        {#        <table class="table">#}
+        {#            <caption>Статистика по месяцам</caption>#}
+        {#            <thead>#}
+        {#            <tr>#}
+        {#                <th>Наименование товара</th>#}
+        {#                <th>Количество</th>#}
+        {#                <th>Номер заказа</th>#}
+        {#                <th>Дата</th>#}
+        {#            </tr>#}
+        {#            </thead>#}
+        {#            <tbody>#}
+        {#            {% for oi_item in user_oi_qs %}#}
+        {#                <tr>#}
+        {#                    <td>{{ oi_item.product }}</td>#}
+        {#                    <td>{{ oi_item.quantity }}</td>#}
+        {#                    <td>{{ oi_item.order }}</td>#}
+        {#                    <td>{{ oi_item.order.date }}</td>#}
+        {#                </tr>#}
+        {#            {% endfor %}#}
+        {#            </tbody>#}
+        {#        </table>#}
+        <div class="well well-lg">
+            <h1 class="page-header">Торговый представитель - Ежемесячные отчеты</h1>
+
+            <div>
+                {% for d in data %}
+                    <table class="table table-striped">
+                        <caption>{{ d.date.0 }} год {{ d.date.1|month_name }}</caption>
+                        <thead>
+                        <tr>
+                            <th>Наименование товара</th>
+                            <th>Количество</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in d.products %}
+                            <tr>
+                                <td>{{ p.0.name }}</td>
+                                <td>{{ p.1.quantity__sum }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {#    <fieldset class="my_account">#}
+    {#        <legend>История заказов</legend>#}
+    {#        <ul class="list-group">#}
+    {#            {% for order in orders %}#}
+    {#                <li class="list-group-item">#}
+    {#                    <a href="{{ order.get_absolute_url }}">#}
+    {#                        Заказ #{{ order.id }} - {{ order.date|date }} (подробнее)#}
+    {#                    </a>#}
+    {#                </li>#}
+    {#            {% empty %}#}
+    {#                Вы еще ничего не купили.#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    </fieldset>#}
     <br/>
     <fieldset class="my_account">
         <legend>Настройки личного кабинета</legend>
-        <ul>
-            <li><a href="{% url 'django.contrib.auth.views.password_change' %}">Изменить пароль</a></li>
-{#            <li><a href="{% url 'order_info' %}">Изменить настройки</a></li>#}
+        <ul class="list-group">
+            <li class="list-group-item"><a href="{% url 'django.contrib.auth.views.password_change' %}">Изменить пароль</a></li>
+            {#            <li><a href="{% url 'order_info' %}">Изменить настройки</a></li>#}
         </ul>
     </fieldset>
 {% endblock %}

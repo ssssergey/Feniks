@@ -166,7 +166,7 @@ class Product(models.Model):
         verbose_name_plural = u'Товары'
 
     def __unicode__(self):
-        return self.name
+        return u'Товар: {}'.format(self.name)
 
     def get_absolute_url(self):
         return reverse('catalog_product', args=(self.slug,))
@@ -198,7 +198,3 @@ class ProductReview(models.Model):
     class Meta:
         verbose_name = u'Отзыв'
         verbose_name_plural = u'Отзывы'
-
-
-        # class User(AbstractUser):
-        #     pass

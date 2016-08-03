@@ -49,17 +49,28 @@
         </tfoot>
     </table>
 
-    <form class="form-horizontal" method="post" action="." style="margin-top: 20px">
+    <form class="form-horizontal" method="post" action="." style="margin-top: 20px" id='theform'>
         <legend>Введите данные для обработки заказа</legend>
         {% csrf_token %}
         {{ form|bootstrap_horizontal }}
         <div class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
-                <button type="submit" class="btn btn-primary">Отправить</button>
+                <button id="send" type="submit" class="btn btn-primary">Отправить</button>
             </div>
         </div>
     </form>
 
+    <script>
+        $(function () {
+            $('#theform').submit(function () {
+                $("#send", this)
+                        .val("Ожидайте...")
+                        .attr('disabled', 'disabled');
+                $('.preloader_bg, .preloader_content').fadeIn(0);
+                return true;
+            });
+        });
+    </script>
     {#    <form class="form-group" action="." method="post">#}
     {#        {% csrf_token %}#}
     {#        {{ form.as_table }}#}

@@ -14,9 +14,66 @@
 
     <!-- Custom CSS -->
     <link href="/static/css/mystyle.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="/static/js/jquery.js"></script>
 </head>
 <body>
+<!-- preloader -->
+<style type="text/css">
+    .preloader_bg {
+        position: fixed;
+        background: white;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 10000;
+    }
 
+    .preloader_content {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10001;
+        font-size: 14px;
+    }
+
+    .preloader_content span {
+        display: block;
+        margin: auto;
+        text-align: center;
+        text-transform: uppercase;
+{#        color: rgba(225, 225, 225, 1);#}
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('.preloader_bg, .preloader_content').fadeIn(0);
+        $(window).load(function () {
+            $('.preloader_bg').delay(250).fadeOut(1500);
+            $('.preloader_content').delay(250).fadeOut(750);
+        });
+    });
+</script>
+<div class="preloader_bg"></div>
+<div class="preloader_content">
+    <img src="/static/images/feniks.gif" class="img-rounded" alt="Feniks" width="200"  />
+    <br>
+    <strong><span>Идет загрузка...<br>Подождите...</span></strong>
+</div>
+<noscript>
+    <style>
+        html, body {
+            opacity: 1 !important;
+        }
+
+        .preloader_bg, .preloader_content {
+            display: none !important;
+        }
+    </style>
+</noscript>
+<!-- /preloader -->
 {% block site_wrapper %}{% endblock %}
 
 <!-- jQuery -->
