@@ -1,7 +1,7 @@
 from django import template
 from cart import cart
 # from catalog.models import Category
-from django.contrib.flatpages.models import FlatPage
+# from django.contrib.flatpages.models import FlatPage
 from django.db.models import Q
 register = template.Library()
 import category_tree
@@ -53,10 +53,10 @@ def category_list(request_path):
         'request_path': request_path
     }
 
-@register.inclusion_tag("tags/footer.html")
-def footer_links():
-    flatpage_list = FlatPage.objects.all()
-    return {'flatpage_list': flatpage_list}
+# @register.inclusion_tag("tags/footer.html")
+# def footer_links():
+#     flatpage_list = FlatPage.objects.all()
+#     return {'flatpage_list': flatpage_list}
 
 
 @register.inclusion_tag("tags/product_list.html")

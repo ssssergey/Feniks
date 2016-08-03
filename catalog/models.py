@@ -30,6 +30,7 @@ class ActiveProductReviewManager(models.Manager):
 
 
 class Product(models.Model):
+    sku = models.CharField(u'Номер товарной позиции', max_length=50, blank=True, null=True)
     MODULE_KOMPLEKT = (
         (u'Комплект', u'Комплект'), (u'Модуль', u'Модуль'), (u'Интерьер', u'Интерьер'),
     )

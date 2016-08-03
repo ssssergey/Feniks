@@ -32,7 +32,7 @@ def products(search_text):
                                    Q(description__icontains=word) |
                                    Q(brand__icontains=word) |
                                    Q(country__icontains=word) |
-                                   Q(color__icontains=word) |
+                                   # Q(color__icontains=word) |
                                    Q(meta_description__icontains=word) |
                                    Q(meta_keywords__icontains=word))
         results['products'] = products

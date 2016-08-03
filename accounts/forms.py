@@ -6,13 +6,13 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
-# REGISTER FORM
-class RegisterForm(UserCreationForm):
-    torg_pred = forms.BooleanField(label=u'Я хочу быть торговым представителем')
-
-    def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
-        self.fields['username'].help_text = u'Используйте английские буквы'
+# # REGISTER FORM
+# class RegisterForm(UserCreationForm):
+#     torg_pred = forms.BooleanField(label=u'Я хочу быть торговым представителем')
+#
+#     def __init__(self, *args, **kwargs):
+#         super(RegisterForm, self).__init__(*args, **kwargs)
+#         self.fields['username'].help_text = u'Используйте английские буквы'
 
 # widget_torgpred=forms.TextInput(attrs={'placeholder': u'Обязательно для ТП'})
 
@@ -26,12 +26,14 @@ class UserRegisterForm(forms.ModelForm):
     # first_name = forms.CharField(label=u'Имя', required = True)
 
     telephone_1 = forms.RegexField(label=u'Телефон 1', regex=r'^\+?1?\d{9,15}$', help_text=u'Например: +79999999999',
-                                   error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."), required=True)
+                                   error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."),
+                                   required=True)
     telephone_2 = forms.RegexField(label=u'Телефон 2', regex=r'^\+?1?\d{9,15}$',
-                                   error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."), required=False)
+                                   error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."),
+                                   required=False)
     telephone_3 = forms.RegexField(label=u'Телефон 3', regex=r'^\+?1?\d{9,15}$',
-                                   error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."), required=False)
-
+                                   error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."),
+                                   required=False)
 
     class Meta:
         model = User
@@ -40,10 +42,10 @@ class UserRegisterForm(forms.ModelForm):
             'username',
             'email',
             'password',
-            'last_name',    # required
-            'first_name',   # required
+            'last_name',  # required
+            'first_name',  # required
             'patronymic',
-            'country',      # required
+            'country',  # required
             'region',
             'city',
             'adress',
@@ -65,17 +67,13 @@ class UserRegisterForm(forms.ModelForm):
             user.groups.add(group)
         return user
 
-
-# group = Group.objects.get(name='groupname')
-# user.groups.add(group)
+    # group = Group.objects.get(name='groupname')
+    # user.groups.add(group)
 
     # def clean_torgpred(self):
     #     torgpred = self.cleaned_data.get('torgpred')
     #     if torgpred:
     #         if
-
-
-
 
 
 # CUSTOM LOGIN FORM

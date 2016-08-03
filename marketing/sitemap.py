@@ -1,5 +1,5 @@
 from catalog.models import Product
-from django.contrib.flatpages.models import FlatPage
+# from django.contrib.flatpages.models import FlatPage
 from django.contrib.sitemaps import Sitemap
 
 
@@ -13,9 +13,12 @@ class ProductSitemap(Sitemap):
 #         return Category.active.all()
 
 
-class FlatPageSitemap(Sitemap):
-    def items(self):
-        return FlatPage.objects.all()
+# class FlatPageSitemap(Sitemap):
+#     def items(self):
+#         return FlatPage.objects.all()
 
 
-SITEMAPS = {'products': ProductSitemap, 'flatpages': FlatPageSitemap}
+SITEMAPS = {
+    'products': ProductSitemap,
+    # 'flatpages': FlatPageSitemap
+}

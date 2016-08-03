@@ -26,32 +26,32 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="/about"><i class="fa fa-users fa-lg" aria-hidden="true"></i> О нас</a>
+                    <a href="/about"><i class="fa fa-users fa-lg" aria-hidden="true"></i>&nbsp;О нас</a>
                 </li>
                 <li>
-                    <a href="/contact"><i class="fa fa-book fa-lg" aria-hidden="true"></i> Контакты</a>
+                    <a href="/contact"><i class="fa fa-book fa-lg" aria-hidden="true"></i>&nbsp;Контакты</a>
                 </li>
                 <li>
-                    <a href="/delivery"><i class="fa fa-truck fa-lg" aria-hidden="true"></i> Доставка</a>
+                    <a href="/delivery"><i class="fa fa-truck fa-lg" aria-hidden="true"></i>&nbsp;Доставка</a>
                 </li>
                 <li>
-                    <a href="/faq"><i class="fa fa-comments-o fa-lg" aria-hidden="true"></i> Вопросы и ответы</a>
+                    <a href="/faq"><i class="fa fa-comments-o fa-lg" aria-hidden="true"></i>&nbsp;Вопросы и ответы</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                     <li>
-                        <a><i class="fa fa-user fa-lg" aria-hidden="true"></i> Привет, {{ user.username }}</a>
+                        <a href="{% url 'my_account' %}"><i class="fa fa-user fa-lg" aria-hidden="true"></i>&nbsp;{{ user.username }}</a>
                     </li>
                     <li>
-                        <a href="{% url 'django.contrib.auth.views.logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</a>
+                        <a href="{% url 'django.contrib.auth.views.logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Выйти</a>
                     </li>
                 {% else %}
                     <li>
-                        <a href="{% url 'register' %}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Регистрация</a>
+                        <a href="{% url 'register' %}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;Регистрация</a>
                     </li>
                     <li>
-                        <a href="{% url 'django.contrib.auth.views.login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Войти</a>
+                        <a href="{% url 'django.contrib.auth.views.login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Войти</a>
                     </li>
                 {% endif %}
                 <li>
