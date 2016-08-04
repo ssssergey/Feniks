@@ -1,14 +1,24 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <a href="{% url 'catalog_home' %}">Главная</a>
+            <a href="/about">&nbsp;О нас</a>
         </div>
-        {% with flatpage_list as pages %}
-            {% for page in pages %}
-                <div class="col-md-3">
-                    <a href="{{ page.url }}">{{ page.title }}</a>
-                </div>
-            {% endfor %}
-        {% endwith %}
+        <div class="col-md-3">
+            <a href="/contact">&nbsp;Контакты</a>
+        </div>
+        <div class="col-md-3">
+            <a href="/delivery">&nbsp;Доставка</a>
+        </div>
+        <div class="col-md-3">
+            <a href="/faq">&nbsp;Вопросы и ответы</a>
+        </div>
+
+        {#        {% with flatpage_list as pages %}#}
+        {#            {% for page in pages %}#}
+        {#                <div class="col-md-3">#}
+        {#                    <a href="{{ page.url }}">{{ page.title }}</a>#}
+        {#                </div>#}
+        {#            {% endfor %}#}
+        {#        {% endwith %}#}
     </div>
 </div>

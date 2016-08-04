@@ -130,11 +130,11 @@ class Product(models.Model):
     name = models.CharField(u'Название товара', max_length=255)
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
-    image = ImageWithThumbsField(u'Фото_1', upload_to='images/products/main', blank=True,
+    image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to='images/products/main', blank=True,
                                  sizes=((125, 125), (200, 200)))
-    image2 = ImageWithThumbsField(u'Фото_2', upload_to='images/products/main', blank=True,
+    image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to='images/products/main', blank=True,
                                   sizes=((125, 125), (200, 200)))
-    image3 = ImageWithThumbsField(u'Фото_3', upload_to='images/products/main', blank=True,
+    image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to='images/products/main', blank=True,
                                   sizes=((125, 125), (200, 200)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
