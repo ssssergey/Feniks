@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from catalog.models import Product, ProductReview
-from accounts.models import UserProfile
+from catalog.models import Product, ProductReview, Material, Architecture
+# from accounts.models import UserProfile
+# from django.contrib.auth.admin import UserAdmin
 
-
-@admin.register(UserProfile)
-class UserAdmin(UserAdmin):
-    list_display = ('username', 'last_name', 'first_name', 'city', 'region',)
-    list_filter = ('groups', 'city', 'region',)
-    list_per_page = 20
-    ordering = ['last_name']
-    fieldsets = (
-        (None, {'fields': ('password',)}),
-        (u'Личные данные', {'fields': ('username', 'last_name', 'first_name', 'patronymic')}),
-        (u'Местоположение', {'fields': ('city', 'region', 'country',)}),
-        (u'Контакты', {'fields': ('email', 'skype', 'telephone_1', 'telephone_2', 'telephone_3')}),
-        (u'Разрешения', {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                    'groups', 'user_permissions')}),
-        (u'Даты', {'fields': ('last_login', 'date_joined')}),
-    )
+# @admin.register(UserProfile)
+# class UserAdmin(UserAdmin):
+#     list_display = ('username', 'last_name', 'first_name', 'city', 'region',)
+#     list_filter = ('groups', 'city', 'region', '')
+#     list_per_page = 20
+#     ordering = ['last_name']
+#     fieldsets = (
+#         (None, {'fields': ('password',)}),
+#         (u'Личные данные', {'fields': ('username', 'last_name', 'first_name', 'patronymic')}),
+#         (u'Местоположение', {'fields': ('city', 'region', 'country',)}),
+#         (u'Контакты', {'fields': ('email', 'skype', 'telephone_1', 'telephone_2', 'telephone_3')}),
+#         (u'Разрешения', {'fields': ('is_active', 'is_staff', 'is_superuser',
+#                                     'groups', 'user_permissions')}),
+#         (u'Даты', {'fields': ('last_login', 'date_joined')}),
+#     )
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -40,8 +39,8 @@ class ProductAdmin(admin.ModelAdmin):
         (u'Если это КОМПЛЕКТ', {'fields': ('komplekt_mebel', 'soft_komplekt',)}),
         (u'Если это МОДУЛЬ', {
             'fields': (
-            'peace_of', 'module_mebel', 'module_other', 'doors', 'length', 'architecture_type', 'armchaire_role', 'shape',
-            'ochag')
+                'peace_of', 'module_mebel', 'module_other', 'doors', 'length', 'architecture_type', 'armchaire_role', 'shape',
+                'ochag')
         }),
         (u'Общие', {'fields': (
             'name', 'slug', 'brand', 'country', 'description', 'image', 'image2', 'image3', 'price', 'price_bulk1', 'price_bulk2',
@@ -76,3 +75,17 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ProductReview, ProductReviewAdmin)
+
+
+class MaterialAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+admin.site.register(Material, MaterialAdmin)
+
+
+class ArchitectureAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+admin.site.register(Architecture, ArchitectureAdmin)

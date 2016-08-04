@@ -18,20 +18,21 @@ class CartItem(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     quantity = models.IntegerField(default=1)
     product = models.ForeignKey('catalog.Product', unique=False, null=True)
+    price = models.IntegerField(null=True)
 
     class Meta:
         db_table = 'cart_items'
         ordering = ['date_added']
 
     def total(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.price
 
     def name(self):
         return self.product.name
 
-    @property
-    def price(self):
-        return self.product.price
+    # @property
+    # def price(self):
+    #     return self.product.price
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
@@ -104,7 +105,7 @@ class Order(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('order_details', (), { 'order_id': self.id })
+        return ('order_details', (), {'order_id': self.id})
 
 
 class OrderItem(models.Model):
@@ -138,3 +139,17 @@ class OrderItem(models.Model):
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
+
+
+class Delivery(models.Model):
+    name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
+    terminal = models.CharField(u'Терминал отправления', max_length=50, blank=True)
+    site = models.CharField(u'Сайт', max_length=50, blank=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = u'Способ доставки'
+        verbose_name_plural = u'Способы доставки'
+
+    def __unicode__(self):
+        return self.name

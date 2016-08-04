@@ -2,14 +2,25 @@
 {% load bootstrap %}
 {% block content %}
 
-    <form class="form-horizontal" action="." method="post" style="margin-top: 20px">
+    <form class="form-horizontal" action="." method="post" style="margin-top: 20px" id="theform">
         <legend>Регистрация</legend>
         {% csrf_token %}
         {{ form|bootstrap_horizontal }}
         <div class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
-                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                <button type="submit" class="btn btn-primary" id="send">Зарегистрироваться</button>
             </div>
         </div>
     </form>
+    <script>
+        $(function () {
+            $('#theform').submit(function () {
+                $("#send", this)
+                        .val("Ожидайте...")
+                        .attr('disabled', 'disabled');
+                $('.preloader_bg, .preloader_content').fadeIn(0);
+                return true;
+            });
+        });
+    </script>
 {% endblock %}

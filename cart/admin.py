@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Delivery
 
 
 class OrderItemInline(admin.StackedInline):
@@ -21,3 +21,9 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order, OrderAdmin)
+
+
+class DeliveryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'terminal', 'site')
+
+admin.site.register(Delivery, DeliveryAdmin)

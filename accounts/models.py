@@ -16,7 +16,7 @@ class UserProfile(AbstractUser):
     telephone_2 = models.CharField(u'Телефон 2', max_length=20, blank=True, null=True)
     telephone_3 = models.CharField(u'Телефон 3', max_length=20, blank=True, null=True)
     skype = models.CharField(u'Скайп', max_length=50, blank=True, null=True)
-
+    torgpred_request = models.BooleanField(u'Заявка на ТП', default=False, help_text=u'Я хочу быть вашим торговым представителем (ТП)')
     class Meta:
         verbose_name = u'Пользователь'
         verbose_name_plural = u'Пользователи'

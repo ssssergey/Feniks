@@ -1,7 +1,7 @@
 {% extends "catalog.html" %}
 {% load catalog_filters %}
 {% block content %}
-    <h1 class="page-header">Личный кабинет</h1>
+    <h1 class="page-header">Личный кабинет{% if torgpred %} торгового представителя{% endif %}</h1>
     <strong>Здравствуйте, {{ name|capfirst }}!</strong>
     <br/><br/>
     <table class="table table-striped">

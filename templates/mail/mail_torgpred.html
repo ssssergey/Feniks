@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<p>Дата: {% now "d.m.Y H:i" %}</p>
+<p>ФИО заявителя: {{ last_name  }} {{ first_name }} {{ patronymic }}</p>
+<p>Адрес: {{ country }}, {{ region }}, {{ city }}, {{ adress }}, {{ index }}</p>
+<p>Номер телефона клиента: {{ telephone_1 }}</p>
+<p>Электронная почта: {{ email }}</p>
+<p>Скайп: {{ skype }}</p>
+
+</body>
+</html>

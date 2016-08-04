@@ -23,26 +23,13 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% for d in deliveries %}
                         <tr>
-                            <th scope="row">ПЭК</th>
-                            <td>Нальчик</td>
-                            <td>nalchik@pecom.ru</td>
+                            <th scope="row">{{ d.name }}</th>
+                            <td>{{ d.terminal }}</td>
+                            <td>{{ d.site }}</td>
                         </tr>
-                        <tr>
-                            <th scope="row">Деловые линии</th>
-                            <td>Пятигорск</td>
-                            <td>pyatigorsk.dellin.ru</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Байкал сервис</th>
-                            <td>Пятигорск</td>
-                            <td>promo.baikalsr.ru</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Кит</th>
-                            <td>Нальчик</td>
-                            <td>tk-kit.ru</td>
-                        </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                     <p><i class="fa fa-asterisk" aria-hidden="true"></i> До терминала транспортной компании доставка бесплатно.

@@ -29,7 +29,6 @@ import profile
 
 # ALTERNATIVE CUSTOM REGISTER VIEW
 def register_view(request, template_name="registration/register.html"):
-    print(request.user.is_authenticated())
     page_title = u'Регистрация'
     form = UserRegisterForm(request.POST or None)
     if form.is_valid():

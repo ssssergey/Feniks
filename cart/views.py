@@ -23,7 +23,11 @@ def show_cart(request, template_name="cart/cart.html"):
             cart.update_cart(request)
     cart_items = cart.get_cart_items(request)
     page_title = u'Корзина'
-    cart_subtotal = cart.cart_subtotal(request)
+    cart_total = cart.cart_total(request)
+    torgpred = False
+    user = request.user
+    if user.groups.filter(name=u'Торговые представители').exists():
+        torgpred = True
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -32,28 +36,23 @@ def confirm_order(request):
     cart_items = cart.get_cart_items(request)
     page_title = u'Подтверждение'
     cart_item_count = cart.cart_item_count(request)
-    cart_subtotal = cart.cart_subtotal(request)
+    cart_total = cart.cart_total(request)
     form = CheckoutForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
             # telephone_1 = form.cleaned_data['telephone_1']
             # email = form.cleaned_data['email']
-
             recipients = ['lse1983@mail.ru']
             # Send email
-            plaintext = get_template('cart/mail.txt')
-            htmly = get_template('cart/mail.html')
+            mail_template = 'mail/mail_order.html'
+            # mail_txt = 'cart/mail.txt'
+            # plaintext = get_template(mail_txt)
+            # text_content = plaintext.render(d)
             context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_subtotal': cart_subtotal,
                               'domain_url': domain_url}
             context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
-            d = Context(context_dict)
-            subject, from_email, to = u'ЗАКАЗ', EMAIL_HOST_USER, recipients
-            # text_content = plaintext.render(d)
-            html_content = htmly.render(d)
-            text_content = render_to_string('cart/mail.html', context_dict)
-            msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            mail_theme = u'ЗАКАЗ'
+            push_mail(context_dict, mail_theme, recipients, mail_template)
             # Clear Cart
             order = cart.create_order(request)
             # cart_items.delete()
@@ -77,6 +76,17 @@ def confirm_order(request):
                     }
             form = CheckoutForm(initial=data)
     return render_to_response("cart/confirm.html", locals(), context_instance=RequestContext(request))
+
+
+def push_mail(context_dict, mail_theme, recipients, mail_template):
+    d = Context(context_dict)
+    subject, from_email, to = mail_theme, EMAIL_HOST_USER, recipients
+    htmly = get_template(mail_template)
+    html_content = htmly.render(d)
+    text_content = render_to_string(mail_template, context_dict)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
 
 
 ################################# Checkout Views ########################################
@@ -117,4 +127,3 @@ def receipt(request, template_name='checkout/receipt.html'):
         cart_url = urlresolvers.reverse('show_cart')
         return HttpResponseRedirect(cart_url)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
-

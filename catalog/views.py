@@ -33,6 +33,8 @@ def contact(request, template_name="catalog/contact.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 def delivery(request, template_name="catalog/delivery.html"):
+    from cart.models import Delivery
+    deliveries = Delivery.objects.all()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 def faq(request, template_name="catalog/faq.html"):
@@ -148,7 +150,7 @@ def carcass_furniture_beds(request, type, template_name="catalog/category.html")
     elif type == 'length_180':
         products = products.filter(Q(length=180))
     elif type == 'cases_corners':
-        products = products.filter(Q(architecture_type=u'Двухъярусная кровать'))
+        products = products.filter(Q(architecture_type__name=u'Двухъярусная кровать'))
     elif type == 'cases_others':
         products = products.filter(Q(length__gte=180))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
@@ -174,49 +176,49 @@ def cushioned_furniture_komplekts(request, type, template_name="catalog/category
 def cushioned_furniture_corners(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(komplekt_mebel=u'Мягкая мебель') & Q(shape=u'Угловые'))
     if type == 'rollable':
-        products = products.filter(Q(architecture_type=u'Выкатные'))
+        products = products.filter(Q(architecture_type__name=u'Выкатные'))
     elif type == 'classic':
-        products = products.filter(Q(architecture_type=u'Классические'))
+        products = products.filter(Q(architecture_type__name=u'Классические'))
     elif type == 'metalkarkas':
-        products = products.filter(Q(materal=u'Металлокаркас'))
+        products = products.filter(Q(material__name=u'Металлокаркас'))
     elif type == 'euro':
-        products = products.filter(Q(architecture_type=u'Евро'))
+        products = products.filter(Q(architecture_type__name=u'Евро'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def cushioned_furniture_sofas(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(komplekt_mebel=u'Мягкая мебель') & Q(module_mebel=u'Диван'))
     if type == 'classic':
-        products = products.filter(Q(architecture_type=u'Классические'))
+        products = products.filter(Q(architecture_type__name=u'Классические'))
     elif type == 'euro_book':
-        products = products.filter(Q(architecture_type=u'Евро-книжка'))
+        products = products.filter(Q(architecture_type__name=u'Евро-книжка'))
     elif type == 'book':
-        products = products.filter(Q(architecture_type=u'Книжка'))
+        products = products.filter(Q(architecture_type__name=u'Книжка'))
     elif type == 'rollable':
-        products = products.filter(Q(architecture_type=u'Выкатные'))
+        products = products.filter(Q(architecture_type__name=u'Выкатные'))
     elif type == 'metalkarkas':
-        products = products.filter(Q(architecture_type=u'Металлокаркас') | Q(materal=u'Металлокаркас'))
+        products = products.filter(Q(architecture_type__name=u'Металлокаркас') | Q(material__name=u'Металлокаркас'))
     elif type == 'mini':
-        products = products.filter(Q(architecture_type=u'Мини'))
+        products = products.filter(Q(architecture_type__name=u'Мини'))
     elif type == 'office':
-        products = products.filter(Q(architecture_type=u'Офисные') | Q(style=u'Офисные'))
+        products = products.filter(Q(architecture_type__name=u'Офисные') | Q(style=u'Офисные'))
     elif type == 'rotang':
-        products = products.filter(Q(materal__icontains=u'Ротанг'))
+        products = products.filter(Q(material__name__icontains=u'Ротанг'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def cushioned_furniture_armchairs(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(komplekt_mebel=u'Мягкая мебель') & Q(module_mebel=u'Кресло'))
     if type == 'classic':
-        products = products.filter(Q(architecture_type=u'Классические'))
+        products = products.filter(Q(architecture_type__name=u'Классические'))
     elif type == 'euro_book':
-        products = products.filter(Q(architecture_type=u'Евро-книжка'))
+        products = products.filter(Q(architecture_type__name=u'Евро-книжка'))
     elif type == 'book':
-        products = products.filter(Q(architecture_type=u'Книжка'))
+        products = products.filter(Q(architecture_type__name=u'Книжка'))
     elif type == 'rollable':
-        products = products.filter(Q(architecture_type=u'Выкатные'))
+        products = products.filter(Q(architecture_type__name=u'Выкатные'))
     elif type == 'metalkarkas':
-        products = products.filter(Q(architecture_type=u'Металлокаркас') | Q(materal=u'Металлокаркас'))
+        products = products.filter(Q(architecture_type__name=u'Металлокаркас') | Q(material__name=u'Металлокаркас'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -299,11 +301,11 @@ def fireplace_serii(request, type, template_name="catalog/category.html"):
 def fireplace_portals(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_other=u'Камин-портал'))
     if type == 'natural_marble':
-        products = products.filter(Q(materal=u'Натуральный мрамор'))
+        products = products.filter(Q(material__name=u'Натуральный мрамор'))
     elif type == 'polimer_stone':
-        products = products.filter(Q(materal=u'Полимерный камень'))
+        products = products.filter(Q(material__name=u'Полимерный камень'))
     elif type == 'mdf':
-        products = products.filter(Q(materal=u'МДФ'))
+        products = products.filter(Q(material__name=u'МДФ'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -330,15 +332,15 @@ def fireplace_accesories(request, template_name="catalog/category.html"):
 
 def tables_foldable(request, type1, type2, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стол'))
-    products = products.filter(Q(architecture_type=u'Раскладные'))
+    products = products.filter(Q(architecture_type__name=u'Раскладные'))
     if type1 == 'wooden':
-        products = products.filter(Q(materal=u'Деревянные'))
+        products = products.filter(Q(material__name=u'Деревянные'))
     elif type1 == 'glass':
-        products = products.filter(Q(materal=u'Стеклянные'))
+        products = products.filter(Q(material__name=u'Стеклянные'))
     elif type1 == 'ldsp':
-        products = products.filter(Q(materal=u'ЛДСП'))
+        products = products.filter(Q(material__name=u'ЛДСП'))
     elif type1 == 'others':
-        products = products.filter(~Q(materal=u'Деревянные') & ~Q(materal=u'Стеклянные') & ~Q(materal=u'ЛДСП'))
+        products = products.filter(~Q(material__name=u'Деревянные') & ~Q(material__name=u'Стеклянные') & ~Q(material__name=u'ЛДСП'))
     if type2 == 'round':
         products = products.filter(Q(shape=u'Круглые'))
     elif type2 == 'oval':
@@ -352,15 +354,15 @@ def tables_foldable(request, type1, type2, template_name="catalog/category.html"
 
 def tables_unfoldable(request, type1, type2, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стол'))
-    products = products.filter(~Q(architecture_type=u'Раскладные'))
+    products = products.filter(~Q(architecture_type__name=u'Раскладные'))
     if type1 == 'wooden':
-        products = products.filter(Q(materal=u'Деревянные'))
+        products = products.filter(Q(material__name=u'Деревянные'))
     elif type1 == 'glass':
-        products = products.filter(Q(materal=u'Стеклянные'))
+        products = products.filter(Q(material__name=u'Стеклянные'))
     elif type1 == 'ldsp':
-        products = products.filter(Q(materal=u'ЛДСП'))
+        products = products.filter(Q(material__name=u'ЛДСП'))
     elif type1 == 'others':
-        products = products.filter(~Q(materal=u'Деревянные') & ~Q(materal=u'Стеклянные') & ~Q(materal=u'ЛДСП'))
+        products = products.filter(~Q(material__name=u'Деревянные') & ~Q(material__name=u'Стеклянные') & ~Q(material__name=u'ЛДСП'))
     if type2 == 'round':
         products = products.filter(Q(shape=u'Круглые'))
     elif type2 == 'oval':
@@ -374,19 +376,19 @@ def tables_unfoldable(request, type1, type2, template_name="catalog/category.htm
 
 def chairs_wooden(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(material=u'Деревянные'))
+    products = products.filter(Q(material__name=u'Деревянные'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def chairs_metalkarkas(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(material=u'Металлокаркас'))
+    products = products.filter(Q(material__name=u'Металлокаркас'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def chairs_plastic(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(material=u'Пластиковые'))
+    products = products.filter(Q(material__name=u'Пластиковые'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -398,7 +400,7 @@ def chairs_barniy(request, template_name="catalog/category.html"):
 
 def chairs_foldable(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(architecture_type=u'Раскладные'))
+    products = products.filter(Q(architecture_type__name=u'Раскладные'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -407,7 +409,7 @@ def chairs_others(request, type, template_name="catalog/category.html"):
     if type == 'rotang':
         products = products.filter(Q(rotang=True))
     elif type == 'office':
-        products = products.filter(Q(architecture_type=u'Офисные') | Q(style=u'Офисные'))
+        products = products.filter(Q(architecture_type__name=u'Офисные') | Q(style=u'Офисные'))
     elif type == 'cinema':
         products = products.filter(Q(style=u'Для кинотеатров'))
     elif type == 'visitors':
@@ -420,11 +422,11 @@ def kitchen_corners_komplekts(request, type, template_name="catalog/category.htm
     products = products.filter(Q(shape=u'Угловые'))
     products = products.filter(Q(room=u'Кухня'))
     if type == 'wooden':
-        products = products.filter(Q(material=u'Деревянные'))
+        products = products.filter(Q(material__name=u'Деревянные'))
     elif type == 'ldsp':
-        products = products.filter(Q(material=u'ЛДСП'))
+        products = products.filter(Q(material__name=u'ЛДСП'))
     elif type == 'metalkarkas':
-        products = products.filter(Q(material=u'Металлокаркас'))
+        products = products.filter(Q(material__name=u'Металлокаркас'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -432,11 +434,11 @@ def kitchen_corners_module(request, type1, type2, template_name="catalog/categor
     products = Product.active.filter(Q(peace_of__isnull=False))
     products = products.filter(Q(room=u'Кухня'))
     if type1 == 'wooden':
-        products = products.filter(Q(materal=u'Деревянные'))
+        products = products.filter(Q(material__name=u'Деревянные'))
     elif type1 == 'ldsp':
-        products = products.filter(Q(materal=u'ЛДСП'))
+        products = products.filter(Q(material__name=u'ЛДСП'))
     elif type1 == 'metalkarkas':
-        products = products.filter(Q(materal=u'Металлокаркас'))
+        products = products.filter(Q(material__name=u'Металлокаркас'))
     if type2 == 'tables':
         products = products.filter(Q(module_mebel=u'Стол'))
     elif type2 == 'chairs':
@@ -451,9 +453,9 @@ def kitchen_corner_sofa(request, type, template_name="catalog/category.html"):
     products = products.filter(Q(room=u'Кухня'))
     products = products.filter(Q(shape=u'Угловые'))
     if type == 'foldable':
-        products = products.filter(Q(architecture_type=u'Раскладные'))
+        products = products.filter(Q(architecture_type__name=u'Раскладные'))
     elif type == 'unfoldable':
-        products = products.filter(~Q(architecture_type=u'Раскладные'))
+        products = products.filter(~Q(architecture_type__name=u'Раскладные'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -466,11 +468,11 @@ def kitchen_corner_from(request, template_name="catalog/category.html"):
 def matrasses(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Матрас'))
     if type == 'springing':
-        products = products.filter(Q(architecture_type=u'Пружинные'))
+        products = products.filter(Q(architecture_type__name=u'Пружинные'))
     elif type == 'ortoped':
-        products = products.filter(~Q(architecture_type=u'Ортопедические'))
+        products = products.filter(~Q(architecture_type__name=u'Ортопедические'))
     elif type == 'anatom':
-        products = products.filter(~Q(architecture_type=u'Анатомические'))
+        products = products.filter(~Q(architecture_type__name=u'Анатомические'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -478,11 +480,11 @@ def garden_furniture_rotang(request, type1, type2, type3, template_name="catalog
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(rotang=True))
     if type1 == 'artificial':
-        products = products.filter(Q(materal=u'Ротанг искусственный'))
+        products = products.filter(Q(material__name=u'Ротанг искусственный'))
     elif type1 == 'natural':
-        products = products.filter(Q(materal=u'Ротанг натуральный'))
+        products = products.filter(Q(material__name=u'Ротанг натуральный'))
     elif type1 == 'wooden':
-        products = products.filter(Q(materal=u'Деревянные'))
+        products = products.filter(Q(material__name=u'Деревянные'))
     if type2 == 'sofas':
         products = products.filter(Q(module_mebel=u'Диван'))
     elif type2 == 'tables':
@@ -492,9 +494,9 @@ def garden_furniture_rotang(request, type1, type2, type3, template_name="catalog
     elif type2 == 'chairs':
         products = products.filter(Q(module_mebel=u'Стул'))
     if type3 == 'mini':
-        products = products.filter(Q(architecture_type=u'Мини'))
+        products = products.filter(Q(architecture_type__name=u'Мини'))
     elif type3 == 'standard':
-        products = products.filter(Q(architecture_type=u'Стандарт'))
+        products = products.filter(Q(architecture_type__name=u'Стандарт'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -549,7 +551,7 @@ def bars_restaurants(request, type, template_name="catalog/category.html"):
 
 
 def case_kupe(request, template_name="catalog/category.html"):
-    products = Product.active.filter(Q(architecture_type=u'Шкаф-купе'))
+    products = Product.active.filter(Q(architecture_type__name=u'Шкаф-купе'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

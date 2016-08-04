@@ -18,12 +18,13 @@ User = get_user_model()
 
 # ALTERNATIVE REGISTER FORM
 class UserRegisterForm(forms.ModelForm):
-    torgpred = forms.BooleanField(label=u'Я хочу быть торговым представителем (ТП)', required=False)
+    # torgpred = forms.BooleanField(label=u'Я хочу быть торговым представителем (ТП)', required=False)
     username = forms.CharField(label=u'Логин', help_text=u'Используйте в этом поле английские буквы')
     email = forms.EmailField(required=True)
     # password = forms.CharField(widget=forms.PasswordInput)
-    # last_name = forms.CharField(label=u'Фамилия', required = True)
-    # first_name = forms.CharField(label=u'Имя', required = True)
+    last_name = forms.CharField(label=u'Фамилия', required = True)
+    first_name = forms.CharField(label=u'Имя', required = True)
+    city = forms.CharField(label=u'Город, село', required = True, help_text=u'Например: г.Прохладный или с.Московское')
 
     telephone_1 = forms.RegexField(label=u'Телефон 1', regex=r'^\+?1?\d{9,15}$', help_text=u'Например: +79999999999',
                                    error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."),
@@ -54,17 +55,20 @@ class UserRegisterForm(forms.ModelForm):
             'telephone_2',
             'telephone_3',
             'skype',
+            'torgpred_request',
         ]
 
     def save(self, commit=True):
         # Save the provided password in hashed format
         user = super(UserRegisterForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password"])
-        torgpred = self.cleaned_data.get('torgpred')
+        torgpred_request = self.cleaned_data.get('torgpred_request')
         user.save()
-        if torgpred:
-            group, created = Group.objects.get_or_create(name=u'Торговые представители')
-            user.groups.add(group)
+        if torgpred_request:
+            from cart.views import push_mail
+            push_mail(self.cleaned_data, u'Заявка на торгового представителя', ['lse1983@mail.ru'], 'mail/mail_torgpred.html')
+            # group, created = Group.objects.get_or_create(name=u'Торговые представители')
+            # user.groups.add(group)
         return user
 
     # group = Group.objects.get(name='groupname')

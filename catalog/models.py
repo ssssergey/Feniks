@@ -29,6 +29,30 @@ class ActiveProductReviewManager(models.Manager):
         return super(ActiveProductReviewManager, self).all().filter(is_approved=True)
 
 
+class Material(models.Model):
+    name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = u'Материал'
+        verbose_name_plural = u'Материалы'
+
+    def __unicode__(self):
+        return self.name
+
+
+class Architecture(models.Model):
+    name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = u'Конструкция'
+        verbose_name_plural = u'Конструкция'
+
+    def __unicode__(self):
+        return self.name
+
+
 class Product(models.Model):
     sku = models.CharField(u'Номер товарной позиции', max_length=50, blank=True, null=True)
     MODULE_KOMPLEKT = (
@@ -89,7 +113,8 @@ class Product(models.Model):
         (u'Офисные', u'Офисные'), (u'Двухъярусная кровать', u'Двухъярусная кровать'), (u'Пружинные', u'Пружинные'),
         (u'Ортопедические', u'Ортопедические'), (u'Анатомические', u'Анатомические'),
     )
-    architecture_type = models.CharField(u'Конструкция', max_length=100, blank=True, choices=ARCHITECTURE_TYPE)
+    # architecture_type = models.CharField(u'Конструкция', max_length=100, blank=True, choices=ARCHITECTURE_TYPE)
+    architecture_type = models.ManyToManyField(Architecture, verbose_name=u'Конструкция', blank=True)
 
     ARMCHAIRE_ROLE = (
         (u'Для руководителя', u'Для руководителя'), (u'Для персонала', u'Для персонала'),
@@ -109,7 +134,8 @@ class Product(models.Model):
                 (u'Полимерный камень', u'Полимерный камень'), (u'МДФ', u'МДФ'), (u'Плетеные', u'Плетеные'),
                 (u'Ротанг', u'Ротанг'),
                 (u'Ротанг искусственный', u'Ротанг искусственный'), (u'Ротанг натуральный', u'Ротанг натуральный'))
-    material = models.CharField(u'Материал', max_length=100, blank=True, choices=MATERIAL)
+    # material = models.CharField(u'Материал', max_length=100, blank=True, choices=MATERIAL)
+    material = models.ManyToManyField(Material, verbose_name=u'Материал', blank=True)
 
     SHAPE = ((u'Круглые', u'Круглые'), (u'Овальные', u'Овальные'), (u'Прямоугольные', u'Прямоугольные'),
              (u'Угловые', u'Угловые'), (u'Прямые', u'Прямые'),)

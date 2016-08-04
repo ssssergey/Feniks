@@ -49,7 +49,7 @@ def add_to_cart(request):
     quantity = postdata.get('quantity', 1)
     # fetch the product or return a missing page error
     p = get_object_or_404(Product, slug=product_slug)
-    print "Was {}".format(p.quantity)
+    # print "Was {}".format(p.quantity)
     # get products in cart
     cart_products = get_cart_items(request)
     product_in_cart = False
@@ -64,11 +64,12 @@ def add_to_cart(request):
         ci = CartItem()
         ci.product = p
         ci.quantity = quantity
+        ci.price = p.price
         ci.cart_id = _cart_id(request)
         ci.save()
-    p.quantity -= int(quantity)
-    p.save()
-    print "Now {}".format(p.quantity)
+    # p.quantity -= int(quantity)
+    # p.save()
+    # print "Now {}".format(p.quantity)
     # returns the total number of items in the user's cart
 
 
@@ -89,17 +90,20 @@ def update_cart(request):
     postdata = request.POST.copy()
     item_id = postdata['item_id']
     quantity = postdata['quantity']
+    price = postdata['price']
     cart_item = get_single_item(request, item_id)
+    cart_item.price = int(price)
+    cart_item.save()
     if cart_item:
         if int(quantity) > 0:
-            delta_quantity = int(quantity) - cart_item.quantity
+            # delta_quantity = int(quantity) - cart_item.quantity
             cart_item.quantity = int(quantity)
             cart_item.save()
-            product = Product.active.get(cartitem=cart_item)
-            print "Was {}".format(product.quantity)
-            product.quantity -= delta_quantity
-            product.save()
-            print "Now {}".format(product.quantity)
+            # product = Product.active.get(cartitem=cart_item)
+            # print "Was {}".format(product.quantity)
+            # product.quantity -= delta_quantity
+            # product.save()
+            # print "Now {}".format(product.quantity)
         else:
             remove_from_cart(request)
 
@@ -119,11 +123,11 @@ def remove_from_cart(request):
 
 
 # gets the total cost for the current cart
-def cart_subtotal(request):
-    cart_total = int('0')
+def cart_total(request):
+    cart_total = 0
     cart_products = get_cart_items(request)
     for cart_item in cart_products:
-        cart_total += cart_item.product.price * cart_item.quantity
+        cart_total += cart_item.price * cart_item.quantity
     return cart_total
 
 

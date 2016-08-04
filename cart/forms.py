@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from .models import Order
+from .models import Order, Product
 import re
 
 # class ContactForm(forms.Form):
@@ -55,3 +55,7 @@ class CheckoutForm(forms.ModelForm):
         if len(stripped_phone) < 10:
             raise forms.ValidationError('Enter a valid phone number with area code.(e.g. 555-555-5555)')
         return self.cleaned_data['phone']
+
+class PriceForm(forms.Form):
+    price = forms.IntegerField()
+
