@@ -28,12 +28,13 @@
                         <form method="post" action="." class="cart" name="{{ item.id }}" id="{{ item.id }}"
                               onsubmit="return validateForm({{ item.id }}, {{ item.product.price }} , {{ item.product.price_bulk1 }})">
                             {% csrf_token %}
+                            <label form="price">Цена</label>
                             {% if torgpred %}
-                                <label form="price">Цена</label>
                                 <input type="text" name="price" value="{{ item.price }}" id="price"
                                        size="6" class="price" maxlength="10"/>
                             {% else %}
-                                {{ item.price }}
+                                <input type="text" name="price" value="{{ item.price }}" id="price"
+                                       size="6" class="price" maxlength="10" disabled/>
                             {% endif %}
                             <label form="quantity">Количество</label>
                             <input type="text" name="quantity" value="{{ item.quantity }}" id="quantity"
@@ -82,7 +83,7 @@
     <script>
         function validateForm(id, high, low) {
             console.log(id);
-            var x = $('form[name='+id+']').find('input[name=price]').val();
+            var x = $('form[name=' + id + ']').find('input[name=price]').val();
             console.log(x);
             x = parseInt(x);
             console.log(x);

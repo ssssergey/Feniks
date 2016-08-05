@@ -11,7 +11,7 @@ class OrderItemInline(admin.StackedInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'date', 'status', 'id', 'user')
-    list_filter = ('status', 'date')
+    list_filter = ('status', 'date', 'user')
     search_fields = ('email', 'delivery', 'payment', 'id')
     inlines = [OrderItemInline, ]
     fieldsets = (

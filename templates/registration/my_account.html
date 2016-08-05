@@ -53,40 +53,107 @@
         {#            {% endfor %}#}
         {#            </tbody>#}
         {#        </table>#}
-        <div class="well well-lg">
-            <h1 class="page-header">Торговый представитель - Ежемесячные отчеты</h1>
+
+
+            <h1 class="page-header">Ежемесячные отчеты по завершенным заказам</h1>
 
             <div>
                 {% for d in data %}
+                    <div class="well well-lg">
                     <table class="table table-striped">
-                        <caption>{{ d.date.0 }} год {{ d.date.1|month_name }}</caption>
+                        <caption>{{ d.month.0 }} год {{ d.month.1|month_name }}</caption>
                         <thead>
                         <tr>
                             <th>Наименование товара</th>
+                            <th>Дата</th>
+                            <th>Цена розничная</th>
+                            <th>Цена оптовая</th>
+                            <th>Цена продажи</th>
+                            <th>Маржа (наценка)</th>
                             <th>Количество</th>
-                            <th>Цена</th>
+                            <th>Сумма</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for p in d.products %}
+                        {% for p in d.product_items %}
                             <tr>
-                                <td>{{ p.0.name }}</td>
-                                <td>{{ p.1.quantity__sum }}</td>
-                                {% if p.1.quantity__sum < 5 %}
-                                    <td>{{ p.0.price }}</td>
-                                {% elif p.1.quantity__sum >= 5 and p.1.quantity__sum < 10 %}
-                                    <td class="info">{{ p.0.price_bulk1 }}</td>
-                                {% elif p.1.quantity__sum >= 10 and p.1.quantity__sum < 20 %}
-                                    <td class="warning">{{ p.0.price_bulk2 }}</td>
-                                {% elif p.1.quantity__sum >= 20 %}
-                                    <td class="danger">{{ p.0.price_bulk3 }}</td>
-                                {% endif %}
+                                <td>{{ p.name }}</td>
+                                <td>{{ p.order.date }}</td>
+                                <td>{{ p.product.price }}</td>
+                                <td>{{ p.product.price_bulk1 }}</td>
+                                <td>{{ p.price }}</td>
+                                <td>{{ p.margin }}</td>
+                                <td>{{ p.quantity }}</td>
+                                <td>{{ p.total }}</td>
                             </tr>
                         {% endfor %}
+                        <tr style="font-size: 1.1em; font-weight: bold">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td style="background-color: gainsboro">Месячная маржа</td>
+                            <td style="background-color: gainsboro">{{ d.month_margin }}</td>
+                            <td style="background-color: #c2c2c2">Месячный оборот</td>
+                            <td style="background-color: #c2c2c2">{{ d.month_total }}</td>
+                        </tr>
+                        <tr style="background-color: deepskyblue">
+                            <td colspan="5">
+                                <b>Исходя из вашего объема продаж за месяц ({{ d.month_total }} руб.), ваш коэфициэнт составил:</b>
+                            </td>
+                            <td style="font-size: 1.5em">
+                                <button type="button" class="btn btn-lg btn-success" data-toggle="popover-percent"
+                                        data-trigger="focus" data-placement="left"
+                                        > {{ d.percent }}%
+                                </button>
+                            </td>
+                            <td colspan="2">
+                                Ваша комиссия:<br>
+                                <button style="font-size: 1.5em" type="button" class="btn btn-lg btn-danger" data-toggle="popover"
+                                        data-trigger="focus" data-placement="left" data-html="true"
+                                        title="<b>Состовляет процент от месячной маржи</b>"
+                                        data-content="{{ d.percent }}% от {{ d.month_margin }} руб.">{{ d.profit }}
+                                    руб.
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
+                    </div>
                 {% endfor %}
-            </div>
+
+            <hr>
+            {#            <div>#}
+            {#                {% for d in data %}#}
+            {#                    <table class="table table-striped">#}
+            {#                        <caption>{{ d.month.0 }} год {{ d.month.1|month_name }}</caption>#}
+            {#                        <thead>#}
+            {#                        <tr>#}
+            {#                            <th>Наименование товара</th>#}
+            {#                            <th>Количество</th>#}
+            {#                            <th>Цена</th>#}
+            {#                        </tr>#}
+            {#                        </thead>#}
+            {#                        <tbody>#}
+            {#                        {% for p in d.products_aggregated %}#}
+            {#                            <tr>#}
+            {#                                <td>{{ p.0.name }}</td>#}
+            {#                                <td>{{ p.1.quantity__sum }}</td>#}
+            {#                                {% if p.1.quantity__sum < 5 %}#}
+            {#                                    <td>{{ p.0.price }}</td>#}
+            {#                                {% elif p.1.quantity__sum >= 5 and p.1.quantity__sum < 10 %}#}
+            {#                                    <td class="info">{{ p.0.price_bulk1 }}</td>#}
+            {#                                {% elif p.1.quantity__sum >= 10 and p.1.quantity__sum < 20 %}#}
+            {#                                    <td class="warning">{{ p.0.price_bulk2 }}</td>#}
+            {#                                {% elif p.1.quantity__sum >= 20 %}#}
+            {#                                    <td class="danger">{{ p.0.price_bulk3 }}</td>#}
+            {#                                {% endif %}#}
+            {#                            </tr>#}
+            {#                        {% endfor %}#}
+            {#                        </tbody>#}
+            {#                    </table>#}
+            {#                {% endfor %}#}
+            {#            </div>#}
         </div>
     {% endif %}
 
@@ -112,4 +179,35 @@
             {#            <li><a href="{% url 'order_info' %}">Изменить настройки</a></li>#}
         </ul>
     </fieldset>
+
+    <div id="popover-2-content" class="hidden">
+        <div>
+            <ul class="list-group">
+                <li class="list-group-item">менее 100 тыс. <span class="label label-success pull-right">20%</span></li>
+                <li class="list-group-item">100-500 тыс. <span class="label label-success pull-right">40%</span></li>
+                <li class="list-group-item">500 тыс. - 1 млн. <span class="label label-success pull-right">60%</span></li>
+                <li class="list-group-item">1 - 2 млн. <span class="label label-success pull-right">80%</span></li>
+                <li class="list-group-item">более 2 млн. <span class="label label-success pull-right">100%</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="popover-2-title" class="hidden">
+        <b>Зависит от месячного оборота</b>
+    </div>
+
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="popover-percent"]').popover({
+                html: true,
+                content: function () {
+                    return $("#popover-2-content").html();
+                },
+                title: function () {
+                    return $("#popover-2-title").html();
+                }
+            })
+        })
+    </script>
 {% endblock %}

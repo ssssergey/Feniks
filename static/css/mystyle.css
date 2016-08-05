@@ -188,21 +188,21 @@ div.navbar-header a img {
 }
 
 .c {
-    background-color: #5599dd;
-    color: white !important;
+    background-color: rgba(221, 188, 86, 0.81);
+    /*color: white !important;*/
 }
 
 .c2 {
-    background-color: #dddd55;
+    background-color: rgba(221, 188, 86, 0.61);
 }
 
 .c3 {
-    background-color: #dd7755;
-    color: white !important;
+    background-color: rgba(221, 188, 86, 0.4);
+    /*color: white !important;*/
 }
 
 .c4 {
-    background-color: #55dd77;
+    background-color: rgba(221, 188, 86, 0.2);
 }
 
 a.cat_vertical:focus {
@@ -217,7 +217,7 @@ a.c:focus, a.c:hover {
 
 a.c2:focus, a.c2:hover {
     background-color: #dddd55;
-    color: white;
+    /*color: white;*/
 }
 
 a.c3:focus, a.c3:hover {

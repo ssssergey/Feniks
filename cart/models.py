@@ -60,7 +60,7 @@ class Order(models.Model):
     status = models.IntegerField(u'Статус', choices=ORDER_STATUSES, default=PROCESSED)
     ip_address = models.GenericIPAddressField()
     last_updated = models.DateTimeField(u'Изменен', auto_now=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=u'Покупатель', null=True)
     # transaction_id = models.CharField(max_length=20)
     email = models.EmailField(u'Адрес электронной почты', max_length=50)
     telephone_1 = models.CharField(u'Номер телефона', max_length=20)

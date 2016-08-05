@@ -91,19 +91,19 @@
             <h4>{{ p.price }} руб.</h4>
             {% if torgpred or request.user.is_superuser %}
                 <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Оптовые цены
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Цена ТП
                         <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" style="background-color: #2aabd2; color: white">
                         {% if p.price_bulk1 %}
-                            <li style="margin-left: 10px;">От 5 шт.: {{ p.price_bulk1 }} руб.</li>
-                            <li class="divider"></li>
-                        {% endif %}
-                        {% if p.price_bulk2 %}
-                            <li style="margin-left: 10px;">От 10 шт.: {{ p.price_bulk2 }} руб.</li>
-                            <li class="divider"></li>
-                        {% endif %}
-                        {% if p.price_bulk3 %}
-                            <li style="margin-left: 10px;">От 20 шт.: {{ p.price_bulk3 }} руб.</li>
+                            <li style="margin-left: 10px;">{{ p.price_bulk1 }} руб.</li>
+{#                            <li class="divider"></li>#}
+{#                        {% endif %}#}
+{#                        {% if p.price_bulk2 %}#}
+{#                            <li style="margin-left: 10px;">От 10 шт.: {{ p.price_bulk2 }} руб.</li>#}
+{#                            <li class="divider"></li>#}
+{#                        {% endif %}#}
+{#                        {% if p.price_bulk3 %}#}
+{#                            <li style="margin-left: 10px;">От 20 шт.: {{ p.price_bulk3 }} руб.</li>#}
                         {% endif %}
                     </ul>
                 </div>

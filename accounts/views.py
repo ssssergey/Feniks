@@ -94,13 +94,37 @@ def my_account(request, template_name="registration/my_account.html"):
         # [(2016, 8), (2016, 7), (2016, 6), (2016, 5), (2016, 4), (2016, 3), (2016, 2), (2016, 1), (2015, 12), (2015, 11)]
         data = []
         for couple in last_months:
-            month_obj = {'date':couple, 'products': []}
-            month_oi_qs = user_oi_qs.filter(order__date__year=couple[0], order__date__month=couple[1])
+            month_obj = {
+                'month':couple,
+                'products_aggregated': [],
+                'product_items': [],
+                'month_total': 0,
+                'month_margin': 0,
+            }
+            month_oi_qs = user_oi_qs_completed.filter(order__date__year=couple[0], order__date__month=couple[1])
             distinct_product_oi_qs = month_oi_qs.distinct('product')
-            # print distinct_product_oi_qs
-            for i in distinct_product_oi_qs:
-                product_sum = month_oi_qs.filter(Q(product=i.product)).aggregate(Sum("quantity"))
-                month_obj['products'].append((i.product, product_sum))
+
+            # for i in distinct_product_oi_qs:
+            #     product_sum = month_oi_qs.filter(Q(product=i.product)).aggregate(Sum("quantity"))
+            #     month_obj['products_aggregated'].append((i.product, product_sum))
+
+            for p in month_oi_qs:
+                month_obj['month_total'] += p.total
+                p.margin = p.price-p.product.price_bulk1
+                month_obj['month_margin'] += p.margin
+                month_obj['product_items'].append(p)
+            month_obj['percent'] = 0
+            if month_obj['month_total'] < 100000:
+                month_obj['percent'] = 20
+            elif month_obj['month_total'] > 100000 and month_obj['month_total'] < 500000:
+                month_obj['percent'] = 40
+            elif month_obj['month_total'] > 500000 and month_obj['month_total'] < 1000000:
+                month_obj['percent'] = 60
+            elif month_obj['month_total'] > 1000000 and month_obj['month_total'] < 2000000:
+                month_obj['percent'] = 80
+            elif month_obj['month_total'] > 2000000:
+                month_obj['percent'] = 100
+            month_obj['profit'] = month_obj['month_margin']/100  * month_obj['percent']
             data.append(month_obj)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
