@@ -110,7 +110,7 @@ urlpatterns = [
     url(r'^about$', about, {'template_name': 'flatpages/about.html'}, 'about'),
     url(r'^contact$', contact, {'template_name': 'flatpages/contact.html'}, 'contact'),
     url(r'^delivery$', delivery, {'template_name': 'flatpages/delivery.html'}, 'delivery'),
-    url(r'^faq', delivery, {'template_name': 'flatpages/faq.html'}, 'delivery'),
+    url(r'^faq', faq, {'template_name': 'flatpages/faq.html'}, 'faq'),
     url(r'^review/product/add/$', add_review),
     url(r'^product/(?P<product_slug>[-\w]+)/$', show_product, {'template_name': 'catalog/product.html'},
         'catalog_product'),

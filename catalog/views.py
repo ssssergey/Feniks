@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render_to_response, render
 from catalog.models import ProductReview, Product
 from django.template import RequestContext
 from django.db.models import Q
@@ -26,19 +26,21 @@ def index(request, template_name="catalog/index.html"):
     view_recs = stats.recommended_from_views(request)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def about(request, template_name="catalog/about.html"):
+def about(request, template_name="flatpages/about.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def contact(request, template_name="catalog/contact.html"):
+def contact(request, template_name="flatpages/contact.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def delivery(request, template_name="catalog/delivery.html"):
-    from cart.models import Delivery
+from cart.models import Delivery
+def delivery(request, template_name="flatpages/delivery.html"):
     deliveries = Delivery.objects.all()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
-def faq(request, template_name="catalog/faq.html"):
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+from search.models import Faq
+def faq(request, template_name="flatpages/faq.html"):
+    faqs = Faq.objects.all()
+    return render(request, template_name, {'faqs': faqs})
 
 #################### Catalog list ###############################
 def carcass_furniture_kitchens(request, type, template_name="catalog/category.html"):

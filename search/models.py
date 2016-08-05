@@ -19,3 +19,15 @@ class SearchTerm(models.Model):
 
     def __unicode__(self):
         return self.q
+
+
+class Faq(models.Model):
+    question = models.CharField(u'Вопрос', max_length=255, blank=True, unique=True)
+    answer = models.TextField(u'Ответ', blank=True, unique=True)
+
+    class Meta:
+        verbose_name = u'Вопросы и ответы'
+        verbose_name_plural = u'Вопросы и ответы'
+
+    def __unicode__(self):
+        return u'Вопрос №{}'.format(self.id)

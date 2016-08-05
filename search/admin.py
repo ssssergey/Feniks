@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from models import SearchTerm
+from models import SearchTerm, Faq
 
 
 class SearchTermAdmin(admin.ModelAdmin):
@@ -10,3 +10,8 @@ class SearchTermAdmin(admin.ModelAdmin):
 
 
 admin.site.register(SearchTerm, SearchTermAdmin)
+
+class FaqAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__','question', 'answer')
+
+admin.site.register(Faq, FaqAdmin)
