@@ -5,6 +5,7 @@ from django.views.static import serve
 import settings
 from marketing.sitemap import SITEMAPS
 from django.contrib.sitemaps.views import sitemap
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

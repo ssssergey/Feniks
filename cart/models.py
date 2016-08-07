@@ -42,12 +42,27 @@ class CartItem(models.Model):
         self.save()
 
 
+class Delivery(models.Model):
+    name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
+    terminal = models.CharField(u'Терминал отправления', max_length=50, blank=True)
+    site = models.CharField(u'Сайт', max_length=50, blank=True)
+    number = models.IntegerField(u'Порядковый номер', default=0)
+
+    class Meta:
+        ordering = ['number', 'name']
+        verbose_name = u'Способ доставки'
+        verbose_name_plural = u'Способы доставки'
+
+    def __unicode__(self):
+        return self.name
+
+
 class Order(models.Model):
     # each individual status
+    CANCELLED = 0
     PROCESSED = 1
     SUBMITTED = 2
     SHIPPED = 3
-    CANCELLED = 0
     COMPLETED = 4
     # set of possible order statuses
     ORDER_STATUSES = ((PROCESSED, u'В обработке'), (SUBMITTED, u'Принят'), (SHIPPED, u'Отправлен'), (CANCELLED, u'Отменен'),
@@ -66,20 +81,21 @@ class Order(models.Model):
     telephone_1 = models.CharField(u'Номер телефона', max_length=20)
     country = models.CharField(u'Страна', max_length=50, default=u'Российская Федерация', null=True)
     region = models.CharField(u'Край, область, республика', max_length=50, blank=True, null=True)
-    city = models.CharField(u'Город', max_length=50, blank=True, null=True)
-    adress = models.CharField(u'Улица, дом', max_length=100, blank=True, null=True)
-    index = models.CharField(u'Почтовый индекс', max_length=10, blank=True, null=True)
+    city = models.CharField(u'Населенный пункт', max_length=50, null=True, help_text=u'Например: г. Прохладный или с. Московское')
+    adress = models.CharField(u'Улица, дом', max_length=100, null=True, help_text=u'Например: ул. Ленина 10 или пер. Красный 5')
+    index = models.CharField(u'Почтовый индекс', max_length=10, null=True)
     skype = models.CharField(u'Скайп', max_length=50, blank=True, null=True)
+    delivery = models.ForeignKey(Delivery, verbose_name=u'Способ доставки')
+    # DELIVERY = (
+    #     (u'Самовывоз', u'Самовывоз'),
+    #     (u'ПЭК', u'ПЭК'),
+    #     (u'Деловые линии', u'Деловые линии'),
+    #     (u'Байкал сервис', u'Байкал сервис'),
+    #     (u'Кит', u'Кит'),
+    #     (u'Другой', u'Другой'),
+    # )
+    # delivery = models.CharField(u'Способ доставки', max_length=50, null=True, choices=DELIVERY, default=u'Самовывоз')
 
-    DELIVERY = (
-        (u'Самовывоз', u'Самовывоз'),
-        (u'ПЭК', u'ПЭК'),
-        (u'Деловые линии', u'Деловые линии'),
-        (u'Байкал сервис', u'Байкал сервис'),
-        (u'Кит', u'Кит'),
-        (u'Другой', u'Другой'),
-    )
-    delivery = models.CharField(u'Способ доставки', max_length=50, null=True, choices=DELIVERY, default=u'Самовывоз')
     PAYMENT = (
         (u'Наличные', u'Наличные'),
         (u'Банковский перевод', u'Банковский перевод'),
@@ -94,6 +110,11 @@ class Order(models.Model):
 
     def __unicode__(self):
         return u'Заказ #{}'.format(self.id)
+
+    @property
+    def quantity(self):
+        order_items = OrderItem.objects.filter(order=self)
+        return len(order_items)
 
     @property
     def total(self):
@@ -139,17 +160,3 @@ class OrderItem(models.Model):
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
-
-
-class Delivery(models.Model):
-    name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
-    terminal = models.CharField(u'Терминал отправления', max_length=50, blank=True)
-    site = models.CharField(u'Сайт', max_length=50, blank=True)
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = u'Способ доставки'
-        verbose_name_plural = u'Способы доставки'
-
-    def __unicode__(self):
-        return self.name

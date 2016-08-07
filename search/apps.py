@@ -6,4 +6,4 @@ from django.apps import AppConfig
 
 class SearchConfig(AppConfig):
     name = 'search'
-    verbose_name = u'Поисковые запросы'
+    verbose_name = u'4. Вопросы, отзывы и запросы'

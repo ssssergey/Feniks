@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect, re
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, authenticate, logout
-import profile
+# import profile
 
 # # CUSTOM REGISTER VIEW
 # def register(request, template_name="registration/register.html"):
@@ -65,15 +65,20 @@ def logout_view(request):
 
 from cart.models import Order, OrderItem
 from django.contrib.auth.decorators import login_required
-
-from django.db import connection
-from django.db.models.aggregates import Count, Sum
 import time
-from django.db.models import Q
-
+from cart.cart import remove_from_orders
+# from django.db import connection
+# from django.db.models.aggregates import Count, Sum
+# from django.db.models import Q
+from django.contrib.messages import get_messages
 
 @login_required
 def my_account(request, template_name="registration/my_account.html"):
+    if request.method == 'POST':
+        postdata = request.POST.copy()
+        print postdata
+        if postdata['submit'] == u'Удалить':
+            remove_from_orders(request)
     name = request.user.get_full_name()
     page_title = u'Личный кабинет'
     orders = Order.objects.filter(user=request.user)
@@ -110,7 +115,7 @@ def my_account(request, template_name="registration/my_account.html"):
 
             for p in month_oi_qs:
                 month_obj['month_total'] += p.total
-                p.margin = p.price-p.product.price_bulk1
+                p.margin = (p.price-p.product.price_bulk1)*p.quantity
                 month_obj['month_margin'] += p.margin
                 month_obj['product_items'].append(p)
             month_obj['percent'] = 0
@@ -126,6 +131,9 @@ def my_account(request, template_name="registration/my_account.html"):
                 month_obj['percent'] = 100
             month_obj['profit'] = month_obj['month_margin']/100  * month_obj['percent']
             data.append(month_obj)
+    # storage = get_messages(request)
+    # for message in storage:
+    #     print message
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

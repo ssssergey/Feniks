@@ -83,6 +83,12 @@
                             /></a>
                 {% endfor %}
             {% endif %}
+            {% if p.peace_of %}
+                <h4>Входит в состав комплекта: </h4>
+                    <a href="{{ p.peace_of.get_absolute_url }}" class="thumbnail" style="float: left;"><img
+                            src="{{ p.peace_of.image.url_125x125 }}" alt="{{ p.peace_of.name }}"
+                            /></a>
+            {% endif %}
         </div>
 
         <div class="col-md-4 product-info">
@@ -96,14 +102,14 @@
                     <ul class="dropdown-menu dropdown-menu-right" style="background-color: #2aabd2; color: white">
                         {% if p.price_bulk1 %}
                             <li style="margin-left: 10px;">{{ p.price_bulk1 }} руб.</li>
-{#                            <li class="divider"></li>#}
-{#                        {% endif %}#}
-{#                        {% if p.price_bulk2 %}#}
-{#                            <li style="margin-left: 10px;">От 10 шт.: {{ p.price_bulk2 }} руб.</li>#}
-{#                            <li class="divider"></li>#}
-{#                        {% endif %}#}
-{#                        {% if p.price_bulk3 %}#}
-{#                            <li style="margin-left: 10px;">От 20 шт.: {{ p.price_bulk3 }} руб.</li>#}
+                            {#                            <li class="divider"></li>#}
+                            {#                        {% endif %}#}
+                            {#                        {% if p.price_bulk2 %}#}
+                            {#                            <li style="margin-left: 10px;">От 10 шт.: {{ p.price_bulk2 }} руб.</li>#}
+                            {#                            <li class="divider"></li>#}
+                            {#                        {% endif %}#}
+                            {#                        {% if p.price_bulk3 %}#}
+                            {#                            <li style="margin-left: 10px;">От 20 шт.: {{ p.price_bulk3 }} руб.</li>#}
                         {% endif %}
                     </ul>
                 </div>

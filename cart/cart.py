@@ -114,13 +114,25 @@ def remove_from_cart(request):
     item_id = postdata['item_id']
     cart_item = get_single_item(request, item_id)
     if cart_item:
-        product = Product.active.get(cartitem=cart_item)
-        print "Was {}".format(product.quantity)
-        product.quantity += cart_item.quantity
-        product.save()
-        print "Now {}".format(product.quantity)
+        # product = Product.active.get(cartitem=cart_item)
+        # print "Was {}".format(product.quantity)
+        # product.quantity += cart_item.quantity
+        # product.save()
+        # print "Now {}".format(product.quantity)
         cart_item.delete()
 
+from django.contrib import messages
+def remove_from_orders(request):
+    postdata = request.POST.copy()
+    item_id = postdata['order_id']
+    order = get_object_or_404(Order, id=item_id)
+    if order and order.status == 1:
+        order.delete()
+        message = u'Заказ удален.'
+        messages.success(request, message)
+    else:
+        message = u'Вы не можете удалить этот заказ.'
+        messages.warning(request, message)
 
 # gets the total cost for the current cart
 def cart_total(request):

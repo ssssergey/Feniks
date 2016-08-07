@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
-from catalog.models import Product, ProductReview, Material, Architecture
+from catalog.models import Product, Material, Architecture
 # from accounts.models import UserProfile
 # from django.contrib.auth.admin import UserAdmin
 
@@ -66,15 +66,7 @@ admin.site.register(Product, ProductAdmin)
 #     prepopulated_fields = {'slug' : ('name',)}
 # admin.site.register(Category, CategoryAdmin)
 
-class ProductReviewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'date', 'rating', 'is_approved')
-    list_per_page = 20
-    list_filter = ('product', 'user', 'is_approved')
-    ordering = ['date']
-    search_fields = ['user', 'content']
 
-
-admin.site.register(ProductReview, ProductReviewAdmin)
 
 
 class MaterialAdmin(admin.ModelAdmin):

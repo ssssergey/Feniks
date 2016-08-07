@@ -1,9 +1,9 @@
 {% extends "catalog.html" %}
 {% load catalog_filters %}
 {% block content %}
-    <h1 class="page-header">Корзина</h1>
+    <h1 class="page-header" xmlns="http://www.w3.org/1999/html">Корзина</h1>
     Количество товаров в корзине: {{ cart_item_count }}
-    <table class="table" summary="Your Shopping Cart" id="shopping_cart">
+    <table class="table table-bordered table-responsive" summary="Your Shopping Cart" id="shopping_cart">
         <caption>Ваша корзина</caption>
         <thead>
         <tr>
@@ -25,29 +25,39 @@
                         </a>
                     </td>
                     <td class="right">
-                        <form method="post" action="." class="cart" name="{{ item.id }}" id="{{ item.id }}"
+                        <form method="post" action="." class="cart form-inline" name="{{ item.id }}" id="{{ item.id }}"
                               onsubmit="return validateForm({{ item.id }}, {{ item.product.price }} , {{ item.product.price_bulk1 }})">
                             {% csrf_token %}
-                            <label form="price">Цена</label>
-                            {% if torgpred %}
-                                <input type="text" name="price" value="{{ item.price }}" id="price"
-                                       size="6" class="price" maxlength="10"/>
-                            {% else %}
-                                <input type="text" name="price" value="{{ item.price }}" id="price"
-                                       size="6" class="price" maxlength="10" disabled/>
-                            {% endif %}
-                            <label form="quantity">Количество</label>
-                            <input type="text" name="quantity" value="{{ item.quantity }}" id="quantity"
-                                   size="2" class="quantity" maxlength="5"/>
-                            <input type="hidden" name="item_id" value="{{ item.id }}"/>
-                            <input type="submit" name="submit" value="Сохранить"/>
+                            <div class="form-group">
+                                <label for="price">Цена: </label>
+                                {% if torgpred %}
+                                    <input type="text" name="price" value="{{ item.price }}" id="price"
+                                           size="6" class="price form-control" maxlength="10"/>
+                                {% else %}
+                                    <input type="text" name="price" value="{{ item.price }}" id="price"
+                                           size="6" class="price form-control" maxlength="10" disabled/>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">Количество: </label>
+                                <input type="text" name="quantity" value="{{ item.quantity }}" id="quantity"
+                                       size="2" class="quantity form-control" maxlength="5"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" name="item_id" value="{{ item.id }}"/>
+                                <button type="submit" class="btn btn-default disabled saveButton" name="submit" value="Сохранить"
+                                        id="saveButton"+{{ item.id }}
+                                        data-toggle="tooltip"
+                                        data-placement="bottom" title="Не забудьте сохранить">Сохранить
+                                </button>
+                            </div>
                         </form>
                     </td>
                     <td>
-                        <form method="post" action="." class="cart">
+                        <form method="post" action="." class="cart form-group">
                             {% csrf_token %}
-                            <input type="hidden" name="item_id" value="{{ item.id }}"/>
-                            <input type="submit" name="submit" value="Удалить"/>
+                            <input class="form-control" type="hidden" name="item_id" value="{{ item.id }}"/>
+                            <button type="submit" class="btn btn-default" name="submit" value="Удалить">Удалить</button>
                         </form>
                     </td>
                     <td class="right">{{ item.total }}</td>
@@ -55,7 +65,7 @@
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="6" style="height:30px;">
+                <td colspan="5" style="height:30px;">
                     Ваша корзина пуста.
                 </td>
             </tr>
@@ -63,7 +73,7 @@
         </tbody>
         <tfoot>
         <tr>
-            <th class="right" colspan="4">
+            <th class="right" colspan="3">
                 Сумма:
             </th>
             <th class="right">
@@ -72,7 +82,7 @@
         </tr>
         {% if cart_items %}
             <tr>
-                <th class="right" colspan="6">
+                <th class="right" colspan="5">
                     <a role="button" class="btn btn-primary" href="{% url 'confirm_order' %}">Продолжить</a>
                 </th>
             </tr>
@@ -80,7 +90,16 @@
         </tfoot>
     </table>
 
+
     <script>
+        $("#price, #quantity").on("mouseover", function () {
+            $('[data-toggle="tooltip"]').tooltip('hide')
+        });
+        $("#price, #quantity").on("keyup", function () {
+            $(this).parent().siblings().find(".saveButton").tooltip('show').removeClass('btn-default, disabled').addClass('btn-primary');
+        });
+
+
         function validateForm(id, high, low) {
             console.log(id);
             var x = $('form[name=' + id + ']').find('input[name=price]').val();

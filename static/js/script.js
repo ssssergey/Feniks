@@ -38,7 +38,7 @@ function addProductReview(e) {
         csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
     };
 // make request, process response
-    url = "/review/product/add/";
+    url = "/search/review/product/add/";
     //jQuery.post(url, review,
     //    function (response) {
     //        jQuery("#review_errors").empty();

@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import get_object_or_404, render_to_response, render
-from catalog.models import ProductReview, Product
+from catalog.models import Product
+from search.models import ProductReview
 from django.template import RequestContext
 from django.db.models import Q
 from django.core import urlresolvers
 from cart import cart
 from django.http import HttpResponseRedirect
-from forms import ProductAddToCartForm, ProductReviewForm
+from forms import ProductAddToCartForm
+from search.forms import ProductReviewForm
 
 from stats import stats
 from Feniks.settings import PRODUCTS_PER_ROW
-
-from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
-import json
-from django.http import HttpResponse
 
 
 def index(request, template_name="catalog/index.html"):
@@ -26,21 +23,30 @@ def index(request, template_name="catalog/index.html"):
     view_recs = stats.recommended_from_views(request)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def about(request, template_name="flatpages/about.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 
 def contact(request, template_name="flatpages/contact.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 from cart.models import Delivery
+
+
 def delivery(request, template_name="flatpages/delivery.html"):
     deliveries = Delivery.objects.all()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 from search.models import Faq
+
+
 def faq(request, template_name="flatpages/faq.html"):
     faqs = Faq.objects.all()
     return render(request, template_name, {'faqs': faqs})
+
 
 #################### Catalog list ###############################
 def carcass_furniture_kitchens(request, type, template_name="catalog/category.html"):
@@ -342,7 +348,8 @@ def tables_foldable(request, type1, type2, template_name="catalog/category.html"
     elif type1 == 'ldsp':
         products = products.filter(Q(material__name=u'ЛДСП'))
     elif type1 == 'others':
-        products = products.filter(~Q(material__name=u'Деревянные') & ~Q(material__name=u'Стеклянные') & ~Q(material__name=u'ЛДСП'))
+        products = products.filter(
+            ~Q(material__name=u'Деревянные') & ~Q(material__name=u'Стеклянные') & ~Q(material__name=u'ЛДСП'))
     if type2 == 'round':
         products = products.filter(Q(shape=u'Круглые'))
     elif type2 == 'oval':
@@ -364,7 +371,8 @@ def tables_unfoldable(request, type1, type2, template_name="catalog/category.htm
     elif type1 == 'ldsp':
         products = products.filter(Q(material__name=u'ЛДСП'))
     elif type1 == 'others':
-        products = products.filter(~Q(material__name=u'Деревянные') & ~Q(material__name=u'Стеклянные') & ~Q(material__name=u'ЛДСП'))
+        products = products.filter(
+            ~Q(material__name=u'Деревянные') & ~Q(material__name=u'Стеклянные') & ~Q(material__name=u'ЛДСП'))
     if type2 == 'round':
         products = products.filter(Q(shape=u'Круглые'))
     elif type2 == 'oval':
@@ -649,22 +657,3 @@ def show_product(request, product_slug, template_name="catalog/product.html"):
     if user.groups.filter(name=u'Торговые представители').exists():
         torgpred = True
     return render_to_response("catalog/product.html", locals(), context_instance=RequestContext(request))
-
-
-@login_required
-def add_review(request):
-    form = ProductReviewForm(request.POST)
-    if form.is_valid():
-        review = form.save(commit=False)
-        slug = request.POST.get('slug')
-        product = Product.active.get(slug=slug)
-        review.user = request.user
-        review.product = product
-        review.save()
-        template = "catalog/product_review.html"
-        html = render_to_string(template, {'review': review})
-        response = json.dumps({'success': 'True', 'html': html})
-    else:
-        html = form.errors.as_ul()
-        response = json.dumps({'success': 'False', 'html': html})
-    return HttpResponse(response, content_type='application/javascript; charset=utf-8')

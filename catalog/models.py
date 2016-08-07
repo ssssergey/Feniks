@@ -24,9 +24,7 @@ class ActiveProductManager(models.Manager):
         return super(ActiveProductManager, self).get_query_set().filter(is_active=True)
 
 
-class ActiveProductReviewManager(models.Manager):
-    def all(self):
-        return super(ActiveProductReviewManager, self).all().filter(is_approved=True)
+
 
 
 class Material(models.Model):
@@ -209,18 +207,6 @@ class Product(models.Model):
         modules = Product.active.filter(peace_of=self)
         return modules
 
-
-class ProductReview(models.Model):
-    RATINGS = ((5, 5), (4, 4), (3, 3), (2, 2), (1, 1),)
-    product = models.ForeignKey(Product, verbose_name=u'Товар')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=u'Пользователь')
-    date = models.DateTimeField(u'Создан', auto_now_add=True)
-    rating = models.PositiveSmallIntegerField(u'Рейтинг', default=5, choices=RATINGS)
-    is_approved = models.BooleanField(u'Одобрен', default=True)
-    content = models.TextField(u'Текст')
-    objects = models.Manager()
-    approved = ActiveProductReviewManager()
-
-    class Meta:
-        verbose_name = u'Отзыв'
-        verbose_name_plural = u'Отзывы'
+    # def get_parent_komplekt(self):
+    #     komplekt = self.peace_of
+    #     return komplekt

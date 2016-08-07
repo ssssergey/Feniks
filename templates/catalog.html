@@ -3,10 +3,19 @@
 {% load search_tags %}
 {% block site_wrapper %}
     {% include 'tags/navigation.html' %}
-{#    <div class="cart_box" align="right">#}
-{##}
-{#    </div>#}
+    {#    <div class="cart_box" align="right">#}
+    {##}
+    {#    </div>#}
     <div class="container main-content">
+        {% if messages %}
+            <div>
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-sm-3 col-md-2">
                 {% search_box request %}
@@ -25,4 +34,11 @@
         {% footer_links %}
     </footer>
 
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $(".messages").hide()
+            }, 5000);
+        });
+    </script>
 {% endblock %}

@@ -24,7 +24,7 @@ class UserRegisterForm(forms.ModelForm):
     # password = forms.CharField(widget=forms.PasswordInput)
     last_name = forms.CharField(label=u'Фамилия', required = True)
     first_name = forms.CharField(label=u'Имя', required = True)
-    city = forms.CharField(label=u'Город, село', required = True, help_text=u'Например: г.Прохладный или с.Московское')
+    # city = forms.CharField(label=u'Город, село', required = True)
 
     telephone_1 = forms.RegexField(label=u'Телефон 1', regex=r'^\+?1?\d{9,15}$', help_text=u'Например: +79999999999',
                                    error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."),

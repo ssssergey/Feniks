@@ -12,6 +12,7 @@ class OrderItemInline(admin.StackedInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'date', 'status', 'id', 'user')
     list_filter = ('status', 'date', 'user')
+    date_hierarchy = 'date'
     search_fields = ('email', 'delivery', 'payment', 'id')
     inlines = [OrderItemInline, ]
     fieldsets = (
@@ -24,6 +25,6 @@ admin.site.register(Order, OrderAdmin)
 
 
 class DeliveryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'terminal', 'site')
+    list_display = ('name', 'terminal', 'site', 'number', )
 
 admin.site.register(Delivery, DeliveryAdmin)

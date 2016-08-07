@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # 'django.contrib.flatpages',
     'django.contrib.sitemaps',
+    'django.contrib.humanize',
     'catalog',
     'search',
     'stats',
@@ -150,14 +151,15 @@ USE_L10N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+
 if os.name != 'nt':
-    STATIC_ROOT = '/home/lse/web/Feniks/static'
-    MEDIA_ROOT = '/home/lse/web/Feniks/media'
-else:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "static"),
-    ]
-    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'

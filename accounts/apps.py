@@ -6,4 +6,4 @@ from django.apps import AppConfig
 
 class AccountsConfig(AppConfig):
     name = u'accounts'
-    verbose_name = u'Пользователи'
+    verbose_name = u'3. Пользователи'

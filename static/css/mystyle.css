@@ -205,29 +205,24 @@ div.navbar-header a img {
     background-color: rgba(221, 188, 86, 0.2);
 }
 
-a.cat_vertical:focus {
+a.cat_vertical:focus, a.cat_vertical:hover {
     background-color: #DDBC56;
-    color: white;
 }
 
 a.c:focus, a.c:hover {
-    background-color: #5599dd;
-    color: black !important;
+    background-color: rgba(221, 188, 86, 0.81);
 }
 
 a.c2:focus, a.c2:hover {
-    background-color: #dddd55;
-    /*color: white;*/
+    background-color: rgba(221, 188, 86, 0.61);
 }
 
 a.c3:focus, a.c3:hover {
-    background-color: #dd7755;
-    color: black !important;
+    background-color: rgba(221, 188, 86, 0.4);
 }
 
 a.c4:focus, a.c4:hover {
-    background-color: #55dd77;
-    color: white;
+    background-color: rgba(221, 188, 86, 0.2);
 }
 
 .list-group.panel > .list-group-item {
@@ -273,4 +268,27 @@ table#register tr td input {
     color: #dd7755;
     background: 0 0;
     transition: all .3s ease-in-out;
+}
+
+.messages {
+    position: absolute;
+    z-index: 1000;
+    right: 10px;
+    max-width: 400px;
+}
+
+.success {
+    padding: 10px;
+    background-color: lightgreen;
+}
+
+.info {
+    padding: 10px;
+    background-color: #28a4c9;
+}
+
+.warning {
+    padding: 10px;
+    background-color: indianred;
+    color: white;
 }

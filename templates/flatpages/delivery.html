@@ -9,6 +9,7 @@
             <ul class="list-group">
                 <li class="list-group-item">
                     <h3><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;&nbsp;Самовывоз</h3>
+
                     <p>Вы можете забрать товар по адресу: Россия, Республика Кабардино-Балкария, г. Прохладный, ул. Свободы
                         207</p>
                 </li>
@@ -24,11 +25,13 @@
                         </thead>
                         <tbody>
                         {% for d in deliveries %}
-                        <tr>
-                            <th scope="row">{{ d.name }}</th>
-                            <td>{{ d.terminal }}</td>
-                            <td>{{ d.site }}</td>
-                        </tr>
+                            {% if d.name != 'Другой' and d.name != 'Самовывоз' %}
+                                <tr>
+                                    <th scope="row">{{ d.name }}</th>
+                                    <td>{{ d.terminal }}</td>
+                                    <td>{{ d.site }}</td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>
@@ -58,7 +61,8 @@
                 </li>
             </ul>
             <hr>
-            <h3>Остальную информацию уточняйте здесь <a href="/contact" class="btn-social btn-outline"><i class="fa fa-book fa-lg" aria-hidden="true"></i></a>.
+            <h3>Остальную информацию уточняйте здесь <a href="/contact" class="btn-social btn-outline"><i class="fa fa-book fa-lg"
+                                                                                                          aria-hidden="true"></i></a>.
             </h3>
 
         </div>

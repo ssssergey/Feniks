@@ -12,15 +12,21 @@ from django.http import HttpResponseRedirect
 from .forms import CheckoutForm
 from .models import Order, OrderItem
 
+from django.contrib import messages
 
 def show_cart(request, template_name="cart/cart.html"):
     cart_item_count = cart.cart_item_count(request)
     if request.method == 'POST':
         postdata = request.POST.copy()
+        print postdata
         if postdata['submit'] == u'Удалить':
             cart.remove_from_cart(request)
+            message = u'Товар удален из корзины.'
+            messages.success(request, message)
         if postdata['submit'] == u'Сохранить':
             cart.update_cart(request)
+            message = u'Изменения приняты.'
+            messages.success(request, message)
     cart_items = cart.get_cart_items(request)
     page_title = u'Корзина'
     cart_total = cart.cart_total(request)
@@ -48,7 +54,7 @@ def confirm_order(request):
             # mail_txt = 'cart/mail.txt'
             # plaintext = get_template(mail_txt)
             # text_content = plaintext.render(d)
-            context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_subtotal': cart_subtotal,
+            context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_total': cart_total,
                               'domain_url': domain_url}
             context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
             mail_theme = u'ЗАКАЗ'

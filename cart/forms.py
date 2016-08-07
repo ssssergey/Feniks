@@ -53,9 +53,9 @@ class CheckoutForm(forms.ModelForm):
         phone = self.cleaned_data['telephone_1']
         stripped_phone = strip_non_numbers(phone)
         if len(stripped_phone) < 10:
-            raise forms.ValidationError('Enter a valid phone number with area code.(e.g. 555-555-5555)')
+            raise forms.ValidationError(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов.")
         return self.cleaned_data['phone']
+
 
 class PriceForm(forms.Form):
     price = forms.IntegerField()
-
