@@ -24,9 +24,6 @@ class ActiveProductManager(models.Manager):
         return super(ActiveProductManager, self).get_query_set().filter(is_active=True)
 
 
-
-
-
 class Material(models.Model):
     name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
 
@@ -52,21 +49,23 @@ class Architecture(models.Model):
 
 
 class Product(models.Model):
-    sku = models.CharField(u'Номер товарной позиции', max_length=50, blank=True, null=True)
+    sku = models.CharField(u'Код', max_length=50, blank=True, null=True)
     MODULE_KOMPLEKT = (
-        (u'Комплект', u'Комплект'), (u'Модуль', u'Модуль'), (u'Интерьер', u'Интерьер'),
+        (u'Комплект', u'Комплект'), (u'Модуль', u'Модуль'), (u'Интерьер', u'Интерьер'), (u'Камин', u'Камин'),
+        (u'Сопутствующие товары', u'Сопутствующие товары'),
     )
     module_komplekt = models.CharField(u'Модуль, комплект или интерьер', max_length=100, blank=True, choices=MODULE_KOMPLEKT)
 
     KOMPLEKT_MEBEL = (
         (u'Корпусная мебель', u'Корпусная мебель'), (u'Мягкая мебель', u'Мягкая мебель'),
+        (u'Кухонный уголок', u'Кухонный уголок'),
         (u'Каминный комплект', u'Каминный комплект'),
     )
     komplekt_mebel = models.CharField(u'Тип комплекта', max_length=100, blank=True, choices=KOMPLEKT_MEBEL)
 
     ROOM = (
         (u'Кухня', u'Кухня'), (u'Гостиная(горки, стенки)', u'Гостиная(горки, стенки)'), (u'Прихожие', u'Прихожие'),
-        (u'Детские', u'Детские'), (u'Спальня', u'Спальня'),
+        (u'Детские', u'Детские'), (u'Спальня', u'Спальня'), (u'Другое', u'Другое'),
     )
     room = models.CharField(u'Комната', max_length=100, blank=True, choices=ROOM)
 
@@ -207,6 +206,6 @@ class Product(models.Model):
         modules = Product.active.filter(peace_of=self)
         return modules
 
-    # def get_parent_komplekt(self):
-    #     komplekt = self.peace_of
-    #     return komplekt
+        # def get_parent_komplekt(self):
+        #     komplekt = self.peace_of
+        #     return komplekt

@@ -29,13 +29,13 @@
                         {% csrf_token %}
                         <input class="form-control" type="hidden" name="order_id" value="{{ order.id }}"/>
                         {% if order.get_status_display == 'В обработке' %}
-                            <button role="button" class="btn btn-danger" type="submit" name="submit" value="Удалить"><i
+                            <button role="button" class="btn btn-danger" type="submit" name="submit" value="Удалить"><i style="color: white"
                                     class="fa fa-minus-circle" aria-hidden="true"></i> Удалить
                             </button>
                         {% endif %}
                     </form>
                 </td>
-                <td><a class="btn btn-primary" href="{{ order.get_absolute_url }}">Подробнее</a></td>
+                <td><a class="btn btn-primary" href="{{ order.get_absolute_url }}">Подробнее...</a></td>
             </tr>
         {% empty %}
             <tr>

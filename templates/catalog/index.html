@@ -3,16 +3,23 @@
 {% block content %}
     <link href='http://fonts.googleapis.com/css?family=Cuprum&subset=cyrillic,latin' rel='stylesheet' type='text/css'>
     <div class="row text-center">
-        <h1 class="title">Мебельный магазин
-            <hr style="max-width: 100px;border-color: #f05f40;border-width: 3px;">
-            <span style="font-family: 'sans-serif'; color: red; font-weight:bold; font-size: 2em; white-space: nowrap">Ф Е Н И К С</span></h1>
-        <hr style="max-width: 100px;border-color: #f05f40;border-width: 3px;">
-        {#        <p class="title">г. Прохладный, ул. Свободы, д.207.</p>#}
-        <img class="img-responsive img-rounded" src="/static/images/jumbo.jpg" width="100%">
+        <div class="frontpage">
+            <h1 class="title_1">Мебельный магазин</h1>
+{#            <hr class="title_line_1">#}
+            <h1 class="title_2"><span
+                    >Ф Е Н И К С</span>
+            </h1>
+{#            <hr class="title_line_2">#}
+            {#        <p class="title">г. Прохладный, ул. Свободы, д.207.</p>#}
+            <img class="img-responsive img-rounded" src="/static/images/jumbo.jpg" width="100%">
+        </div>
         <hr>
         {% product_list recently_viewed 'Недавно Вы смотрели эти товары' %}
+
         {% product_list view_recs 'Похожие товары' %}
+
         {% product_list featured 'Особые товары' %}
+
         {% product_list search_recs 'Рекомендовано Вам' %}
     </div>
 {% endblock %}

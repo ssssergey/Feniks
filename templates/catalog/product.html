@@ -85,10 +85,11 @@
             {% endif %}
             {% if p.peace_of %}
                 <h4>Входит в состав комплекта: </h4>
-                    <a href="{{ p.peace_of.get_absolute_url }}" class="thumbnail" style="float: left;"><img
-                            src="{{ p.peace_of.image.url_125x125 }}" alt="{{ p.peace_of.name }}"
-                            /></a>
+                <a href="{{ p.peace_of.get_absolute_url }}" class="thumbnail" style="float: left;"><img
+                        src="{{ p.peace_of.image.url_125x125 }}" alt="{{ p.peace_of.name }}"
+                        /></a>
             {% endif %}
+            <hr style="clear:both;">
         </div>
 
         <div class="col-md-4 product-info">

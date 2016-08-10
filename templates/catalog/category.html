@@ -1,9 +1,16 @@
 {% extends "catalog.html" %}
 {% block content %}
-            <h1>{{ c.name }}</h1>
-            {{ c.description }}
-            <br/><br/>
-            {% for p in products %}
-                {% include 'tags/product_thumbnail.html' %}
-            {% endfor %}
+    <h1 style="color: gray">{{ category_name }}</h1>
+    {% if subcategories %}
+        <div class="subcategories">
+{#        <h4>Подкаталоги</h4>#}
+        {% for sub in subcategories %}
+            <a class="btn" href="{{ sub.1 }}">{{ sub.0 }}</a>
+        {% endfor %}
+        </div>
+    {% endif %}
+    <br/><br/>
+    {% for p in products %}
+        {% include 'tags/product_thumbnail.html' %}
+    {% endfor %}
 {% endblock %}
