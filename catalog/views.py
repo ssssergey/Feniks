@@ -239,14 +239,14 @@ def carcass_furniture_cases_base(request, template_name="catalog/category.html")
     category_name = u'Корпусная мебель - Шкаф'
     products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(module_mebel=u'Шкаф'))
     subcategories = (
-        (u'1-о дверные', reverse('carcass_furniture_cases', args=('komplekts',))),
-        (u'2-х дверные', reverse('carcass_furniture_cases', args=('modules',))),
-        (u'3-х дверные', reverse('carcass_furniture_cases', args=('others',))),
-        (u'4-х дверные', reverse('carcass_furniture_cases', args=('komplekts',))),
-        (u'5-х дверные', reverse('carcass_furniture_cases', args=('komplekts',))),
-        (u'6-х дверные', reverse('carcass_furniture_cases', args=('komplekts',))),
-        (u'Угловые', reverse('carcass_furniture_cases', args=('komplekts',))),
-        (u'Другое', reverse('carcass_furniture_cases', args=('komplekts',))),
+        (u'1-о дверные', reverse('carcass_furniture_cases', args=('doors_1',))),
+        (u'2-х дверные', reverse('carcass_furniture_cases', args=('doors_2',))),
+        (u'3-х дверные', reverse('carcass_furniture_cases', args=('doors_3',))),
+        (u'4-х дверные', reverse('carcass_furniture_cases', args=('doors_4',))),
+        (u'5-х дверные', reverse('carcass_furniture_cases', args=('doors_5',))),
+        (u'6-х дверные', reverse('carcass_furniture_cases', args=('doors_6',))),
+        (u'Угловые', reverse('carcass_furniture_cases', args=('cases_corners',))),
+        (u'Другое', reverse('carcass_furniture_cases', args=('cases_others',))),
     )
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -290,8 +290,8 @@ def carcass_furniture_beds_base(request, template_name="catalog/category.html"):
         (u'140 см', reverse('carcass_furniture_beds', args=('length_140',))),
         (u'160 см', reverse('carcass_furniture_beds', args=('length_160',))),
         (u'180 см', reverse('carcass_furniture_beds', args=('length_180',))),
-        (u'Двухъярусные', reverse('carcass_furniture_beds', args=('cases_corners',))),
-        (u'Другое', reverse('carcass_furniture_beds', args=('cases_others',))),
+        (u'Двухъярусные', reverse('carcass_furniture_beds', args=('double',))),
+        (u'Другое', reverse('carcass_furniture_beds', args=('others',))),
     )
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -316,10 +316,10 @@ def carcass_furniture_beds(request, type, template_name="catalog/category.html")
     elif type == 'length_180':
         products = products.filter(Q(length=180))
         category_name = u'Корпусная мебель - Кровати - 180 см'
-    elif type == 'cases_corners':
+    elif type == 'double':
         products = products.filter(Q(architecture_type__name=u'Двухъярусная кровать'))
         category_name = u'Корпусная мебель - Кровати - Двухъярусные'
-    elif type == 'cases_others':
+    elif type == 'others':
         products = products.filter(Q(length__gte=180))
         category_name = u'Корпусная мебель - Кровати - Другое'
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
@@ -1509,12 +1509,12 @@ def others(request, template_name="catalog/category.html"):
 def associated_goods_base(request, template_name="catalog/category.html"):
     category_name = u'Сопутствующие товары'
     subcategories = (
-        (u'Электротовары', reverse('interier', args=('electronics',))),
-        (u'Смесители', reverse('interier', args=('smesitels',))),
-        (u'Плиты', reverse('interier', args=('stoves',))),
-        (u'Холодильники', reverse('interier', args=('refrigirators',))),
-        (u'Мойки', reverse('interier', args=('sinks',))),
-        (u'Фартуки', reverse('interier', args=('aprons',))),
+        (u'Электротовары', reverse('associated_goods', args=('electronics',))),
+        (u'Смесители', reverse('associated_goods', args=('smesitels',))),
+        (u'Плиты', reverse('associated_goods', args=('stoves',))),
+        (u'Холодильники', reverse('associated_goods', args=('refrigirators',))),
+        (u'Мойки', reverse('associated_goods', args=('sinks',))),
+        (u'Фартуки', reverse('associated_goods', args=('aprons',))),
     )
     products = Product.active.filter(Q(module_komplekt=u'Сопутствующие товары'))
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))

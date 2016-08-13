@@ -66,7 +66,7 @@ class UserRegisterForm(forms.ModelForm):
         user.save()
         if torgpred_request:
             from cart.views import push_mail
-            push_mail(self.cleaned_data, u'Заявка на торгового представителя', ['lse1983@mail.ru'], 'mail/mail_torgpred.html')
+            push_mail(self.cleaned_data, u'Тест - Заявка на торгового представителя', ['lse1983@mail.ru', 'feniks-kbr@yandex.ru'], 'mail/mail_torgpred.html')
             # group, created = Group.objects.get_or_create(name=u'Торговые представители')
             # user.groups.add(group)
         return user

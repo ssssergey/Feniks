@@ -22,7 +22,7 @@ AUTH_USER_MODEL = 'accounts.UserProfile'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 SITE_ID = 1
 
@@ -154,10 +154,10 @@ USE_L10N = True
 
 if os.name != 'nt':
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+else:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static"),
+    ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -168,4 +168,4 @@ SITE_NAME = u'Феникс'
 META_KEYWORDS = u'мебель, мягкая мебель, офисная мебель, купить мебель, диваны, кресла, кухня'
 META_DESCRIPTION = u'Мебельный Салон Феникс'
 
-ADMINS = [('lse', 'lse1983@mail.ru')]
+ADMINS = [('feniks', 'feniks-kbr@yandex.ru')]

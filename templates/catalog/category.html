@@ -3,10 +3,16 @@
     <h1 style="color: gray">{{ category_name }}</h1>
     {% if subcategories %}
         <div class="subcategories">
-{#        <h4>Подкаталоги</h4>#}
-        {% for sub in subcategories %}
-            <a class="btn" href="{{ sub.1 }}">{{ sub.0 }}</a>
-        {% endfor %}
+            {#        <h4>Подкаталоги</h4>#}
+            {% for sub in subcategories %}
+                {% if forloop.last %}
+                    <a class="btn" href="{{ sub.1 }}">{{ sub.0 }}</a>
+                {% else %}
+                    <a class="btn" href="{{ sub.1 }}">{{ sub.0 }}</a>&nbsp;&nbsp;
+                    <i class="fa fa-asterisk" aria-hidden="true" style="color: white;"></i>
+                    &nbsp;&nbsp;
+                {% endif %}
+            {% endfor %}
         </div>
     {% endif %}
     <br/><br/>

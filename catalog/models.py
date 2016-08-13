@@ -54,7 +54,7 @@ class Product(models.Model):
         (u'Комплект', u'Комплект'), (u'Модуль', u'Модуль'), (u'Интерьер', u'Интерьер'), (u'Камин', u'Камин'),
         (u'Сопутствующие товары', u'Сопутствующие товары'),
     )
-    module_komplekt = models.CharField(u'Модуль, комплект или интерьер', max_length=100, blank=True, choices=MODULE_KOMPLEKT)
+    module_komplekt = models.CharField(u'Общие категории', max_length=100, blank=True, choices=MODULE_KOMPLEKT)
 
     KOMPLEKT_MEBEL = (
         (u'Корпусная мебель', u'Корпусная мебель'), (u'Мягкая мебель', u'Мягкая мебель'),
@@ -162,10 +162,10 @@ class Product(models.Model):
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
-    price_bulk2 = models.IntegerField(u'Оптовая цена 2', blank=True, null=True)
-    price_bulk3 = models.IntegerField(u'Оптовая цена 3', blank=True, null=True)
+    # price_bulk2 = models.IntegerField(u'Оптовая цена 2', blank=True, null=True)
+    # price_bulk3 = models.IntegerField(u'Оптовая цена 3', blank=True, null=True)
     # categories = models.ManyToManyField(Category, verbose_name=u'Категории')
-    quantity = models.IntegerField(u'Количество', default=1)
+    # quantity = models.IntegerField(u'Количество', default=1)
     description = models.TextField(u'Описание', blank=True)
     garantee = models.IntegerField(u'Гарантийный срок', blank=True, default=12)
     on_order = models.BooleanField(u'Под заказ', default=False)

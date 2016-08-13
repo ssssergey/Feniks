@@ -29,7 +29,7 @@
                                 <tr>
                                     <th scope="row">{{ d.name }}</th>
                                     <td>{{ d.terminal }}</td>
-                                    <td>{{ d.site }}</td>
+                                    <td><a href="http://{{ d.site }}" target="_blank">{{ d.site }}</a></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

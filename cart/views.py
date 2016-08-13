@@ -48,7 +48,7 @@ def confirm_order(request):
         if form.is_valid():
             # telephone_1 = form.cleaned_data['telephone_1']
             # email = form.cleaned_data['email']
-            recipients = ['lse1983@mail.ru']
+            recipients = ['lse1983@mail.ru', 'feniks-kbr@yandex.ru']
             # Send email
             mail_template = 'mail/mail_order.html'
             # mail_txt = 'cart/mail.txt'
@@ -57,7 +57,7 @@ def confirm_order(request):
             context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_total': cart_total,
                               'domain_url': domain_url}
             context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
-            mail_theme = u'ЗАКАЗ'
+            mail_theme = u'Тест - ЗАКАЗ'
             push_mail(context_dict, mail_theme, recipients, mail_template)
             # Clear Cart
             order = cart.create_order(request)

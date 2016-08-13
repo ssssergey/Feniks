@@ -294,9 +294,9 @@ a.c4:focus, a.c4:hover {
     border-bottom-left-radius: 4px
 }
 
-.list-group-submenu {
-    margin-left: 5px;
-}
+/*.list-group-submenu {*/
+    /*margin-left: 5px;*/
+/*}*/
 
 /*register*/
 table#register tr {
@@ -332,6 +332,21 @@ table#register tr td input {
     color: #FF9200;
     background: 0 0;
     transition: all .3s ease-in-out;
+}
+
+
+.btn-outline:hover {
+    border: solid 3px black;
+}
+
+.btn-social:hover i {
+    color: black!important;
+}
+
+.social-buttons-group {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
 }
 
 .messages {
