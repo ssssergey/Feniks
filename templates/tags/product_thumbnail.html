@@ -13,5 +13,15 @@
                 {{ p.price }} руб.
             </div>
         </a>
+        {% if p.sale_price %}
+            <div class="sale-ribbon">
+                <span class="sale">СКИДКА</span>
+            </div>
+        {% endif %}
+        {% if p.new %}
+            <div class="new-ribbon">
+                <span class="new">НОВИНКА</span>
+            </div>
+        {% endif %}
     </div>
 </div>

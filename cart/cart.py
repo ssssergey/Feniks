@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .models import CartItem
+from .models import CartItem, Schet
 from catalog.models import Product
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
@@ -11,6 +11,8 @@ from django.conf import settings
 from django.db.models import Max
 from Feniks.settings import SESSION_AGE_DAYS
 from datetime import datetime, timedelta
+from myutils.num2t4ru import num2text
+
 
 CART_ID_SESSION_KEY = 'cart_id'
 # get the current user's cart id, sets new one if blank
@@ -199,3 +201,14 @@ def create_order(request):
     #     profile.set(request)
     # return the new order object
     return order
+
+
+
+def create_schet(order):
+    schet = Schet()
+    schet.order = order
+    schet.platelshik = u'{} {}'.format(order.last_name, order.first_name)
+    schet.poluchatel = u'{} {}'.format(order.last_name, order.first_name)
+    schet.sum_price_words = num2text(order.total)
+    schet.save()
+    return schet

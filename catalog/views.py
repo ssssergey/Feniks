@@ -18,6 +18,8 @@ from django.core.urlresolvers import reverse
 
 def index(request, template_name="catalog/index.html"):
     page_title = u'Феникс'
+    new_products = Product.active.all()
+    new_products = [i for i in new_products if i.new()][0:PRODUCTS_PER_ROW]
     search_recs = stats.recommended_from_search(request)
     featured = Product.featured.all()[0:PRODUCTS_PER_ROW]
     recently_viewed = stats.get_recently_viewed(request)

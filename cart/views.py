@@ -14,6 +14,7 @@ from .models import Order, OrderItem
 
 from django.contrib import messages
 
+
 def show_cart(request, template_name="cart/cart.html"):
     cart_item_count = cart.cart_item_count(request)
     if request.method == 'POST':
@@ -38,6 +39,7 @@ def show_cart(request, template_name="cart/cart.html"):
 
 
 def confirm_order(request):
+    user = request.user
     domain_url = ''.join(['http://', get_current_site(request).domain])
     cart_items = cart.get_cart_items(request)
     page_title = u'Подтверждение'
@@ -58,13 +60,22 @@ def confirm_order(request):
                               'domain_url': domain_url}
             context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
             mail_theme = u'Тест - ЗАКАЗ'
-            push_mail(context_dict, mail_theme, recipients, mail_template)
+            push_mail(context_dict, mail_theme, recipients, mail_template, False)
             # Clear Cart
             order = cart.create_order(request)
-            # cart_items.delete()
-            page_title = u'Спасибо за заказ!'
-            user = request.user
-            return render_to_response("cart/thanks.html", {'request': request, 'page_title': page_title, 'user': user})
+            if order.payment == u'Банковский перевод':
+                schet = cart.create_schet(order)
+                if order.email:
+                    recipients = [order.email, ]
+                    mail_template = 'cart/schet.html'
+                    context_dict = {'schet': schet}
+                    mail_theme = u'Тест - Счет для оплаты от магазина Феникс'
+                    push_mail(context_dict, mail_theme, recipients, mail_template, True)
+                return render_to_response("cart/schet.html",
+                                          {'request': request, 'user': user, 'schet': schet})
+            else:
+                return render_to_response("cart/thanks.html",
+                                          {'request': request, 'user': user})
     else:
         if request.user.is_authenticated():
             user = request.user
@@ -84,15 +95,15 @@ def confirm_order(request):
     return render_to_response("cart/confirm.html", locals(), context_instance=RequestContext(request))
 
 
-def push_mail(context_dict, mail_theme, recipients, mail_template):
-    d = Context(context_dict)
+def push_mail(context_dict, mail_theme, recipients, mail_template, f_silent):
+    # d = Context(context_dict)
     subject, from_email, to = mail_theme, EMAIL_HOST_USER, recipients
     htmly = get_template(mail_template)
-    html_content = htmly.render(d)
+    html_content = htmly.render(context_dict)
     text_content = render_to_string(mail_template, context_dict)
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    msg.send(fail_silently=f_silent)
 
 
 ################################# Checkout Views ########################################

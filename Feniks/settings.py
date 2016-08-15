@@ -34,17 +34,18 @@ SESSION_AGE_DAYS = 7
 SESSION_COOKIE_AGE = 60 * 60 * 24 * SESSION_AGE_DAYS
 
 # # EMAIL
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = email_host_user
+# EMAIL_HOST_PASSWORD = email_host_password
+# EMAIL_PORT = 587
+
+EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_HOST_USER = email_host_user
 EMAIL_HOST_PASSWORD = email_host_password
 EMAIL_PORT = 587
-
-# EMAIL_HOST = 'smtp.yandex.ru'
-# EMAIL_HOST_USER = email_host_user
-# EMAIL_HOST_PASSWORD = email_host_password
-# EMAIL_PORT = 465
-# EMAIL_USE_TLS = True
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = email_host_user
 
 # Application definition
 

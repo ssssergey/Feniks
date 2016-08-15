@@ -43,9 +43,9 @@ class CartItem(models.Model):
 
 
 class Delivery(models.Model):
-    name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
-    terminal = models.CharField(u'Терминал отправления', max_length=50, blank=True)
-    site = models.CharField(u'Сайт', max_length=50, blank=True)
+    name = models.CharField(u'Название', max_length=250, blank=True, unique=True)
+    terminal = models.CharField(u'Терминал отправления', max_length=250, blank=True)
+    site = models.CharField(u'Сайт', max_length=250, blank=True)
     number = models.IntegerField(u'Порядковый номер', default=0)
 
     class Meta:
@@ -62,29 +62,31 @@ class Order(models.Model):
     CANCELLED = 0
     PROCESSED = 1
     SUBMITTED = 2
-    SHIPPED = 3
-    COMPLETED = 4
+    PAYED = 3
+    SHIPPED = 4
+    COMPLETED = 5
     # set of possible order statuses
-    ORDER_STATUSES = ((PROCESSED, u'В обработке'), (SUBMITTED, u'Принят'), (SHIPPED, u'Отправлен'), (CANCELLED, u'Отменен'),
-                      (COMPLETED, u'Завершен'))
+    ORDER_STATUSES = (
+    (PROCESSED, u'В обработке'), (SUBMITTED, u'Принят'), (PAYED, u'Оплачен'), (SHIPPED, u'Отправлен'), (CANCELLED, u'Отменен'),
+    (COMPLETED, u'Завершен'))
     # order info
-    last_name = models.CharField(u'Фамилия', max_length=50)
-    first_name = models.CharField(u'Имя', max_length=50)
-    patronymic = models.CharField(u'Отчество', max_length=50, blank=True, null=True)
+    last_name = models.CharField(u'Фамилия', max_length=250)
+    first_name = models.CharField(u'Имя', max_length=250)
+    patronymic = models.CharField(u'Отчество', max_length=250, blank=True, null=True)
     date = models.DateTimeField(u'Создан', auto_now_add=True)
     status = models.IntegerField(u'Статус', choices=ORDER_STATUSES, default=PROCESSED)
     ip_address = models.GenericIPAddressField()
     last_updated = models.DateTimeField(u'Изменен', auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=u'Покупатель', null=True)
     # transaction_id = models.CharField(max_length=20)
-    email = models.EmailField(u'Адрес электронной почты', max_length=50)
+    email = models.EmailField(u'Адрес электронной почты', max_length=250)
     telephone_1 = models.CharField(u'Номер телефона', max_length=20)
-    country = models.CharField(u'Страна', max_length=50, default=u'Российская Федерация', null=True)
-    region = models.CharField(u'Край, область, республика', max_length=50, blank=True, null=True)
-    city = models.CharField(u'Населенный пункт', max_length=50, null=True, help_text=u'Например: г. Прохладный или с. Московское')
-    adress = models.CharField(u'Улица, дом', max_length=100, null=True, help_text=u'Например: ул. Ленина 10 или пер. Красный 5')
-    index = models.CharField(u'Почтовый индекс', max_length=10, null=True)
-    skype = models.CharField(u'Скайп', max_length=50, blank=True, null=True)
+    country = models.CharField(u'Страна', max_length=250, default=u'Российская Федерация', null=True)
+    region = models.CharField(u'Край, область, республика', max_length=250, blank=True, null=True)
+    city = models.CharField(u'Населенный пункт', max_length=250, null=True, help_text=u'Например: г. Прохладный или с. Московское')
+    adress = models.CharField(u'Улица, дом', max_length=250, null=True, help_text=u'Например: ул. Ленина 10 или пер. Красный 5')
+    index = models.CharField(u'Почтовый индекс', max_length=250, null=True)
+    skype = models.CharField(u'Скайп', max_length=250, blank=True, null=True)
     delivery = models.ForeignKey(Delivery, verbose_name=u'Способ доставки')
     # DELIVERY = (
     #     (u'Самовывоз', u'Самовывоз'),
@@ -160,3 +162,24 @@ class OrderItem(models.Model):
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
+
+
+class Schet(models.Model):
+    platelshik = models.TextField(u'Плательшик', blank=True, null=True)
+    gruzopoluchatel = models.TextField(u'Грузополучатель', blank=True, null=True)
+    order = models.ForeignKey(Order, null=True)
+    sum_price_words = models.TextField(u'Сумма словами', blank=True, null=True)
+    date = models.DateTimeField(u'Создан', auto_now_add=True)
+
+    class Meta:
+        verbose_name = u'Счет'
+        verbose_name_plural = u'Счета'
+
+    @property
+    def nds(self):
+        float_total = self.order.total * 0.18
+        return "{0:.2f}".format(round(float_total, 2))
+
+    def __unicode__(self):
+        return u'Счет №: {}'.format(self.id)
+

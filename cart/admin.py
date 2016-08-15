@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from .models import Order, OrderItem, Delivery
+from .models import Order, OrderItem, Delivery, Schet
 
 
 class OrderItemInline(admin.StackedInline):
@@ -28,3 +28,8 @@ class DeliveryAdmin(admin.ModelAdmin):
     list_display = ('name', 'terminal', 'site', 'number', )
 
 admin.site.register(Delivery, DeliveryAdmin)
+
+class SchetAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'order', 'date', 'platelshik', )
+
+admin.site.register(Schet, SchetAdmin)

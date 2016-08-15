@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, AbstractUser
 
 from django.db import models
 from django_thumbs.db.models import ImageWithThumbsField
+from django.utils import timezone
 
 from Feniks import settings
 
@@ -47,6 +48,16 @@ class Architecture(models.Model):
     def __unicode__(self):
         return self.name
 
+from django.utils.text import slugify
+from unidecode import unidecode
+
+def image_upload_to(instance, filename):
+    title = instance.name
+    title_slug = slugify(unidecode(title))
+    filename_list = filename.split(".")
+    filename_slug = slugify(unidecode(filename_list[0]))
+    new_filename = "%s.%s" % (title_slug+'-'+filename_slug, filename_list[1])
+    return "images/products/%s" % (new_filename)
 
 class Product(models.Model):
     sku = models.CharField(u'Код', max_length=50, blank=True, null=True)
@@ -91,7 +102,7 @@ class Product(models.Model):
     doors = models.IntegerField(u'Количество дверей (шкаф)', blank=True, choices=DOORS, null=True)
 
     LENGTH_BED = ((0, 0), (80, 80), (90, 90), (120, 120), (140, 140), (160, 160), (180, 180),)
-    length = models.IntegerField(u'Длина кровати', blank=True, choices=LENGTH_BED, null=True)
+    length = models.IntegerField(u'Ширина кровати', blank=True, choices=LENGTH_BED, null=True)
 
     SOFT_KOMPLEKT = ((u'Диван + 2 кресла-кровати', u'Диван + 2 кресла-кровати'),
                      (u'Диван + 2 кресла + кресло-кровать', u'Диван + 2 кресла + кресло-кровать'),
@@ -153,11 +164,11 @@ class Product(models.Model):
     name = models.CharField(u'Название товара', max_length=255)
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
-    image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to='images/products/main', blank=True,
+    image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to=image_upload_to, blank=True,
                                  sizes=((125, 125), (200, 200)))
-    image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to='images/products/main', blank=True,
+    image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to=image_upload_to, blank=True,
                                   sizes=((125, 125), (200, 200)))
-    image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to='images/products/main', blank=True,
+    image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to=image_upload_to, blank=True,
                                   sizes=((125, 125), (200, 200)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
@@ -193,6 +204,13 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('catalog_product', args=(self.slug,))
+
+    def new(self):
+        delta = timezone.now() - self.created_at
+        if delta.days < 10:
+            return True
+        else:
+            return False
 
     def admin_image(self):
         if self.image:
