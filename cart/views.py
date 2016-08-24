@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext, Context
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, BadHeaderError, EmailMultiAlternatives
@@ -28,6 +28,7 @@ def show_cart(request, template_name="cart/cart.html"):
             cart.update_cart(request)
             message = u'Изменения приняты.'
             messages.success(request, message)
+        return redirect('show_cart')
     cart_items = cart.get_cart_items(request)
     page_title = u'Корзина'
     cart_total = cart.cart_total(request)

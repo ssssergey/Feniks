@@ -8,7 +8,8 @@ from django_thumbs.db.models import ImageWithThumbsField
 from django.utils import timezone
 
 from Feniks import settings
-
+from django.utils.text import slugify
+from unidecode import unidecode
 
 class ActiveCategoryManager(models.Manager):
     def get_query_set(self):
@@ -37,9 +38,27 @@ class Material(models.Model):
         return self.name
 
 
+def image_upload_to(instance, filename):
+    title = instance.name
+    title_slug = slugify(unidecode(title))
+    filename_list = filename.split(".")
+    filename_slug = slugify(unidecode(filename_list[0]))
+    new_filename = "%s.%s" % (title_slug + '-' + filename_slug, filename_list[1])
+    return "images/products/%s" % (new_filename)
+
+def image_architecture_upload_to(instance, filename):
+    title = instance.name
+    title_slug = slugify(unidecode(title))
+    filename_list = filename.split(".")
+    filename_slug = slugify(unidecode(filename_list[0]))
+    new_filename = "%s.%s" % (title_slug + '-' + filename_slug, filename_list[1])
+    return "images/architecture/%s" % (new_filename)
+
+
 class Architecture(models.Model):
     name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
-
+    description = models.TextField(u'Описание', blank=True, null=True)
+    image = models.ImageField(verbose_name=u'Анимация', upload_to=image_architecture_upload_to, blank=True, null=True )
     class Meta:
         ordering = ['name']
         verbose_name = u'Конструкция'
@@ -48,16 +67,6 @@ class Architecture(models.Model):
     def __unicode__(self):
         return self.name
 
-from django.utils.text import slugify
-from unidecode import unidecode
-
-def image_upload_to(instance, filename):
-    title = instance.name
-    title_slug = slugify(unidecode(title))
-    filename_list = filename.split(".")
-    filename_slug = slugify(unidecode(filename_list[0]))
-    new_filename = "%s.%s" % (title_slug+'-'+filename_slug, filename_list[1])
-    return "images/products/%s" % (new_filename)
 
 class Product(models.Model):
     sku = models.CharField(u'Код', max_length=50, blank=True, null=True)
@@ -72,7 +81,7 @@ class Product(models.Model):
         (u'Кухонный уголок', u'Кухонный уголок'),
         (u'Каминный комплект', u'Каминный комплект'),
     )
-    komplekt_mebel = models.CharField(u'Тип комплекта', max_length=100, blank=True, choices=KOMPLEKT_MEBEL)
+    komplekt_mebel = models.CharField(u'Тип мебели', max_length=100, blank=True, choices=KOMPLEKT_MEBEL)
 
     ROOM = (
         (u'Кухня', u'Кухня'), (u'Гостиная(горки, стенки)', u'Гостиная(горки, стенки)'), (u'Прихожие', u'Прихожие'),
@@ -146,7 +155,7 @@ class Product(models.Model):
     material = models.ManyToManyField(Material, verbose_name=u'Материал', blank=True)
 
     SHAPE = ((u'Круглые', u'Круглые'), (u'Овальные', u'Овальные'), (u'Прямоугольные', u'Прямоугольные'),
-             (u'Угловые', u'Угловые'), (u'Прямые', u'Прямые'),)
+             (u'Угловые', u'Угловые'), (u'Прямые', u'Прямые'),(u'П-образные', u'П-образные'),)
     shape = models.CharField(u'Форма', max_length=100, blank=True, choices=SHAPE)
 
     BRAND = (
@@ -165,11 +174,15 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
     image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to=image_upload_to, blank=True,
-                                 sizes=((125, 125), (200, 200)))
+                                 sizes=((180, 120), (200, 120), (300, 200), (400, 200), (180, 200)))
     image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to=image_upload_to, blank=True,
-                                  sizes=((125, 125), (200, 200)))
+                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
     image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to=image_upload_to, blank=True,
-                                  sizes=((125, 125), (200, 200)))
+                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+    image4 = ImageWithThumbsField(verbose_name=u'Фото_4', upload_to=image_upload_to, blank=True,
+                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+    image5 = ImageWithThumbsField(verbose_name=u'Фото_5', upload_to=image_upload_to, blank=True,
+                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
@@ -214,7 +227,7 @@ class Product(models.Model):
 
     def admin_image(self):
         if self.image:
-            return u'<img src="%s" width="100"/>' % self.image.url_125x125
+            return u'<img src="%s" width="100"/>' % self.image.url_180x120
         else:
             return u'(Нет)'
 

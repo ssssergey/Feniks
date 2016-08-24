@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': SITEMAPS}),
+    url(r'^', include('marketing.urls')),
     url(r'^', include('catalog.urls')),
 ]
 

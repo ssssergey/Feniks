@@ -4,6 +4,8 @@ from secret import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# CURRENT_PATH = os.path.abspath(os.path.dirname(__file__).decode('utf-8')).replace('\\', '/')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 SECRET_KEY = secret_key
 
@@ -166,7 +168,7 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 SITE_NAME = u'Феникс'
-META_KEYWORDS = u'мебель, мягкая мебель, офисная мебель, купить мебель, диваны, кресла, кухня'
+META_KEYWORDS = u'мебель, мягкая мебель, офисная мебель, купить мебель, диваны, кресла, прохладный, кабардино-балкария'
 META_DESCRIPTION = u'Мебельный Салон Феникс'
 
-ADMINS = [('feniks', 'feniks-kbr@yandex.ru')]
+ADMINS = [('feniks', 'feniks-kbr@yandex.ru'),('lse', 'lse1983@mail.ru')]

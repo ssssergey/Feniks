@@ -135,7 +135,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, verbose_name=u'Товар')
     quantity = models.IntegerField(u'Количество', default=1)
     price = models.IntegerField(u'Цена')
-    order = models.ForeignKey(Order)
+    order = models.ForeignKey(Order, verbose_name=u'Заказ')
 
     class Meta:
         verbose_name = u'Позиция заказа'
@@ -167,7 +167,7 @@ class OrderItem(models.Model):
 class Schet(models.Model):
     platelshik = models.TextField(u'Плательшик', blank=True, null=True)
     gruzopoluchatel = models.TextField(u'Грузополучатель', blank=True, null=True)
-    order = models.ForeignKey(Order, null=True)
+    order = models.ForeignKey(Order, verbose_name=u'Заказ', null=True)
     sum_price_words = models.TextField(u'Сумма словами', blank=True, null=True)
     date = models.DateTimeField(u'Создан', auto_now_add=True)
 

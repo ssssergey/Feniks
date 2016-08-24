@@ -30,7 +30,7 @@
             {% endif %}
             {% if p.image2 %}
                 <a href="#" data-toggle="modal" data-target=".pop-up-2" class="thumbnail" style="float: left;">
-                    <img src="{{ p.image2.url_125x125 }}" alt="{{ p.name }}"/>
+                    <img src="{{ p.image2.url_180x120 }}" alt="{{ p.name }}"/>
                 </a>
                 <!--  Modal content for the mixer image example -->
                 <div class="modal fade pop-up-2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
@@ -53,7 +53,7 @@
             {% endif %}
             {% if p.image3 %}
                 <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
-                    <img src="{{ p.image3.url_125x125 }}" alt="{{ p.name }}"/>
+                    <img src="{{ p.image3.url_180x120 }}" alt="{{ p.name }}"/>
                 </a>
                 <!--  Modal content for the mixer image example -->
                 <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
@@ -74,19 +74,65 @@
                 </div>
                 <!-- /.modal mixer image -->
             {% endif %}
+            {% if p.image4 %}
+                <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
+                    <img src="{{ p.image4.url_180x120 }}" alt="{{ p.name }}"/>
+                </a>
+                <!--  Modal content for the mixer image example -->
+                <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="myLargeModalLabel-1">{{ p.name }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ p.image4.url }}" class="img-responsive img-rounded center-block" alt="">
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal mixer image -->
+            {% endif %}
+            {% if p.image5 %}
+                <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
+                    <img src="{{ p.image5.url_180x120 }}" alt="{{ p.name }}"/>
+                </a>
+                <!--  Modal content for the mixer image example -->
+                <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="myLargeModalLabel-1">{{ p.name }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ p.image5.url }}" class="img-responsive img-rounded center-block" alt="">
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal mixer image -->
+            {% endif %}
             <hr style="clear:both;">
             {% if p.get_related_modules %}
                 <h4>С данным комплектом сочетаются следующие модули:</h4>
                 {% for module in p.get_related_modules %}
                     <a href="{{ module.get_absolute_url }}" class="thumbnail" style="float: left;"><img
-                            src="{{ module.image.url_125x125 }}" alt="{{ module.name }}"
+                            src="{{ module.image.url_180x120 }}" alt="{{ module.name }}"
                             /></a>
                 {% endfor %}
             {% endif %}
             {% if p.peace_of %}
                 <h4>Входит в состав комплекта: </h4>
                 <a href="{{ p.peace_of.get_absolute_url }}" class="thumbnail" style="float: left;"><img
-                        src="{{ p.peace_of.image.url_125x125 }}" alt="{{ p.peace_of.name }}"
+                        src="{{ p.peace_of.image.url_180x120 }}" alt="{{ p.peace_of.name }}"
                         /></a>
             {% endif %}
             <hr style="clear:both;">
@@ -128,9 +174,31 @@
                 <p>Цвет: {{ p.color }}</p>
                 <br/>
             {% endif %}
-            <h3>Описание</h3>
-            {{ p.description }}
-            <hr>
+            {% if p.description %}
+                <h3>Описание</h3>
+                {{ p.description }}
+                <hr>
+            {% endif %}
+            {% if p.architecture_type.all|length > 0 %}
+                <h3>Конструкция(механизм):</h3>
+                {% for arc in p.architecture_type.all %}
+                    <h4>{{ arc.name }}</h4>
+                    {#                    {% if arc.image %}#}
+                    {#                        <img src="{{ arc.image.url }}" width="250"/>#}
+                    {#                    {% endif %}#}
+                    {% if arc.description %}
+                        <p>{{ arc.description }}</p>
+                    {% endif %}
+                    <hr>
+                {% endfor %}
+            {% endif %}
+            {#            {% if p.material %}#}
+            {#                <h3>Материалы:</h3>#}
+            {#                {% for mater in p.material.all %}#}
+            {#                    <p>{{ mater.name }}</p>#}
+            {#                    <hr>#}
+            {#                {% endfor %}#}
+            {#            {% endif %}#}
             <div>
                 <form method="post" action="." class="cart form-inline">
                     {% csrf_token %}
@@ -141,13 +209,20 @@
             </div>
         </div>
 
-
     </div>
-
 
     <div class="row cb"><br/><br/></div>
 
     <div class="col-md-12">
+        <div class="social-share">
+            <a class="btn btn-default"
+               href="http://vkontakte.ru/share.php?url={{ request.build_absolute_uri }}{{ request.get_full_path }}" rel="nofollow"
+               target="_blank">Поделиться <i class="fa fa-vk fa-lg"></i></a>
+            <a class="btn btn-default"
+               href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl={{ request.build_absolute_uri }}"
+               rel="nofollow"
+               target="_blank">Поделиться <i class="fa fa-odnoklassniki fa-lg"></i></a>
+        </div>
         <h3>Отзывы на данный товар</h3>
         {% if request.user.is_authenticated %}
             <a id="add_review">Написать отзыв</a>

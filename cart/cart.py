@@ -208,7 +208,7 @@ def create_schet(order):
     schet = Schet()
     schet.order = order
     schet.platelshik = u'{} {}'.format(order.last_name, order.first_name)
-    schet.poluchatel = u'{} {}'.format(order.last_name, order.first_name)
+    schet.gruzopoluchatel = u'{} {}'.format(order.last_name, order.first_name)
     schet.sum_price_words = num2text(order.total)
     schet.save()
     return schet

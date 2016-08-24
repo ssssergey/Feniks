@@ -35,15 +35,15 @@ class ProductAdmin(admin.ModelAdmin):
     # sets up slug to be generated from product name
     prepopulated_fields = {'slug': ('name',)}
     fieldsets = (
-        (None, {'fields': ('sku', 'module_komplekt', 'room', 'style', 'material',)}),
-        (u'Если это КОМПЛЕКТ', {'fields': ('komplekt_mebel', 'soft_komplekt',)}),
+        (None, {'fields': ('sku', 'module_komplekt','komplekt_mebel', 'room', 'style', 'material',)}),
+        (u'Если это КОМПЛЕКТ', {'fields': ('soft_komplekt',)}),
         (u'Если это МОДУЛЬ', {
             'fields': (
                 'peace_of', 'module_mebel', 'module_other', 'doors', 'length', 'architecture_type', 'armchaire_role', 'shape',
                 'ochag')
         }),
         (u'Общие', {'fields': (
-            'name', 'slug', 'brand', 'country', 'description', 'image', 'image2', 'image3', 'price', 'price_bulk1',
+            'name', 'slug', 'brand', 'country', 'description', 'image', 'image2', 'image3', 'image4', 'image5', 'price', 'price_bulk1',
             'garantee', 'on_order', 'is_active', 'is_bestseller', 'is_featured'
         )}),
         (u'Служебные', {

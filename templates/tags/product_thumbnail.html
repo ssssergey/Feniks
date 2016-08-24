@@ -2,9 +2,13 @@
     <div class="thumbnail">
         <a href="{{ p.get_absolute_url }}">
             {% if p.image %}
-                <img src="{{ p.image.url_200x200 }}" alt="{{ p.name }}" class="bn"/>
+                {% if p.module_mebel == 'Шкаф' or p.module_mebel == 'Стул' %}
+                    <img src="{{ p.image.url_180x200 }}" alt="{{ p.name }}" class="bn"/>
+                {% else %}
+                    <img src="{{ p.image.url_400x200 }}" alt="{{ p.name }}" class="bn"/>
+                {% endif %}
             {% else %}
-                <img src="http://placehold.it/200x200" alt="{{ p.name }}" class="bn"/>
+                <img src="http://placehold.it/300x200" alt="{{ p.name }}" class="bn"/>
             {% endif %}
             <div class="caption">
                 <br/>
