@@ -2,7 +2,7 @@
     <div class="thumbnail">
         <a href="{{ p.get_absolute_url }}">
             {% if p.image %}
-                {% if p.module_mebel == 'Шкаф' or p.module_mebel == 'Стул' %}
+                {% if p.module_mebel == 'Шкаф' or p.module_mebel == 'Стул' or p.module_mebel == 'Кресло' %}
                     <img src="{{ p.image.url_180x200 }}" alt="{{ p.name }}" class="bn"/>
                 {% else %}
                     <img src="{{ p.image.url_400x200 }}" alt="{{ p.name }}" class="bn"/>

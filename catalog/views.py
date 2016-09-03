@@ -352,6 +352,10 @@ def cushioned_furniture_komplekts_base(request, template_name="catalog/category.
         (u'Глухой диван + 2 глухих кресла', reverse('cushioned_furniture_komplekts', args=('glkr_2glkr',))),
         (u'Угловой диван + глухое кресло', reverse('cushioned_furniture_komplekts', args=('ugd_glkr',))),
         (u'Угловой диван + кресло-кровать', reverse('cushioned_furniture_komplekts', args=('ugd_krkr',))),
+
+        (u'Диван + 2 кресла глухих', reverse('cushioned_furniture_komplekts', args=('d_2glkr',))),
+        (u'Диван + 2 кресла с ящиками', reverse('cushioned_furniture_komplekts', args=('d_2kryash',))),
+        (u'Угловой диван + 1 кресло с ящиками', reverse('cushioned_furniture_komplekts', args=('ugd_kryash',))),
     )
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -376,6 +380,15 @@ def cushioned_furniture_komplekts(request, type, template_name="catalog/category
     elif type == 'ugd_krkr':
         products = products.filter(Q(soft_komplekt=u'Угловой диван + кресло-кровать'))
         category_name = u'Мягкая мебель - Комплекты - Угловой диван + кресло-кровать'
+    elif type == 'd_2glkr':
+        products = products.filter(Q(soft_komplekt=u'Диван + 2 кресла глухих'))
+        category_name = u'Мягкая мебель - Комплекты - Диван + 2 кресла глухих'
+    elif type == 'd_2kryash':
+        products = products.filter(Q(soft_komplekt=u'Диван + 2 кресла с ящиками'))
+        category_name = u'Мягкая мебель - Комплекты - Диван + 2 кресла с ящиками'
+    elif type == 'ugd_kryash':
+        products = products.filter(Q(soft_komplekt=u'Угловой диван + 1 кресло с ящиками'))
+        category_name = u'Мягкая мебель - Комплекты - Угловой диван + 1 кресло с ящиками'
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

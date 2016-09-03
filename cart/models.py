@@ -104,7 +104,7 @@ class Order(models.Model):
         (u'Банковская карта', u'Банковская карта'),
         (u'Другой', u'Другой'),
     )
-    payment = models.CharField(u'Способ оплаты', max_length=50, null=True, choices=PAYMENT, default=u'Наличные')
+    payment = models.CharField(u'Способ оплаты', max_length=50, null=True, choices=PAYMENT)
 
     class Meta:
         verbose_name = u'Заказ'
