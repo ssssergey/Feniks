@@ -1,4 +1,5 @@
 {% extends "catalog.html" %}
+{% load search_tags %}
 {% block content %}
     <h1 style="color: gray">{{ category_name }}</h1>
     {% if subcategories %}
@@ -19,4 +20,8 @@
     {% for p in products %}
         {% include 'tags/product_thumbnail.html' %}
     {% endfor %}
+    <div class="cb">&nbsp;</div>
+    {% if page %}
+        {% pagination_links request paginator %}
+    {% endif %}
 {% endblock %}

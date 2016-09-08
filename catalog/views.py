@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import get_object_or_404, render_to_response, render
-from catalog.models import Product
-from search.models import ProductReview
 from django.template import RequestContext
 from django.db.models import Q
 from django.core import urlresolvers
-from cart import cart
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+
+from cart import cart
 from forms import ProductAddToCartForm
 from search.forms import ProductReviewForm
-
 from stats import stats
-from Feniks.settings import PRODUCTS_PER_ROW
+from Feniks.settings import PRODUCTS_PER_ROW, PRODUCTS_PER_PAGE
 from django.core.urlresolvers import reverse
-
+from catalog.models import Product
+from search.models import ProductReview
 
 def index(request, template_name="catalog/index.html"):
     page_title = u'Феникс'
@@ -69,6 +69,15 @@ def carcass_furniture_base(request, template_name="catalog/category.html"):
         (u'ТВ-тумбы', reverse('carcass_furniture_tv_tumbs_base')),
         (u'Другая мебель', reverse('carcass_furniture_other_furniture')),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -80,6 +89,15 @@ def carcass_furniture_kitchens_base(request, template_name="catalog/category.htm
         (u'Модульно', reverse('carcass_furniture_kitchens', args=('modules',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -94,6 +112,15 @@ def carcass_furniture_kitchens(request, type, template_name="catalog/category.ht
     # elif type == 'others':
     #     products = products.filter(Q(module_komplekt__isnull=True))
     #     category_name = u'Корпусная мебель - Кухни - Другое'
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -339,6 +366,15 @@ def cushioned_furniture_base(request, template_name="catalog/category.html"):
         (u'Кресла', reverse('cushioned_furniture_armchairs_base')),
         (u'Под заказ', reverse('cushioned_furniture_on_orders')),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -357,6 +393,15 @@ def cushioned_furniture_komplekts_base(request, template_name="catalog/category.
         (u'Диван + 2 кресла с ящиками', reverse('cushioned_furniture_komplekts', args=('d_2kryash',))),
         (u'Угловой диван + 1 кресло с ящиками', reverse('cushioned_furniture_komplekts', args=('ugd_kryash',))),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -389,6 +434,15 @@ def cushioned_furniture_komplekts(request, type, template_name="catalog/category
     elif type == 'ugd_kryash':
         products = products.filter(Q(soft_komplekt=u'Угловой диван + 1 кресло с ящиками'))
         category_name = u'Мягкая мебель - Комплекты - Угловой диван + 1 кресло с ящиками'
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -401,6 +455,15 @@ def cushioned_furniture_corners_base(request, template_name="catalog/category.ht
         (u'Металлокаркас', reverse('cushioned_furniture_corners', args=('metalkarkas',))),
         (u'Евро', reverse('cushioned_furniture_corners', args=('euro',))),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -434,6 +497,15 @@ def cushioned_furniture_sofas_base(request, template_name="catalog/category.html
         (u'Офисные', reverse('cushioned_furniture_sofas', args=('office',))),
         (u'Ротанг', reverse('cushioned_furniture_sofas', args=('rotang',))),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -476,6 +548,15 @@ def cushioned_furniture_armchairs_base(request, template_name="catalog/category.
         (u'Офисные', reverse('cushioned_furniture_armchairs', args=('office_chair',))),
         (u'Банкетка', reverse('cushioned_furniture_armchairs', args=('banketka',))),
     )
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -496,6 +577,15 @@ def cushioned_furniture_armchairs(request, type, template_name="catalog/category
     elif type == 'banketka':
         products = products.filter(Q(architecture_type__name=u'Банкетка'))
         category_name = u'Мягкая мебель - Кресла - Банкетка'
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -519,6 +609,15 @@ def office_furniture_base(request, template_name="catalog/category.html"):
         (u'Перегородки', reverse('office_furniture_divider_base')),
     )
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -620,6 +719,15 @@ def fireplace_base(request, template_name="catalog/category.html"):
         (u'Аксессуары', reverse('fireplace_accesories')),
     )
     products = Product.active.filter(Q(module_komplekt=u'Камин'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -759,6 +867,15 @@ def tables_base(request, template_name="catalog/category.html"):
         (u'Не раскладные', reverse('tables_unfoldable_base')),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -987,6 +1104,15 @@ def chairs_base(request, template_name="catalog/category.html"):
         (u'Складные', reverse('chairs_foldable')),
     )
     products = Product.active.filter(Q(module_mebel=u'Стул'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1065,6 +1191,15 @@ def kitchen_corners_base(request, template_name="catalog/category.html"):
         (u'Уголки от', reverse('kitchen_corner_from')),
     )
     products = Product.active.filter(Q(komplekt_mebel=u'Кухонный уголок') | Q(module_mebel=u'Кухонный уголок'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1213,6 +1348,15 @@ def matrasses_base(request, template_name="catalog/category.html"):
         (u'Анатомические', reverse('matrasses', args=('anatom',))),
     )
     products = Product.active.filter(Q(module_mebel=u'Матрас'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1244,6 +1388,15 @@ def garden_furniture_base(request, template_name="catalog/category.html"):
         (u'Другое', reverse('garden_furniture_others')),
     )
     products = Product.active.filter(Q(style=u'Садовые'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1401,6 +1554,15 @@ def bars_restaurants_base(request, template_name="catalog/category.html"):
         (u'Стойки', reverse('bars_restaurants', args=('stoyki',))),
     )
     products = Product.active.filter(Q(style=u'Для баров и ресторанов'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1439,6 +1601,15 @@ def bars_restaurants_prilavki(request, template_name="catalog/category.html"):
 def case_kupe(request, template_name="catalog/category.html"):
     category_name = u'Шкафы-купе'
     products = Product.active.filter(Q(architecture_type__name=u'Шкаф-купе'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1447,6 +1618,15 @@ def case_kupe(request, template_name="catalog/category.html"):
 def hotels(request, template_name="catalog/category.html"):
     category_name = u'Гостиничные номера'
     products = Product.active.filter(Q(style=u'Гостиничные номера'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1462,6 +1642,15 @@ def interier_base(request, template_name="catalog/category.html"):
         (u'Корзины', reverse('interier', args=('buckets',))),
     )
     products = Product.active.filter(Q(module_komplekt=u'Интерьер'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1516,6 +1705,15 @@ def interier_buckets(request, template_name="catalog/category.html"):
 def others(request, template_name="catalog/category.html"):
     category_name = u'Разное'
     products = Product.active.filter(Q(module_other=u'Разное'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1532,6 +1730,15 @@ def associated_goods_base(request, template_name="catalog/category.html"):
         (u'Фартуки', reverse('associated_goods', args=('aprons',))),
     )
     products = Product.active.filter(Q(module_komplekt=u'Сопутствующие товары'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1549,6 +1756,15 @@ def associated_goods(request, type, template_name="catalog/category.html"):
         products = products.filter(Q(module_other=u'Мойка'))
     elif type == 'aprons':
         products = products.filter(Q(module_other=u'Фартук'))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1557,6 +1773,15 @@ def associated_goods(request, type, template_name="catalog/category.html"):
 def individual_orders(request, template_name="catalog/category.html"):
     category_name = u'Индивидуальные заказы'
     products = Product.active.filter(Q(on_order=True))
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

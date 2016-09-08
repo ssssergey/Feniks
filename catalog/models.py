@@ -177,15 +177,15 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
     image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to=image_upload_to, blank=True,
-                                 sizes=((180, 120), (200, 120), (300, 200), (400, 200), (180, 200)))
+                                 sizes=((300, 200), (400, 200), (180, 200)))
     image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200)))
     image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200)))
     image4 = ImageWithThumbsField(verbose_name=u'Фото_4', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200)))
     image5 = ImageWithThumbsField(verbose_name=u'Фото_5', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
