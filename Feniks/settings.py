@@ -22,13 +22,13 @@ AUTH_USER_MODEL = 'accounts.UserProfile'
 # else:
 #     DEBUG = True
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 SITE_ID = 1
 
-PRODUCTS_PER_PAGE = 12
+PRODUCTS_PER_PAGE = 40
 
 PRODUCTS_PER_ROW = 4
 
