@@ -177,15 +177,15 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
     image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to=image_upload_to, blank=True,
-                                 sizes=((300, 200), (400, 200), (180, 200)))
+                                 sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to=image_upload_to, blank=True,
-                                  sizes=((300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to=image_upload_to, blank=True,
-                                  sizes=((300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image4 = ImageWithThumbsField(verbose_name=u'Фото_4', upload_to=image_upload_to, blank=True,
-                                  sizes=((300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image5 = ImageWithThumbsField(verbose_name=u'Фото_5', upload_to=image_upload_to, blank=True,
-                                  sizes=((300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
@@ -230,7 +230,7 @@ class Product(models.Model):
 
     def admin_image(self):
         if self.image:
-            return u'<img src="%s" width="100"/>' % self.image.url_180x120
+            return u'<img src="%s" width="100"/>' % self.image.url_180x200
         else:
             return u'(Нет)'
 
