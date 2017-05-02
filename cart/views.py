@@ -60,7 +60,7 @@ def confirm_order(request):
             context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_total': cart_total,
                               'domain_url': domain_url}
             context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
-            mail_theme = u'Тест - ЗАКАЗ'
+            mail_theme = u'ЗАКАЗ'
             push_mail(context_dict, mail_theme, recipients, mail_template, False)
             # Clear Cart
             order = cart.create_order(request)

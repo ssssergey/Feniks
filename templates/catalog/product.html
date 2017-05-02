@@ -30,7 +30,7 @@
             {% endif %}
             {% if p.image2 %}
                 <a href="#" data-toggle="modal" data-target=".pop-up-2" class="thumbnail" style="float: left;">
-                    <img src="{{ p.image2.url_180x120 }}" alt="{{ p.name }}"/>
+                    <img src="{{ p.image2.url_180x150 }}" alt="{{ p.name }}"/>
                 </a>
                 <!--  Modal content for the mixer image example -->
                 <div class="modal fade pop-up-2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
@@ -53,7 +53,7 @@
             {% endif %}
             {% if p.image3 %}
                 <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
-                    <img src="{{ p.image3.url_180x120 }}" alt="{{ p.name }}"/>
+                    <img src="{{ p.image3.url_180x150 }}" alt="{{ p.name }}"/>
                 </a>
                 <!--  Modal content for the mixer image example -->
                 <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
@@ -75,11 +75,11 @@
                 <!-- /.modal mixer image -->
             {% endif %}
             {% if p.image4 %}
-                <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
-                    <img src="{{ p.image4.url_180x120 }}" alt="{{ p.name }}"/>
+                <a href="#" data-toggle="modal" data-target=".pop-up-4" class="thumbnail" style="float: left;">
+                    <img src="{{ p.image4.url_180x150 }}" alt="{{ p.name }}"/>
                 </a>
                 <!--  Modal content for the mixer image example -->
-                <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                <div class="modal fade pop-up-4" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
                      aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -98,11 +98,11 @@
                 <!-- /.modal mixer image -->
             {% endif %}
             {% if p.image5 %}
-                <a href="#" data-toggle="modal" data-target=".pop-up-3" class="thumbnail" style="float: left;">
-                    <img src="{{ p.image5.url_180x120 }}" alt="{{ p.name }}"/>
+                <a href="#" data-toggle="modal" data-target=".pop-up-5" class="thumbnail" style="float: left;">
+                    <img src="{{ p.image5.url_180x150 }}" alt="{{ p.name }}"/>
                 </a>
                 <!--  Modal content for the mixer image example -->
-                <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
+                <div class="modal fade pop-up-5" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1"
                      aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -122,19 +122,19 @@
             {% endif %}
             <hr style="clear:both;">
             {% if p.get_related_modules %}
-                <h4>С данным комплектом сочетаются следующие модули:</h4>
+                <h4>С этим товаром сочетается следующая мебель:</h4>
                 {% for module in p.get_related_modules %}
                     <a href="{{ module.get_absolute_url }}" class="thumbnail" style="float: left;"><img
-                            src="{{ module.image.url_180x120 }}" alt="{{ module.name }}"
+                            src="{{ module.image.url_180x150 }}" alt="{{ module.name }}"
                             /></a>
                 {% endfor %}
             {% endif %}
-            {% if p.peace_of %}
-                <h4>Входит в состав комплекта: </h4>
-                <a href="{{ p.peace_of.get_absolute_url }}" class="thumbnail" style="float: left;"><img
-                        src="{{ p.peace_of.image.url_180x120 }}" alt="{{ p.peace_of.name }}"
-                        /></a>
-            {% endif %}
+{#            {% if p.peace_of %}#}
+{#                <h4>Входит в состав комплекта: </h4>#}
+{#                <a href="{{ p.peace_of.get_absolute_url }}" class="thumbnail" style="float: left;"><img#}
+{#                        src="{{ p.peace_of.image.url_180x150 }}" alt="{{ p.peace_of.name }}"#}
+{#                        /></a>#}
+{#            {% endif %}#}
             <hr style="clear:both;">
         </div>
 
@@ -176,7 +176,7 @@
             {% endif %}
             {% if p.description %}
                 <h3>Описание</h3>
-                {{ p.description }}
+                {{ p.description|linebreaksbr }}
                 <hr>
             {% endif %}
             {% if p.architecture_type.all|length > 0 %}
@@ -187,7 +187,7 @@
                     {#                        <img src="{{ arc.image.url }}" width="250"/>#}
                     {#                    {% endif %}#}
                     {% if arc.description %}
-                        <p>{{ arc.description }}</p>
+                        <p>{{ arc.description|linebreaksbr }}</p>
                     {% endif %}
                     <hr>
                 {% endfor %}

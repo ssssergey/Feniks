@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
+
 # # REGISTER FORM
 # class RegisterForm(UserCreationForm):
 #     torg_pred = forms.BooleanField(label=u'Я хочу быть торговым представителем')
@@ -22,8 +23,8 @@ class UserRegisterForm(forms.ModelForm):
     username = forms.CharField(label=u'Логин', help_text=u'Используйте в этом поле английские буквы')
     email = forms.EmailField(required=True)
     # password = forms.CharField(widget=forms.PasswordInput)
-    last_name = forms.CharField(label=u'Фамилия', required = True)
-    first_name = forms.CharField(label=u'Имя', required = True)
+    last_name = forms.CharField(label=u'Фамилия', required=True)
+    first_name = forms.CharField(label=u'Имя', required=True)
     # city = forms.CharField(label=u'Город, село', required = True)
 
     telephone_1 = forms.RegexField(label=u'Телефон 1', regex=r'^\+?1?\d{9,15}$', help_text=u'Например: +79999999999',
@@ -66,18 +67,19 @@ class UserRegisterForm(forms.ModelForm):
         user.save()
         if torgpred_request:
             from cart.views import push_mail
-            push_mail(self.cleaned_data, u'Тест - Заявка на торгового представителя', ['lse1983@mail.ru', 'feniks-kbr@yandex.ru'], 'mail/mail_torgpred.html')
+            push_mail(self.cleaned_data, u'Заявка на торгового представителя', ['lse1983@mail.ru', 'feniks-kbr@yandex.ru'],
+                      'mail/mail_torgpred.html', False)
             # group, created = Group.objects.get_or_create(name=u'Торговые представители')
             # user.groups.add(group)
         return user
 
-    # group = Group.objects.get(name='groupname')
-    # user.groups.add(group)
+        # group = Group.objects.get(name='groupname')
+        # user.groups.add(group)
 
-    # def clean_torgpred(self):
-    #     torgpred = self.cleaned_data.get('torgpred')
-    #     if torgpred:
-    #         if
+        # def clean_torgpred(self):
+        #     torgpred = self.cleaned_data.get('torgpred')
+        #     if torgpred:
+        #         if
 
 
 # CUSTOM LOGIN FORM

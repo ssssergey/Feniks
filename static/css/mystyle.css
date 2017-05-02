@@ -99,18 +99,10 @@ li a.category:hover {
 }
 
 .title_2 {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    text-align: center;
-    top: 30%;
-    z-index: 100;
     font-family: 'sans-serif';
     color: red;
     font-weight: bold;
-    font-size: 4em;
+    font-size: 1.2em;
     white-space: nowrap
 }
 
@@ -400,7 +392,7 @@ i {
     position: relative;
 }
 
-.sale-ribbon {
+.ribbon {
     position: absolute;
     z-index: 10;
     top: 20px;
@@ -422,17 +414,34 @@ i {
     padding: 3px 5px;
 }
 
-.new-ribbon {
-    position: absolute;
-    z-index: 10;
-    top: 0px;
-    right: 0;
-    height: 22px;
-    width: auto;
-}
-
 .new {
     background: #63aceb;
+    border-radius: 0 4px 4px 0;
+    color: #fff;
+    display: inline-block;
+    float: left;
+    font-family: Oswald, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+    height: 100%;
+    padding: 3px 5px;
+}
+
+.bestseller {
+    background: #eb5548;
+    border-radius: 0 4px 4px 0;
+    color: #fff;
+    display: inline-block;
+    float: left;
+    font-family: Oswald, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+    height: 100%;
+    padding: 3px 5px;
+}
+
+.featured {
+    background: #73eb86;
     border-radius: 0 4px 4px 0;
     color: #fff;
     display: inline-block;
@@ -449,7 +458,13 @@ i {
 }
 
 /*change collapse on md*/
+@media (max-width: 768px) {
+    .title_1 {
+        top: 2%;
+        font-size: 1.5em;
+    }
 
+}
 
 @media (max-width: 991px) {
     .navbar-header {
@@ -498,42 +513,23 @@ i {
     }
 
     .title_1 {
-        top: 2%;
+        top: 1%;
         font-size: 1.5em;
     }
 
-    .title_2 {
-        top: 25%;
-        font-size: 2.5em;
-    }
 
 }
 
-@media (min-width: 991px) and (max-width: 1200px) {
+@media (min-width: 991px) {
     body {
         padding-top: 120px;
     }
 
     .title_1 {
-        top: 5%;
+        top: 1%;
         font-size: 2em;
     }
 
-    .title_2 {
-        top: 30%;
-        font-size: 3em;
-    }
 }
 
 
-@media (max-width: 768px) {
-    .title_1 {
-        top: 5%;
-        font-size: 1.5em;
-    }
-
-    .title_2 {
-        top: 30%;
-        font-size: 2.5em;
-    }
-}

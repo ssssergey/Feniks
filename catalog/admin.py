@@ -26,6 +26,7 @@ class ProductAdmin(admin.ModelAdmin):
     # form = ProductAdminForm
     # sets values for how the admin site lists your products
     list_display = ('admin_image', 'name', 'price', 'created_at', 'updated_at',)
+    list_filter = ('module_komplekt', 'komplekt_mebel', 'room', 'module_mebel', 'material')
     list_display_links = ('name',)
     list_per_page = 50
     ordering = ['-created_at']
@@ -50,8 +51,8 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('meta_keywords', 'meta_description',)
         }),
     )
+    change_list_template = 'admin_custom/change_list_custom.html'
 
-# registers your product model with the admin site
 admin.site.register(Product, ProductAdmin)
 
 # class CategoryAdmin(admin.ModelAdmin):

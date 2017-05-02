@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import socket
 from secret import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,18 +18,16 @@ LOGIN_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'accounts.UserProfile'
 
-# if os.name != 'nt':
-#     DEBUG = False
-# else:
-#     DEBUG = True
+if socket.gethostname() == 'asus-UX32LN':
+    DEBUG = True
+else:
+    DEBUG = False
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 SITE_ID = 1
 
-PRODUCTS_PER_PAGE = 12
+PRODUCTS_PER_PAGE = 40
 
 PRODUCTS_PER_ROW = 4
 
@@ -48,6 +47,7 @@ EMAIL_HOST_PASSWORD = email_host_password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = email_host_user
+SERVER_EMAIL = 'django@my-domain.com'
 
 # Application definition
 
@@ -155,7 +155,7 @@ USE_L10N = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-if os.name != 'nt':
+if socket.gethostname() != 'asus-UX32LN':
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
 else:
     STATICFILES_DIRS = [
