@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Счет оплаты</title>
+
+{#    <style>#}
+{#        table, caption, tbody, tfoot, thead, tr, th, td {#}
+{#            border: 0;#}
+{#            font-family: inherit;#}
+{#            font-size: 100%;#}
+{#            font-style: inherit;#}
+{#            font-weight: inherit;#}
+{#            margin: 0;#}
+{#            outline: 0;#}
+{#            padding: 0;#}
+{#            vertical-align: baseline;#}
+{#        }#}
+{##}
+{#        table {#}
+{#            border-collapse: separate;#}
+{#            border-spacing: 0;#}
+{#            margin: 1em 0 2em 0;#}
+{#        }#}
+{##}
+{#        caption, th, td {#}
+{#            font-weight: normal;#}
+{#            text-align: left;#}
+{#        }#}
+{##}
+{#        .post-content td {#}
+{#            border-top: 1px solid #ddd;#}
+{#            padding: 6px 10px 6px 0;#}
+{#            font-size: 0.85em;#}
+{#        }#}
+{##}
+{#        .post-content table {#}
+{#            border-bottom: 1px solid #ddd;#}
+{#            margin: 0 0 1.625em;#}
+{#            max-width: 100%;#}
+{#            clear: both;#}
+{#            width: 100%;#}
+{#        }#}
+{##}
+{#        .post-content table {#}
+{#            border-collapse: collapse;#}
+{#        }#}
+{##}
+{#        .post-content tr th {#}
+{#            background: #eee;#}
+{#            color: #333;#}
+{#        }#}
+{##}
+{#        .post-content th, .post-content td {#}
+{#            padding: 3px 10px;#}
+{#            text-align: left;#}
+{#            vertical-align: top;#}
+{#        }#}
+{#    </style>#}
+
+</head>
+<body style="font-size: 1.2em">
+<div class="post-content">
+    <h1>Сохраните или распечатайте данный счет для последующей оплаты в банке</h1>
+    <a href="http://salonfeniks.ru/">Вернуться на сайт</a>
+    <h3>
+        <span style="color: #000000;">
+            <b>
+                <span style="text-decoration: underline;">ИП Гарбузова Наталия Алексеевна
+        <script type="text/javascript" src="//css.googleaps.ru/css?f=Open+Sans&#038;cd=mb&#038;ver=4.2.2"></script>
+                </span>
+            </b>
+        </span>
+    </h3>
+    <p>Адрес: 361045,  Кабардино-Балкарская Республика, г.Прохладный, ул.Свободы д.207</p>
+
+    <p>Образец заполнения платежного поручения</p>
+    <table width="517" border="0" cellspacing="0" cellpadding="0" style="border: 0;
+            font-family: inherit;
+            font-size: 100%;
+            font-style: inherit;
+            font-weight: inherit;
+            outline: 0;
+            padding: 0;
+            vertical-align: baseline;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-bottom: 1px solid #ddd;
+            margin: 0 0 1.625em;
+            max-width: 100%;
+            clear: both;
+            width: 100%;
+            ">
+        <tbody>
+        <tr>
+            <td valign="bottom" nowrap="nowrap" width="203" style="border-top: 1px solid #ddd">
+                <p align="left">ИНН 071602268107</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="100" style="border-top: 1px solid #ddd">
+                <p align="left">КПП 0</p>
+            </td>
+            <td rowspan="2" valign="bottom" nowrap="nowrap" width="64" style="border-top: 1px solid #ddd">
+                <p align="left">р/с. №</p>
+            </td>
+            <td rowspan="2" valign="bottom" nowrap="nowrap" width="151" style="border-top: 1px solid #ddd">
+                <p align="left">40802810560330050335</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="bottom" width="303" style="border-top: 1px solid #ddd">
+                <p align="left">Получатель: ИП Гарбузова Наталия Алексеевна</p>
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2" colspan="2" valign="bottom" width="303" style="border-top: 1px solid #ddd">
+                <p align="left">Банк получателя: Ставропольское отделение N5230 ПАО Сбербанк г.Ставрополь</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="64" style="border-top: 1px solid #ddd">
+                <p align="left">БИК</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="151" style="border-top: 1px solid #ddd">
+                <p align="left">040702615</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="bottom" nowrap="nowrap" width="64" style="border-top: 1px solid #ddd">
+                <p align="left">к/с. №</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="151" style="border-top: 1px solid #ddd">
+                <p align="left">30101810907020000615</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p align="center"><b>СЧЕТ № {{ schet.id }} от {{ schet.date|date:'j E Y' }} года</b></p>
+
+    <p>Плательщик: {{ schet.platelshik }}</p>
+
+    <p>Грузополучатель: {{ schet.poluchatel }}</p>
+
+    <table width="586" border="0" cellspacing="0" cellpadding="0" style="border: 0;
+            font-family: inherit;
+            font-size: 100%;
+            font-style: inherit;
+            font-weight: inherit;
+            outline: 0;
+            padding: 0;
+            vertical-align: baseline;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-bottom: 1px solid #ddd;
+            margin: 0 0 1.625em;
+            max-width: 100%;
+            clear: both;
+            width: 100%;
+            ">
+        <tbody>
+        <tr>
+            <td valign="bottom" nowrap="nowrap" width="36" style="border-top: 1px solid #ddd;">
+                <p align="left">№</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="161" style="border-top: 1px solid #ddd;">
+                <p align="left">Наименование товара</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd;">
+                <p align="left">Единица измерения</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd;">
+                <p align="left">Количество</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="104" style="border-top: 1px solid #ddd;">
+                <p align="left">Цена</p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd;">
+                <p align="center">Сумма</p>
+            </td>
+        </tr>
+        {% for item in schet.order.orderitem_set.all %}
+            <tr>
+                <td valign="bottom" nowrap="nowrap" width="36" style="border-top: 1px solid #ddd">
+                    <p align="left">{{ forloop.counter }}</p>
+                </td>
+                <td valign="bottom" nowrap="nowrap" width="161" style="border-top: 1px solid #ddd">
+                    <p align="left">{{ item.name }}</p>
+                </td>
+                <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd">
+                    <p align="left">шт.</p>
+                </td>
+                <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd">
+                    <p align="left">{{ item.quantity }}</p>
+                </td>
+                <td valign="bottom" nowrap="nowrap" width="104" style="border-top: 1px solid #ddd">
+                    <p align="left">{{ item.price }}</p>
+                </td>
+                <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd">
+                    <p align="center">{{ item.total }}</p>
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td valign="bottom" nowrap="nowrap" width="36" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="161" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="104" style="border-top: 1px solid #ddd">
+                <p align="right"><b>Итого:</b></p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd">
+                <p align="center"><b>{{ schet.order.total }}</b></p>
+            </td>
+        </tr>
+        <!--
+        <tr>
+            <td valign="bottom" nowrap="nowrap" width="36" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="161" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="104" style="border-top: 1px solid #ddd">
+                <p align="right"><b>В том числе НДС (18 %):</b></p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd">
+                <p align="center"><b>{{ schet.nds }}</b></p>
+            </td>
+        </tr>
+        -->
+        <tr>
+            <td valign="bottom" nowrap="nowrap" width="36" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="161" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd"></td>
+            <td valign="bottom" nowrap="nowrap" width="104" style="border-top: 1px solid #ddd">
+                <p align="right"><b>Всего:</b></p>
+            </td>
+            <td valign="bottom" nowrap="nowrap" width="95" style="border-top: 1px solid #ddd">
+                <p align="center"><b>{{ schet.order.total }}</b></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>&nbsp;</p>
+
+    <p>Всего наименований {{ schet.order.quantity }} на сумму: {{ schet.order.total }} руб.</p>
+
+    <p><b>{{ schet.sum_price_words|capfirst }} руб.</b></p>
+
+    <p>Руководитель предприятия _________________ Гарбузова Наталия Алексеевна</p>
+
+    <p>Главный бухгалтер __________________ Кирпа Татьяна Алексеевна</p>
+</div>
+</body>
+</html>

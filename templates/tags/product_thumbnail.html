@@ -18,13 +18,23 @@
             </div>
         </a>
         {% if p.sale_price %}
-            <div class="sale-ribbon">
+            <div class="ribbon">
                 <span class="sale">СКИДКА</span>
             </div>
         {% endif %}
         {% if p.new %}
-            <div class="new-ribbon">
+            <div class="ribbon">
                 <span class="new">НОВИНКА</span>
+            </div>
+        {% endif %}
+        {% if p.is_bestseller %}
+            <div class="ribbon">
+                <span class="bestseller">ХИТ ПРОДАЖ</span>
+            </div>
+        {% endif %}
+        {% if p.is_featured %}
+            <div class="ribbon">
+                <span class="featured">ВЫГОДНО</span>
             </div>
         {% endif %}
     </div>

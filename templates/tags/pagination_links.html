@@ -1,17 +1,31 @@
 {% if p.has_other_pages %}
-    {% if p.has_previous %}
-        <a href="{{ request.path }}?{{ params }}&page={{ p.previous_page_number }}">
-            &laquo; Предыдущая
-        </a>
-    {% else %}
-        &laquo; Предыдущая
-    {% endif %}
-    | Страница {{ p.number }} из {{ paginator.num_pages }} |
-    {% if p.has_next %}
-        <a href="{{ request.path }}?{{ params }}&page={{ p.next_page_number }}">
-            Следующая &raquo;
-        </a>
-    {% else %}
-        Следующая &raquo;
-    {% endif %}
+    <nav aria-label="...">
+        <ul class="pagination pagination-lg">
+            {% if p.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" aria-label="Previous"
+                       href="{{ request.path }}?{{ params }}&page={{ p.previous_page_number }}">
+                        &laquo; Предыдущая
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled" >
+                    <a class="page-link">&laquo; Предыдущая</a>
+                </li>
+            {% endif %}
+            <li class="page-item disabled"><a class="page-link"> Страница {{ p.number }} из {{ paginator.num_pages }} </a></li>
+            {% if p.has_next %}
+                <li class="page-item">
+                    <a class="page-link" aria-label="Next" href="{{ request.path }}?{{ params }}&page={{ p.next_page_number }}">
+                        Следующая &raquo;
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">Следующая &raquo;</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
 {% endif %}

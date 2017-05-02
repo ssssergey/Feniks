@@ -58,6 +58,7 @@ fireplace = [
     url(r'^serii$', fireplace_serii_komplekt_base, name='fireplace_serii_komplekt_base'),
     url(r'^portals$', fireplace_portals_base, name='fireplace_portals_base'),
     url(r'^electrokamins$', fireplace_electrokamins_base, name='fireplace_electrokamins_base'),
+    url(r'^three_d$', fireplace_3d_base, name='fireplace_3d_base'),
     url(r'^kamin_komplekt/(?P<type>[-_\w]+)$', fireplace_kamin_komplekt, name='fireplace_kamin_komplekt'),
     url(r'^serii/(?P<type>[-_\w]+)$', fireplace_serii, name='fireplace_serii'),
     url(r'^portals/(?P<type>[-_\w]+)$', fireplace_portals, name='fireplace_portals'),
@@ -68,6 +69,12 @@ fireplace = [
 
 tables = [
     url(r'^$', tables_base, name='tables_base'),
+    url(r'^dinner$', tables_dinner_base, name='tables_dinner_base'),
+    url(r'^computer$', tables_computer_base, name='tables_computer_base'),
+    url(r'^writing$', tables_writing_base, name='tables_writing_base'),
+    url(r'^journal$', tables_journal_base, name='tables_journal_base'),
+    url(r'^toilet$', tables_toilet_base, name='tables_toilet_base'),
+    url(r'^office$', tables_office_base, name='tables_office_base'),
     url(r'^foldable$', tables_foldable_base, name='tables_foldable_base'),
     url(r'^foldable/wooden$', tables_foldable_wooden_base, name='tables_foldable_wooden_base'),
     url(r'^foldable/glass$', tables_foldable_glass_base, name='tables_foldable_glass_base'),
@@ -161,6 +168,10 @@ individual_orders = [
     url(r'^$', individual_orders, name='individual_orders'),
 ]
 
+dinner_groups = [
+    url(r'^$', dinner_groups, name='dinner_groups'),
+]
+
 
 urlpatterns = [
     url(r'^$', index, {'template_name': 'catalog/index.html'}, 'catalog_home'),
@@ -176,6 +187,7 @@ urlpatterns = [
     url(r'^fireplace/', include(fireplace)),
     url(r'^tables/', include(tables)),
     url(r'^chairs/', include(chairs)),
+    url(r'^dinner_groups/', include(dinner_groups)),
     url(r'^kitchen_corners/', include(kitchen_corners)),
     url(r'^matrasses/', include(matrasses)),
     url(r'^garden_furniture/', include(garden_furniture)),

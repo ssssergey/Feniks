@@ -10,6 +10,8 @@ from django.utils import timezone
 from Feniks import settings
 from django.utils.text import slugify
 from unidecode import unidecode
+from django.db.models import Q
+
 
 class ActiveCategoryManager(models.Manager):
     def get_query_set(self):
@@ -46,6 +48,7 @@ def image_upload_to(instance, filename):
     new_filename = "%s.%s" % (title_slug + '-' + filename_slug, filename_list[1])
     return "images/products/%s" % (new_filename)
 
+
 def image_architecture_upload_to(instance, filename):
     title = instance.name
     title_slug = slugify(unidecode(title))
@@ -58,7 +61,8 @@ def image_architecture_upload_to(instance, filename):
 class Architecture(models.Model):
     name = models.CharField(u'Название', max_length=100, blank=True, unique=True)
     description = models.TextField(u'Описание', blank=True, null=True)
-    image = models.ImageField(verbose_name=u'Анимация', upload_to=image_architecture_upload_to, blank=True, null=True )
+    image = models.ImageField(verbose_name=u'Анимация', upload_to=image_architecture_upload_to, blank=True, null=True)
+
     class Meta:
         ordering = ['name']
         verbose_name = u'Конструкция'
@@ -78,7 +82,7 @@ class Product(models.Model):
 
     KOMPLEKT_MEBEL = (
         (u'Корпусная мебель', u'Корпусная мебель'), (u'Мягкая мебель', u'Мягкая мебель'),
-        (u'Кухонный уголок', u'Кухонный уголок'),
+        (u'Кухонный уголок', u'Кухонный уголок'), (u'Обеденная группа', u'Обеденная группа'),
         (u'Каминный комплект', u'Каминный комплект'),
     )
     komplekt_mebel = models.CharField(u'Тип мебели', max_length=100, blank=True, choices=KOMPLEKT_MEBEL)
@@ -93,12 +97,13 @@ class Product(models.Model):
         (u'Шкаф', u'Шкаф'), (u'Кровать', u'Кровать'), (u'Диван', u'Диван'), (u'Кресло', u'Кресло'), (u'Стул', u'Стул'),
         (u'Стол', u'Стол'), (u'ТВ-тумба', u'ТВ-тумба'), (u'Библиотека', u'Библиотека'), (u'Перегородка', u'Перегородка'),
         (u'Ресепшн', u'Ресепшн'), (u'Кухонный уголок', u'Кухонный уголок'), (u'Стойка', u'Стойка'),
-        (u'Прилавок', u'Прилавок'),
+        (u'Прилавок', u'Прилавок'), (u'Антресоль', u'Антресоль'), (u'Тумба', u'Тумба'), (u'Полка', u'Полка'),
     )
     module_mebel = models.CharField(u'Тип модуля мебели', max_length=100, blank=True, choices=MODULE_MEBEL)
 
     MODULE_OTHER = (
         (u'Камин-портал', u'Камин-портал'), (u'Камин-электрокамин', u'Камин-электрокамин'), (u'Камин-печь', u'Камин-печь'),
+        (u'Камин-3D-камин', u'Камин-3D-камин'),
         (u'Камин-аксессуар', u'Камин-аксессуар'), (u'Матрас', u'Матрас'), (u'Качели', u'Качели'),
         (u'Раскладушка', u'Раскладушка'), (u'Шезлонг', u'Шезлонг'), (u'Цветы', u'Цветы'), (u'Статуэтка', u'Статуэтка'),
         (u'Картина', u'Картина'), (u'Ваза', u'Ваза'), (u'Корзина', u'Корзина'), (u'Сундук', u'Сундук'),
@@ -125,14 +130,15 @@ class Product(models.Model):
                      )
     soft_komplekt = models.CharField(u'Комплект мягкой мебели', max_length=100, blank=True, choices=SOFT_KOMPLEKT)
 
-    ARCHITECTURE_TYPE = (
-        (u'Выкатные', u'Выкатные'), (u'Раскладные', u'Раскладные'), (u'Классические', u'Классические'),
-        (u'Евро', u'Евро'), (u'Металлокаркас', u'Металлокаркас'), (u'Мини', u'Мини'),
-        (u'Евро-книжка', u'Евро-книжка'), (u'Книжка', u'Книжка'), (u'Стандарт', u'Стандарт'), (u'Шкаф-купе', u'Шкаф-купе'),
-        (u'Кресла-кровати', u'Кресла-кровати'), (u'Кресла-качалки', u'Кресла-качалки'), (u'Банкетки', u'Банкетки'),
-        (u'Офисные', u'Офисные'), (u'Двухъярусная кровать', u'Двухъярусная кровать'), (u'Пружинные', u'Пружинные'),
-        (u'Ортопедические', u'Ортопедические'), (u'Анатомические', u'Анатомические'),
-    )
+    # ARCHITECTURE_TYPE = (
+    #     (u'Выкатные', u'Выкатные'), (u'Раскладные', u'Раскладные'), (u'Классические', u'Классические'),
+    #     (u'Евро', u'Евро'), (u'Металлокаркас', u'Металлокаркас'), (u'Мини', u'Мини'),
+    #     (u'Евро-книжка', u'Евро-книжка'), (u'Книжка', u'Книжка'), (u'Стандарт', u'Стандарт'), (u'Шкаф-купе', u'Шкаф-купе'),
+    #     (u'Кресла-кровати', u'Кресла-кровати'), (u'Кресла-качалки', u'Кресла-качалки'), (u'Банкетки', u'Банкетки'),
+    #     (u'Офисные', u'Офисные'), (u'Двухъярусная кровать', u'Двухъярусная кровать'), (u'Пружинные', u'Пружинные'),
+    #     (u'Ортопедические', u'Ортопедические'), (u'Анатомические', u'Анатомические'), (u'Беспружинные', u'Беспружинные'),
+    #     (u'Комплектующие', u'Комплектующие'), (u'Независимые пружины', u'Независимые пружины'),
+    # )
     # architecture_type = models.CharField(u'Конструкция', max_length=100, blank=True, choices=ARCHITECTURE_TYPE)
     architecture_type = models.ManyToManyField(Architecture, verbose_name=u'Конструкция', blank=True)
 
@@ -145,7 +151,9 @@ class Product(models.Model):
     STYLE = (
         (u'Офисные', u'Офисные'), (u'Садовые', u'Садовые'), (u'Для баров и ресторанов', u'Для баров и ресторанов'),
         (u'Банкетка', u'Банкетка'), (u'Для кинотеатров', u'Для кинотеатров'), (u'Для посетителей', u'Для посетителей'),
-        (u'Под старину', u'Под старину'), (u'Гостиничные номера', u'Гостиничные номера'),
+        (u'Под старину', u'Под старину'), (u'Гостиничные номера', u'Гостиничные номера'), (u'Обеденные', u'Обеденные'),
+        (u'Компьютерные', u'Компьютерные'), (u'Журнальные', u'Журнальные'), (u'Туалетные', u'Туалетные'),
+        (u'Письменные', u'Письменные')
     )
     style = models.CharField(u'Стиль', max_length=100, blank=True, choices=STYLE)
 
@@ -158,7 +166,7 @@ class Product(models.Model):
     material = models.ManyToManyField(Material, verbose_name=u'Материал', blank=True)
 
     SHAPE = ((u'Круглые', u'Круглые'), (u'Овальные', u'Овальные'), (u'Прямоугольные', u'Прямоугольные'),
-             (u'Угловые', u'Угловые'), (u'Прямые', u'Прямые'),(u'П-образные', u'П-образные'),)
+             (u'Квадратные', u'Квадратные'), (u'Угловые', u'Угловые'), (u'Прямые', u'Прямые'), (u'П-образные', u'П-образные'),)
     shape = models.CharField(u'Форма', max_length=100, blank=True, choices=SHAPE)
 
     BRAND = (
@@ -169,23 +177,23 @@ class Product(models.Model):
     OCHAG = ((u'Широкий очаг', u'Широкий очаг'), (u'Стандартный очаг', u'Стандартный очаг'),
              (u'Навесной очаг', u'Навесной очаг'),)
     ochag = models.CharField(u'Очаг каминов', max_length=100, blank=True, choices=OCHAG)
-    peace_of = models.ForeignKey('self', verbose_name=u'Относится к комплекту', limit_choices_to={'module_komplekt': u'Комплект'},
-                                 unique=False, null=True,
-                                 blank=True)
+    peace_of = models.ManyToManyField('self', verbose_name=u'Относится к комплекту',
+                                      # limit_choices_to={'module_komplekt': u'Комплект'},
+                                      unique=False, null=True, blank=True)
 
     name = models.CharField(u'Название товара', max_length=255)
     slug = models.SlugField(max_length=255, unique=True,
                             help_text='Unique value for product page URL, created from name.')
     image = ImageWithThumbsField(verbose_name=u'Фото_1', upload_to=image_upload_to, blank=True,
-                                 sizes=((180, 120), (200, 120), (300, 200), (400, 200), (180, 200)))
+                                 sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image2 = ImageWithThumbsField(verbose_name=u'Фото_2', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image3 = ImageWithThumbsField(verbose_name=u'Фото_3', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image4 = ImageWithThumbsField(verbose_name=u'Фото_4', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     image5 = ImageWithThumbsField(verbose_name=u'Фото_5', upload_to=image_upload_to, blank=True,
-                                  sizes=((180, 120),(200, 120), (300, 200), (400, 200), (180, 200)))
+                                  sizes=((300, 200), (400, 200), (180, 200), (180, 150)))
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
@@ -230,7 +238,7 @@ class Product(models.Model):
 
     def admin_image(self):
         if self.image:
-            return u'<img src="%s" width="100"/>' % self.image.url_180x120
+            return u'<img src="%s" width="100"/>' % self.image.url_180x200
         else:
             return u'(Нет)'
 

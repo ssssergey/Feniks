@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import get_object_or_404, render_to_response, render
-from catalog.models import Product
-from search.models import ProductReview
 from django.template import RequestContext
 from django.db.models import Q
 from django.core import urlresolvers
-from cart import cart
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+
+from cart import cart
 from forms import ProductAddToCartForm
 from search.forms import ProductReviewForm
-
 from stats import stats
-from Feniks.settings import PRODUCTS_PER_ROW
+from Feniks.settings import PRODUCTS_PER_ROW, PRODUCTS_PER_PAGE
 from django.core.urlresolvers import reverse
+from catalog.models import Product
+from search.models import ProductReview
 
 
 def index(request, template_name="catalog/index.html"):
@@ -24,6 +25,17 @@ def index(request, template_name="catalog/index.html"):
     featured = Product.featured.all()[0:PRODUCTS_PER_ROW]
     recently_viewed = stats.get_recently_viewed(request)
     view_recs = stats.recommended_from_views(request)
+    subcategories = (
+        (u'Кухни', reverse('carcass_furniture_kitchens_base')),
+        (u'Горки, стенки, гостинные', reverse('carcass_furniture_gorki_stenki_gestrooms_base')),
+        (u'Спальни', reverse('carcass_furniture_bedrooms_base')),
+        (u'Прихожие', reverse('carcass_furniture_corridors_base')),
+        (u'Детские', reverse('carcass_furniture_children_rooms_base')),
+        (u'Шкафы', reverse('carcass_furniture_cases_base')),
+        (u'Кровати', reverse('carcass_furniture_beds_base')),
+        (u'ТВ-тумбы', reverse('carcass_furniture_tv_tumbs_base')),
+        (u'Другая мебель', reverse('carcass_furniture_other_furniture')),
+    )
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -53,11 +65,24 @@ def faq(request, template_name="flatpages/faq.html"):
 
 #################### Catalog list ###############################
 
+def paginate_products(request, products):
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        page = 1
+    paginator = Paginator(products, PRODUCTS_PER_PAGE)
+    try:
+        products = paginator.page(page).object_list
+    except (InvalidPage, EmptyPage):
+        products = paginator.page(1).object_list
+    return products, paginator, page
+
+
 ################### carcass furniture #########################
 
 def carcass_furniture_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель'
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель'))
+    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & ~Q(module_komplekt=u'Модуль'))
     subcategories = (
         (u'Кухни', reverse('carcass_furniture_kitchens_base')),
         (u'Горки, стенки, гостинные', reverse('carcass_furniture_gorki_stenki_gestrooms_base')),
@@ -69,17 +94,19 @@ def carcass_furniture_base(request, template_name="catalog/category.html"):
         (u'ТВ-тумбы', reverse('carcass_furniture_tv_tumbs_base')),
         (u'Другая мебель', reverse('carcass_furniture_other_furniture')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_kitchens_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель - Кухни'
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Кухня'))
+    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Кухня') & ~Q(module_komplekt=u'Модуль'))
     subcategories = (
         (u'Комплекты', reverse('carcass_furniture_kitchens', args=('komplekts',))),
         (u'Модульно', reverse('carcass_furniture_kitchens', args=('modules',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -94,12 +121,14 @@ def carcass_furniture_kitchens(request, type, template_name="catalog/category.ht
     # elif type == 'others':
     #     products = products.filter(Q(module_komplekt__isnull=True))
     #     category_name = u'Корпусная мебель - Кухни - Другое'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_gorki_stenki_gestrooms_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель - Горки, стенки, гостинные'
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Гостиная(горки, стенки)'))
+    products = Product.active.filter(
+        Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Гостиная(горки, стенки)') & ~Q(module_komplekt=u'Модуль'))
     subcategories = (
         (u'Комплекты', reverse('carcass_furniture_gorki_stenki_gestrooms', args=('komplekts',))),
         (u'Модульно', reverse('carcass_furniture_gorki_stenki_gestrooms', args=('modules',))),
@@ -107,16 +136,19 @@ def carcass_furniture_gorki_stenki_gestrooms_base(request, template_name="catalo
         (u'Библиотека', reverse('carcass_furniture_gorki_stenki_gestrooms', args=('libraries',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_gorki_stenki_gestrooms(request, type, template_name="catalog/category.html"):
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Гостиная(горки, стенки)'))
+    products = Product.active.filter(
+        Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Гостиная(горки, стенки)') & ~Q(module_komplekt=u'Модуль'))
     if type == 'komplekts':
         products = products.filter(Q(module_komplekt=u'Комплект'))
         category_name = u'Корпусная мебель - Горки, стенки, гостинные - Комплекты'
     elif type == 'modules':
-        products = products.filter(Q(module_komplekt=u'Модуль'))
+        products = Product.active.filter(
+            Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Гостиная(горки, стенки)') & Q(module_komplekt=u'Модуль'))
         category_name = u'Корпусная мебель - Горки, стенки, гостинные - Модули'
     elif type == 'others':
         products = products.filter(Q(module_komplekt__isnull=True))
@@ -124,18 +156,20 @@ def carcass_furniture_gorki_stenki_gestrooms(request, type, template_name="catal
     elif type == 'libraries':
         products = products.filter(Q(module_mebel=u'Библиотека'))
         category_name = u'Корпусная мебель - Горки, стенки, гостинные - Библиотеки'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_bedrooms_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель - Спальни'
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Спальня'))
+    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Спальня') & ~Q(module_komplekt=u'Модуль'))
     subcategories = (
         (u'Комплекты', reverse('carcass_furniture_bedrooms', args=('komplekts',))),
         (u'Модульно', reverse('carcass_furniture_bedrooms', args=('modules',))),
         (u'Другое', reverse('carcass_furniture_bedrooms', args=('others',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -145,23 +179,26 @@ def carcass_furniture_bedrooms(request, type, template_name="catalog/category.ht
         products = products.filter(Q(module_komplekt=u'Комплект'))
         category_name = u'Корпусная мебель - Спальни - Комплекты'
     elif type == 'modules':
-        products = products.filter(Q(module_komplekt=u'Модуль'))
+        products = Product.active.filter(
+            Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Спальня') & Q(module_komplekt=u'Модуль'))
         category_name = u'Корпусная мебель - Спальни - Модули'
     elif type == 'others':
         products = products.filter(Q(module_komplekt__isnull=True))
         category_name = u'Корпусная мебель - Спальни - Другое'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_corridors_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель - Прихожие'
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Прихожие'))
+    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Прихожие') & ~Q(module_komplekt=u'Модуль'))
     subcategories = (
         (u'Комплекты', reverse('carcass_furniture_corridors', args=('komplekts',))),
         (u'Модульно', reverse('carcass_furniture_corridors', args=('modules',))),
         (u'Другое', reverse('carcass_furniture_corridors', args=('others',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -176,18 +213,20 @@ def carcass_furniture_corridors(request, type, template_name="catalog/category.h
     elif type == 'others':
         products = products.filter(Q(module_komplekt__isnull=True))
         category_name = u'Корпусная мебель - Прихожие - Другое'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_children_rooms_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель - Детские'
-    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Детские'))
+    products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Детские') & ~Q(module_komplekt=u'Модуль'))
     subcategories = (
         (u'Комплекты', reverse('carcass_furniture_children_rooms', args=('komplekts',))),
         (u'Модульно', reverse('carcass_furniture_children_rooms', args=('modules',))),
         (u'Другое', reverse('carcass_furniture_children_rooms', args=('others',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -202,6 +241,7 @@ def carcass_furniture_children_rooms(request, type, template_name="catalog/categ
     elif type == 'others':
         products = products.filter(Q(module_komplekt__isnull=True))
         category_name = u'Корпусная мебель - Детские - Другое'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -214,6 +254,7 @@ def carcass_furniture_tv_tumbs_base(request, template_name="catalog/category.htm
         (u'Другое', reverse('carcass_furniture_tv_tumbs', args=('others',))),
         (u'Сопутствующие товары', reverse('associated_goods_base')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -228,12 +269,14 @@ def carcass_furniture_tv_tumbs(request, type, template_name="catalog/category.ht
     elif type == 'others':
         products = products.filter(Q(module_komplekt__isnull=True))
         category_name = u'Корпусная мебель - ТВ-тумбы - Другие'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def carcass_furniture_other_furniture(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель - Другая мебель'
     products = Product.active.filter(Q(komplekt_mebel=u'Корпусная мебель') & Q(room=u'Другое'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -250,6 +293,7 @@ def carcass_furniture_cases_base(request, template_name="catalog/category.html")
         (u'Угловые', reverse('carcass_furniture_cases', args=('cases_corners',))),
         (u'Другое', reverse('carcass_furniture_cases', args=('cases_others',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -279,6 +323,7 @@ def carcass_furniture_cases(request, type, template_name="catalog/category.html"
     elif type == 'cases_others':
         products = products.filter(Q(doors__gte=6))
         category_name = u'Корпусная мебель - Шкафы - Другое'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -295,6 +340,7 @@ def carcass_furniture_beds_base(request, template_name="catalog/category.html"):
         (u'Двухъярусные', reverse('carcass_furniture_beds', args=('double',))),
         (u'Другое', reverse('carcass_furniture_beds', args=('others',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -324,6 +370,7 @@ def carcass_furniture_beds(request, type, template_name="catalog/category.html")
     elif type == 'others':
         products = products.filter(Q(length__gte=180))
         category_name = u'Корпусная мебель - Кровати - Другое'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -339,6 +386,7 @@ def cushioned_furniture_base(request, template_name="catalog/category.html"):
         (u'Кресла', reverse('cushioned_furniture_armchairs_base')),
         (u'Под заказ', reverse('cushioned_furniture_on_orders')),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -357,6 +405,7 @@ def cushioned_furniture_komplekts_base(request, template_name="catalog/category.
         (u'Диван + 2 кресла с ящиками', reverse('cushioned_furniture_komplekts', args=('d_2kryash',))),
         (u'Угловой диван + 1 кресло с ящиками', reverse('cushioned_furniture_komplekts', args=('ugd_kryash',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -389,6 +438,7 @@ def cushioned_furniture_komplekts(request, type, template_name="catalog/category
     elif type == 'ugd_kryash':
         products = products.filter(Q(soft_komplekt=u'Угловой диван + 1 кресло с ящиками'))
         category_name = u'Мягкая мебель - Комплекты - Угловой диван + 1 кресло с ящиками'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -401,6 +451,7 @@ def cushioned_furniture_corners_base(request, template_name="catalog/category.ht
         (u'Металлокаркас', reverse('cushioned_furniture_corners', args=('metalkarkas',))),
         (u'Евро', reverse('cushioned_furniture_corners', args=('euro',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -413,11 +464,12 @@ def cushioned_furniture_corners(request, type, template_name="catalog/category.h
         products = products.filter(Q(architecture_type__name=u'Классические'))
         category_name = u'Мягкая мебель - Угловые - Классические'
     elif type == 'metalkarkas':
-        products = products.filter(Q(material__name=u'Металлокаркас'))
+        products = products.filter(Q(material__name__icontains=u'Металлокаркас'))
         category_name = u'Мягкая мебель - Угловые - Металлокаркас'
     elif type == 'euro':
         products = products.filter(Q(architecture_type__name=u'Евро'))
         category_name = u'Мягкая мебель - Угловые - Евро'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -434,6 +486,7 @@ def cushioned_furniture_sofas_base(request, template_name="catalog/category.html
         (u'Офисные', reverse('cushioned_furniture_sofas', args=('office',))),
         (u'Ротанг', reverse('cushioned_furniture_sofas', args=('rotang',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -452,7 +505,7 @@ def cushioned_furniture_sofas(request, type, template_name="catalog/category.htm
         products = products.filter(Q(architecture_type__name=u'Выкатные'))
         category_name = u'Мягкая мебель - Диваны - Выкатные'
     elif type == 'metalkarkas':
-        products = products.filter(Q(architecture_type__name=u'Металлокаркас') | Q(material__name=u'Металлокаркас'))
+        products = products.filter(Q(architecture_type__name=u'Металлокаркас') | Q(material__name__icontains=u'Металлокаркас'))
         category_name = u'Мягкая мебель - Диваны - Металлокаркас'
     elif type == 'mini':
         products = products.filter(Q(architecture_type__name=u'Мини'))
@@ -463,6 +516,7 @@ def cushioned_furniture_sofas(request, type, template_name="catalog/category.htm
     elif type == 'rotang':
         products = products.filter(Q(material__name__icontains=u'Ротанг'))
         category_name = u'Мягкая мебель - Диваны - Ротанг'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -476,6 +530,7 @@ def cushioned_furniture_armchairs_base(request, template_name="catalog/category.
         (u'Офисные', reverse('cushioned_furniture_armchairs', args=('office_chair',))),
         (u'Банкетка', reverse('cushioned_furniture_armchairs', args=('banketka',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -496,12 +551,14 @@ def cushioned_furniture_armchairs(request, type, template_name="catalog/category
     elif type == 'banketka':
         products = products.filter(Q(architecture_type__name=u'Банкетка'))
         category_name = u'Мягкая мебель - Кресла - Банкетка'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def cushioned_furniture_on_orders(request, template_name="catalog/category.html"):
     category_name = u'Мягкая мебель - Под заказ'
     products = Product.active.filter(Q(komplekt_mebel=u'Мягкая мебель') & Q(on_order=True))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -519,6 +576,7 @@ def office_furniture_base(request, template_name="catalog/category.html"):
         (u'Перегородки', reverse('office_furniture_divider_base')),
     )
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -529,6 +587,7 @@ def office_furniture_sofas_base(request, template_name="catalog/category.html"):
         (u'Прямые', reverse('office_furniture_sofas', args=('strait',))),
         (u'Угловые', reverse('office_furniture_sofas', args=('corner',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -540,24 +599,28 @@ def office_furniture_sofas(request, type, template_name="catalog/category.html")
     elif type == 'corner':
         products = products.filter(Q(shape=u'Угловые'))
         category_name = u'Офисная мебель - Диваны - Угловые'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def office_furniture_tables(request, template_name="catalog/category.html"):
     category_name = u'Офисная мебель - Столы'
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель') & Q(module_mebel=u'Стол'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def office_furniture_cases(request, template_name="catalog/category.html"):
     category_name = u'Офисная мебель - Шкафы'
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель') & Q(module_mebel=u'Шкаф'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def office_furniture_libraries(request, template_name="catalog/category.html"):
     category_name = u'Офисная мебель - Библиотеки'
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель') & Q(module_mebel=u'Библиотека'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -569,6 +632,7 @@ def office_furniture_armchairs_base(request, template_name="catalog/category.htm
         (u'Для персонала', reverse('office_furniture_armchairs', args=('personel',))),
         (u'Для менеджеров', reverse('office_furniture_armchairs', args=('managers',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -583,12 +647,14 @@ def office_furniture_armchairs(request, type, template_name="catalog/category.ht
     elif type == 'managers':
         products = products.filter(Q(armchaire_role=u'Для менеджеров'))
         category_name = u'Офисная мебель - Кресла - Для менеджеров'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def office_furniture_chairs_base(request, template_name="catalog/category.html"):
     category_name = u'Офисная мебель - Стулья'
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель') & Q(module_mebel=u'Стул'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -598,12 +664,14 @@ def office_furniture_divider_base(request, template_name="catalog/category.html"
         (u'Ресепшн', reverse('office_furniture_divider')),
     )
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель') & Q(module_mebel=u'Перегородка'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def office_furniture_divider(request, template_name="catalog/category.html"):
     category_name = u'Офисная мебель - Перегородки - Ресепшн'
     products = Product.active.filter(Q(komplekt_mebel=u'Офисная мебель') & Q(module_mebel=u'Ресепшн'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -616,10 +684,12 @@ def fireplace_base(request, template_name="catalog/category.html"):
         (u'Серии', reverse('fireplace_serii_komplekt_base')),
         (u'Порталы', reverse('fireplace_portals_base')),
         (u'Электрокамины', reverse('fireplace_electrokamins_base')),
+        (u'3D-камины', reverse('fireplace_3d_base')),
         (u'Печи', reverse('fireplace_ovens')),
         (u'Аксессуары', reverse('fireplace_accesories')),
     )
     products = Product.active.filter(Q(module_komplekt=u'Камин'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -628,10 +698,12 @@ def fireplace_kamin_komplekt_base(request, template_name="catalog/category.html"
     products = Product.active.filter(Q(komplekt_mebel=u'Каминный комплект'))
     subcategories = (
         (u'Выгодные', reverse('fireplace_kamin_komplekt', args=('vigodnie',))),
+        (u'Угловые', reverse('fireplace_kamin_komplekt', args=('conner',))),
         (u'Stone', reverse('fireplace_kamin_komplekt', args=('stone',))),
         (u'New Look', reverse('fireplace_kamin_komplekt', args=('new_look',))),
         (u'Mini', reverse('fireplace_kamin_komplekt', args=('mini',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -640,6 +712,9 @@ def fireplace_kamin_komplekt(request, type, template_name="catalog/category.html
     if type == 'vigodnie':
         products = products.filter(Q(is_featured=True))
         category_name = u'Камины - Каминные комплекты - Выгодные'
+    elif type == 'conner':
+        products = products.filter(Q(shape=u'Угловые'))
+        category_name = u'Камины - Каминные комплекты - Угловые'
     elif type == 'stone':
         products = products.filter(Q(brand=u'Stone'))
         category_name = u'Камины - Каминные комплекты - Stone'
@@ -649,6 +724,7 @@ def fireplace_kamin_komplekt(request, type, template_name="catalog/category.html
     elif type == 'mini':
         products = products.filter(Q(brand=u'Mini'))
         category_name = u'Камины - Каминные комплекты - Mini'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -663,6 +739,7 @@ def fireplace_serii_komplekt_base(request, template_name="catalog/category.html"
         (u'Mini', reverse('fireplace_serii', args=('mini',))),
         (u'Marble', reverse('fireplace_serii', args=('marble',))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -686,6 +763,7 @@ def fireplace_serii(request, type, template_name="catalog/category.html"):
     elif type == 'marble':
         products = products.filter(Q(brand=u'Marble'))
         category_name = u'Камины - Серии - Marble'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -697,20 +775,22 @@ def fireplace_portals_base(request, template_name="catalog/category.html"):
         (u'МДФ', reverse('fireplace_portals', args=('mdf',))),
     )
     products = Product.active.filter(Q(module_other=u'Камин-портал'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def fireplace_portals(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_other=u'Камин-портал'))
     if type == 'natural_marble':
-        products = products.filter(Q(material__name=u'Натуральный мрамор'))
+        products = products.filter(Q(material__name__icontains=u'Натуральный мрамор'))
         category_name = u'Камины - Порталы - Натуральный мрамор'
     elif type == 'polimer_stone':
-        products = products.filter(Q(material__name=u'Полимерный камень'))
+        products = products.filter(Q(material__name__icontains=u'Полимерный камень'))
         category_name = u'Камины - Порталы - Полимерный камень'
     elif type == 'mdf':
-        products = products.filter(Q(material__name=u'МДФ'))
+        products = products.filter(Q(material__name__icontains=u'МДФ'))
         category_name = u'Камины - Порталы - МДФ'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -722,6 +802,7 @@ def fireplace_electrokamins_base(request, template_name="catalog/category.html")
         (u'Навесной очаг', reverse('fireplace_electrokamins', args=('hover_flame',))),
     )
     products = Product.active.filter(Q(module_other=u'Камин-электрокамин'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -736,18 +817,28 @@ def fireplace_electrokamins(request, type, template_name="catalog/category.html"
     elif type == 'hover_flame':
         products = products.filter(Q(ochag=u'Навесной очаг'))
         category_name = u'Камины - Электрокамины - Навесной очаг'
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def fireplace_3d_base(request, template_name="catalog/category.html"):
+    category_name = u'Камины - 3D-камин'
+    products = Product.active.filter(Q(module_other=u'Камин-3D-камин'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def fireplace_ovens(request, template_name="catalog/category.html"):
     category_name = u'Камины - Камин-печь'
     products = Product.active.filter(Q(module_other=u'Камин-печь'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def fireplace_accesories(request, template_name="catalog/category.html"):
     category_name = u'Камины - Аксессуары'
     products = Product.active.filter(Q(module_other=u'Камин-аксессуар'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -757,8 +848,61 @@ def tables_base(request, template_name="catalog/category.html"):
     subcategories = (
         (u'Раскладные', reverse('tables_foldable_base')),
         (u'Не раскладные', reverse('tables_unfoldable_base')),
+        (u'Обеденные', reverse('tables_dinner_base')),
+        (u'Компьютерные', reverse('tables_computer_base')),
+        (u'Письменные', reverse('tables_writing_base')),
+        (u'Журнальные', reverse('tables_journal_base')),
+        (u'Туалетные (трельяж)', reverse('tables_toilet_base')),
+        (u'Офисные', reverse('tables_office_base')),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def tables_dinner_base(request, template_name="catalog/category.html"):
+    category_name = u'Столы - Обеденные'
+    products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products = products.filter(Q(style=u'Обеденные'))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def tables_computer_base(request, template_name="catalog/category.html"):
+    category_name = u'Столы - Компьютерные'
+    products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products = products.filter(Q(style=u'Компьютерные'))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+def tables_writing_base(request, template_name="catalog/category.html"):
+    category_name = u'Столы - Письменные'
+    products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products = products.filter(Q(style=u'Письменные'))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+def tables_journal_base(request, template_name="catalog/category.html"):
+    category_name = u'Столы - Журнальные'
+    products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products = products.filter(Q(style=u'Журнальные'))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def tables_toilet_base(request, template_name="catalog/category.html"):
+    category_name = u'Столы - Туалетные (трельяж)'
+    products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products = products.filter(Q(style=u'Туалетные'))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+def tables_office_base(request, template_name="catalog/category.html"):
+    category_name = u'Столы - Офисные'
+    products = Product.active.filter(Q(module_mebel=u'Стол'))
+    products = products.filter(Q(style=u'Офисные'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -772,6 +916,7 @@ def tables_foldable_base(request, template_name="catalog/category.html"):
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -781,11 +926,13 @@ def tables_foldable_wooden_base(request, template_name="catalog/category.html"):
         (u'Круглые', reverse('tables_foldable', args=('wooden', 'round'))),
         (u'Овальные', reverse('tables_foldable', args=('wooden', 'oval'))),
         (u'Прямоугольные', reverse('tables_foldable', args=('wooden', 'rectangle'))),
+        (u'Квадратные', reverse('tables_foldable', args=('wooden', 'square'))),
         (u'Другие', reverse('tables_foldable', args=('wooden', 'others'))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(Q(material__name=u'Дерево'))
+    products = products.filter(Q(material__name__icontains=u'Дерево'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -795,11 +942,13 @@ def tables_foldable_glass_base(request, template_name="catalog/category.html"):
         (u'Круглые', reverse('tables_foldable', args=('glass', 'round'))),
         (u'Овальные', reverse('tables_foldable', args=('glass', 'oval'))),
         (u'Прямоугольные', reverse('tables_foldable', args=('glass', 'rectangle'))),
+        (u'Квадратные', reverse('tables_foldable', args=('glass', 'square'))),
         (u'Другие', reverse('tables_foldable', args=('glass', 'others'))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(Q(material__name=u'Стекло'))
+    products = products.filter(Q(material__name__icontains=u'Стекло'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -809,11 +958,13 @@ def tables_foldable_ldsp_base(request, template_name="catalog/category.html"):
         (u'Круглые', reverse('tables_foldable', args=('ldsp', 'round'))),
         (u'Овальные', reverse('tables_foldable', args=('ldsp', 'oval'))),
         (u'Прямоугольные', reverse('tables_foldable', args=('ldsp', 'rectangle'))),
+        (u'Квадратные', reverse('tables_foldable', args=('ldsp', 'square'))),
         (u'Другие', reverse('tables_foldable', args=('ldsp', 'others'))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(Q(material__name=u'ЛДСП'))
+    products = products.filter(Q(material__name__icontains=u'ЛДСП'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -826,7 +977,10 @@ def tables_foldable_others_base(request, template_name="catalog/category.html"):
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(~Q(material__name=u'Дерево') & ~Q(material__name=u'Стекло') & ~Q(material__name=u'ЛДСП'))
+    products = products.filter(
+        Q(architecture_type__name=u'Офисные') | Q(style=u'Офисные') | Q(material__name__icontains=u'Ротанг') | Q(
+            style=u'Садовые'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -835,17 +989,18 @@ def tables_foldable(request, type1, type2, template_name="catalog/category.html"
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
     if type1 == 'wooden':
-        products = products.filter(Q(material__name=u'Дерево'))
+        products = products.filter(Q(material__name__icontains=u'Дерево'))
         category_name += u' - Дерево'
     elif type1 == 'glass':
-        products = products.filter(Q(material__name=u'Стекло'))
+        products = products.filter(Q(material__name__icontains=u'Стекло'))
         category_name += u' - Стекло'
     elif type1 == 'ldsp':
-        products = products.filter(Q(material__name=u'ЛДСП'))
+        products = products.filter(Q(material__name__icontains=u'ЛДСП'))
         category_name += u' - ЛДСП'
     elif type1 == 'others':
         products = products.filter(
-            ~Q(material__name=u'Дерево') & ~Q(material__name=u'Стекло') & ~Q(material__name=u'ЛДСП'))
+            ~Q(material__name__icontains=u'Дерево') & ~Q(material__name__icontains=u'Стекло') & ~Q(
+                material__name__icontains=u'ЛДСП'))
         category_name += u' - Другие'
     if type2 == 'round':
         products = products.filter(Q(shape=u'Круглые'))
@@ -856,8 +1011,12 @@ def tables_foldable(request, type1, type2, template_name="catalog/category.html"
     elif type2 == 'rectangle':
         products = products.filter(Q(shape=u'Прямоугольные'))
         category_name += u' - Прямоугольные'
+    elif type2 == 'square':
+        products = products.filter(Q(shape=u'Квадратные'))
+        category_name += u' - Квадратные'
     elif type2 == 'others':
-        products = products.filter(~Q(shape=u'Круглые') & ~Q(shape=u'Овальные') & ~Q(shape=u'Прямоугольные'))
+        products = products.filter(
+            ~Q(shape=u'Круглые') & ~Q(shape=u'Овальные') & ~Q(shape=u'Прямоугольные') & ~Q(shape=u'Квадратные'))
         category_name += u' - Другие'
     elif type2 == 'office':
         products = products.filter(Q(architecture_type__name=u'Офисные') | Q(style=u'Офисные'))
@@ -868,13 +1027,21 @@ def tables_foldable(request, type1, type2, template_name="catalog/category.html"
     elif type2 == 'garden':
         products = products.filter(Q(style=u'Садовые'))
         category_name += u' - Садовые'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def tables_unfoldable_base(request, template_name="catalog/category.html"):
     category_name = u'Столы - Не раскладные'
+    subcategories = (
+        (u'Дерево', reverse('tables_unfoldable_wooden_base')),
+        (u'Стекло', reverse('tables_unfoldable_glass_base')),
+        (u'ЛДСП', reverse('tables_unfoldable_ldsp_base')),
+        (u'Другие', reverse('tables_unfoldable_others_base')),
+    )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(~Q(architecture_type__name=u'Раскладные'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -884,11 +1051,13 @@ def tables_unfoldable_wooden_base(request, template_name="catalog/category.html"
         (u'Круглые', reverse('tables_unfoldable', args=('wooden', 'round'))),
         (u'Овальные', reverse('tables_unfoldable', args=('wooden', 'oval'))),
         (u'Прямоугольные', reverse('tables_unfoldable', args=('wooden', 'rectangle'))),
+        (u'Квадратные', reverse('tables_unfoldable', args=('wooden', 'square'))),
         (u'Другие', reverse('tables_unfoldable', args=('wooden', 'others'))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(~Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(Q(material__name=u'Дерево'))
+    products = products.filter(Q(material__name__icontains=u'Дерево'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -898,11 +1067,13 @@ def tables_unfoldable_glass_base(request, template_name="catalog/category.html")
         (u'Круглые', reverse('tables_unfoldable', args=('glass', 'round'))),
         (u'Овальные', reverse('tables_unfoldable', args=('glass', 'oval'))),
         (u'Прямоугольные', reverse('tables_unfoldable', args=('glass', 'rectangle'))),
+        (u'Квадратные', reverse('tables_unfoldable', args=('glass', 'square'))),
         (u'Другие', reverse('tables_unfoldable', args=('glass', 'others'))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(~Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(Q(material__name=u'Стекло'))
+    products = products.filter(Q(material__name__icontains=u'Стекло'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -912,11 +1083,13 @@ def tables_unfoldable_ldsp_base(request, template_name="catalog/category.html"):
         (u'Круглые', reverse('tables_unfoldable', args=('ldsp', 'round'))),
         (u'Овальные', reverse('tables_unfoldable', args=('ldsp', 'oval'))),
         (u'Прямоугольные', reverse('tables_unfoldable', args=('ldsp', 'rectangle'))),
+        (u'Квадратные', reverse('tables_unfoldable', args=('ldsp', 'square'))),
         (u'Другие', reverse('tables_unfoldable', args=('ldsp', 'others'))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(~Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(Q(material__name=u'ЛДСП'))
+    products = products.filter(Q(material__name__icontains=u'ЛДСП'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -929,7 +1102,10 @@ def tables_unfoldable_others_base(request, template_name="catalog/category.html"
     )
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(~Q(architecture_type__name=u'Раскладные'))
-    products = products.filter(~Q(material__name=u'Дерево') & ~Q(material__name=u'Стекло') & ~Q(material__name=u'ЛДСП'))
+    products = products.filter(
+        Q(architecture_type__name=u'Офисные') | Q(style=u'Офисные') | Q(material__name__icontains=u'Ротанг') | Q(
+            style=u'Садовые'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -938,17 +1114,18 @@ def tables_unfoldable(request, type1, type2, template_name="catalog/category.htm
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(~Q(architecture_type__name=u'Раскладные'))
     if type1 == 'wooden':
-        products = products.filter(Q(material__name=u'Дерево'))
+        products = products.filter(Q(material__name__icontains=u'Дерево'))
         category_name += u' - Дерево'
     elif type1 == 'glass':
-        products = products.filter(Q(material__name=u'Стекло'))
+        products = products.filter(Q(material__name__icontains=u'Стекло'))
         category_name += u' - Стекло'
     elif type1 == 'ldsp':
-        products = products.filter(Q(material__name=u'ЛДСП'))
+        products = products.filter(Q(material__name__icontains=u'ЛДСП'))
         category_name += u' - ЛДСП'
     elif type1 == 'others':
         products = products.filter(
-            ~Q(material__name=u'Дерево') & ~Q(material__name=u'Стекло') & ~Q(material__name=u'ЛДСП'))
+            ~Q(material__name__icontains=u'Дерево') & ~Q(material__name__icontains=u'Стекло') & ~Q(
+                material__name__icontains=u'ЛДСП'))
         category_name += u' - Другие'
     if type2 == 'round':
         products = products.filter(Q(shape=u'Круглые'))
@@ -959,6 +1136,9 @@ def tables_unfoldable(request, type1, type2, template_name="catalog/category.htm
     elif type2 == 'rectangle':
         products = products.filter(Q(shape=u'Прямоугольные'))
         category_name += u' - Прямоугольные'
+    elif type2 == 'square':
+        products = products.filter(Q(shape=u'Квадратные'))
+        category_name += u' - Квадратные'
     elif type2 == 'others':
         products = products.filter(~Q(shape=u'Круглые') & ~Q(shape=u'Овальные') & ~Q(shape=u'Прямоугольные'))
         category_name += u' - Другие'
@@ -971,6 +1151,7 @@ def tables_unfoldable(request, type1, type2, template_name="catalog/category.htm
     elif type2 == 'garden':
         products = products.filter(Q(style=u'Садовые'))
         category_name += u' - Садовые'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -982,32 +1163,36 @@ def chairs_base(request, template_name="catalog/category.html"):
         (u'Дерево', reverse('chairs_wooden')),
         (u'Металлокаркас', reverse('chairs_metalkarkas')),
         (u'Пластиковые', reverse('chairs_plastic')),
-        (u'Разные', reverse('chairs_others_base')),
         (u'Барные', reverse('chairs_barniy')),
         (u'Складные', reverse('chairs_foldable')),
+        (u'Разные', reverse('chairs_others_base')),
     )
     products = Product.active.filter(Q(module_mebel=u'Стул'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def chairs_wooden(request, template_name="catalog/category.html"):
     category_name = u'Стулья - Дерево'
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(material__name=u'Дерево'))
+    products = products.filter(Q(material__name__icontains=u'Дерево'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def chairs_metalkarkas(request, template_name="catalog/category.html"):
     category_name = u'Стулья - Металлокаркас'
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(material__name=u'Металлокаркас'))
+    products = products.filter(Q(material__name__icontains=u'Металлокаркас'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def chairs_plastic(request, template_name="catalog/category.html"):
     category_name = u'Стулья - Пластиковые'
     products = Product.active.filter(Q(module_mebel=u'Стул'))
-    products = products.filter(Q(material__name=u'Пластик'))
+    products = products.filter(Q(material__name__icontains=u'Пластик'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1015,6 +1200,7 @@ def chairs_barniy(request, template_name="catalog/category.html"):
     category_name = u'Стулья - Барные'
     products = Product.active.filter(Q(module_mebel=u'Стул'))
     products = products.filter(Q(style=u'Для баров и ресторанов'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1022,6 +1208,7 @@ def chairs_foldable(request, template_name="catalog/category.html"):
     category_name = u'Стулья - Складные'
     products = Product.active.filter(Q(module_mebel=u'Стул'))
     products = products.filter(Q(architecture_type__name=u'Раскладные'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1029,18 +1216,19 @@ def chairs_others_base(request, template_name="catalog/category.html"):
     category_name = u'Стулья - Разные'
     subcategories = (
         (u'Ротанг', reverse('chairs_others', args=('rotang',))),
-        (u'Офисные', reverse('chairs_others', args=('rotang',))),
-        (u'Для кинотеатров', reverse('chairs_others', args=('rotang',))),
-        (u'Для посетителей', reverse('chairs_others', args=('rotang',))),
+        (u'Офисные', reverse('chairs_others', args=('office',))),
+        (u'Для кинотеатров', reverse('chairs_others', args=('cinema',))),
+        (u'Для посетителей', reverse('chairs_others', args=('visitors',))),
     )
     products = Product.active.filter(Q(module_mebel=u'Стул'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def chairs_others(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_mebel=u'Стул'))
     if type == 'rotang':
-        products = products.filter(Q(rotang=True))
+        products = products.filter(Q(material__name__icontains=u'Ротанг'))
         category_name = u'Стулья - Разные - Ротанг'
     elif type == 'office':
         products = products.filter(Q(architecture_type__name=u'Офисные') | Q(style=u'Офисные'))
@@ -1051,6 +1239,7 @@ def chairs_others(request, type, template_name="catalog/category.html"):
     elif type == 'visitors':
         products = products.filter(Q(style=u'Для посетителей'))
         category_name = u'Стулья - Разные - Для посетителей'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1065,6 +1254,7 @@ def kitchen_corners_base(request, template_name="catalog/category.html"):
         (u'Уголки от', reverse('kitchen_corner_from')),
     )
     products = Product.active.filter(Q(komplekt_mebel=u'Кухонный уголок') | Q(module_mebel=u'Кухонный уголок'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1077,6 +1267,7 @@ def kitchen_corners_komplekts_base(request, template_name="catalog/category.html
     )
     products = Product.active.filter(Q(module_komplekt=u'Комплект'))
     products = products.filter(Q(komplekt_mebel=u'Кухонный уголок'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1092,6 +1283,7 @@ def kitchen_corners_komplekts(request, type, template_name="catalog/category.htm
     elif type == 'metalkarkas':
         products = products.filter(Q(material__name=u'Металлокаркас'))
         category_name = u'Кухонные уголки - Комплекты - Металлокаркас'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1104,6 +1296,7 @@ def kitchen_corners_module_base(request, template_name="catalog/category.html"):
     )
     products = Product.active.filter(Q(module_komplekt=u'Модуль'))
     products = products.filter(Q(module_mebel=u'Кухонный уголок'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1116,7 +1309,8 @@ def kitchen_corners_module_wooden(request, template_name="catalog/category.html"
     )
     products = Product.active.filter(Q(module_komplekt=u'Модуль'))
     products = products.filter(Q(module_mebel=u'Кухонный уголок'))
-    products = products.filter(Q(material__name=u'Дерево'))
+    products = products.filter(Q(material__name__icontains=u'Дерево'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1129,7 +1323,8 @@ def kitchen_corners_module_ldsp(request, template_name="catalog/category.html"):
     )
     products = Product.active.filter(Q(module_komplekt=u'Модуль'))
     products = products.filter(Q(module_mebel=u'Кухонный уголок'))
-    products = products.filter(Q(material__name=u'ЛДСП'))
+    products = products.filter(Q(material__name__icontains=u'ЛДСП'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1142,7 +1337,8 @@ def kitchen_corners_module_metalkarkas(request, template_name="catalog/category.
     )
     products = Product.active.filter(Q(module_komplekt=u'Модуль'))
     products = products.filter(Q(module_mebel=u'Кухонный уголок'))
-    products = products.filter(Q(material__name=u'Металлокаркас'))
+    products = products.filter(Q(material__name__icontains=u'Металлокаркас'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1151,13 +1347,13 @@ def kitchen_corners_module(request, type1, type2, template_name="catalog/categor
     products = Product.active.filter(Q(module_komplekt=u'Модуль'))
     products = products.filter(Q(module_mebel=u'Кухонный уголок'))
     if type1 == 'wooden':
-        products = products.filter(Q(material__name=u'Дерево'))
+        products = products.filter(Q(material__name__icontains=u'Дерево'))
         category_name += u' - Дерево'
     elif type1 == 'ldsp':
-        products = products.filter(Q(material__name=u'ЛДСП'))
+        products = products.filter(Q(material__name__icontains=u'ЛДСП'))
         category_name += u' - ЛДСП'
     elif type1 == 'metalkarkas':
-        products = products.filter(Q(material__name=u'Металлокаркас'))
+        products = products.filter(Q(material__name__icontains=u'Металлокаркас'))
         category_name += u' - Металлокаркас'
     if type2 == 'tables':
         products = products.filter(Q(module_mebel=u'Стол'))
@@ -1168,6 +1364,7 @@ def kitchen_corners_module(request, type1, type2, template_name="catalog/categor
     elif type2 == 'corners':
         products = products.filter(Q(module_mebel=u'Кухонный уголок'))
         category_name += u' - Кухонный уголок'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1180,6 +1377,7 @@ def kitchen_corner_sofa_base(request, type, template_name="catalog/category.html
     products = Product.active.filter(Q(module_mebel=u'Диван'))
     products = products.filter(Q(room=u'Кухня'))
     products = products.filter(Q(shape=u'Угловые'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1193,6 +1391,7 @@ def kitchen_corner_sofa(request, type, template_name="catalog/category.html"):
     elif type == 'unfoldable':
         products = products.filter(~Q(architecture_type__name=u'Раскладные'))
         category_name = u'Кухонные уголки - Кухонные + угловые диваны - Не раскладные'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1200,6 +1399,7 @@ def kitchen_corner_from(request, template_name="catalog/category.html"):
     category_name = u'Кухонные уголки - Кухонные + угловые диваны - Уголки от'
     products = Product.active.filter(Q(shape=u'Угловые'))
     products = products.filter(Q(room=u'Кухня'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1209,16 +1409,20 @@ def matrasses_base(request, template_name="catalog/category.html"):
     category_name = u'Матрасы'
     subcategories = (
         (u'Пружинные', reverse('matrasses', args=('springing',))),
+        (u'Беспружинные', reverse('matrasses', args=('springless',))),
+        (u'Независимые пружины', reverse('matrasses', args=('independent',))),
         (u'Ортопедические', reverse('matrasses', args=('ortoped',))),
         (u'Анатомические', reverse('matrasses', args=('anatom',))),
+        (u'Комплектующие', reverse('matrasses', args=('complectable',))),
     )
-    products = Product.active.filter(Q(module_mebel=u'Матрас'))
+    products = Product.active.filter(Q(module_other=u'Матрас') & ~Q(architecture_type__name=u'Комплектующие'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def matrasses(request, type, template_name="catalog/category.html"):
     category_name = u'Матрас'
-    products = Product.active.filter(Q(module_mebel=category_name))
+    products = Product.active.filter(Q(module_other=u'Матрас'))
     if type == 'springing':
         products = products.filter(Q(architecture_type__name=u'Пружинные'))
         category_name = u'Матрасы - Пружинные'
@@ -1228,6 +1432,16 @@ def matrasses(request, type, template_name="catalog/category.html"):
     elif type == 'anatom':
         products = products.filter(Q(architecture_type__name=u'Анатомические'))
         category_name = u'Матрасы - Анатомические'
+    elif type == 'springless':
+        products = products.filter(Q(architecture_type__name=u'Беспружинные'))
+        category_name = u'Матрасы - Беспружинные'
+    elif type == 'complectable':
+        products = products.filter(Q(architecture_type__name=u'Комплектующие'))
+        category_name = u'Матрасы - Комплектующие'
+    elif type == 'independent':
+        products = products.filter(Q(architecture_type__name=u'Независимые пружины'))
+        category_name = u'Матрасы - Независимые пружины'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1244,6 +1458,7 @@ def garden_furniture_base(request, template_name="catalog/category.html"):
         (u'Другое', reverse('garden_furniture_others')),
     )
     products = Product.active.filter(Q(style=u'Садовые'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1256,6 +1471,7 @@ def garden_furniture_rotang_base(request, template_name="catalog/category.html")
     )
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(material__name__icontains=u'Ротанг'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1268,7 +1484,8 @@ def garden_furniture_rotang_artificial(request, template_name="catalog/category.
         (u'Стулья', reverse('garden_furniture_rotang_material', args=('artificial', 'chairs'))),
     )
     products = Product.active.filter(Q(style=u'Садовые'))
-    products = products.filter(Q(material__name=u'Ротанг искусственный'))
+    products = products.filter(Q(material__name__icontains=u'Ротанг искусственный'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1281,7 +1498,8 @@ def garden_furniture_rotang_natural(request, template_name="catalog/category.htm
         (u'Стулья', reverse('garden_furniture_rotang_material', args=('natural', 'chairs'))),
     )
     products = Product.active.filter(Q(style=u'Садовые'))
-    products = products.filter(Q(material__name=u'Ротанг натуральный'))
+    products = products.filter(Q(material__name__icontains=u'Ротанг натуральный'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1294,7 +1512,8 @@ def garden_furniture_rotang_wooden(request, template_name="catalog/category.html
         (u'Стулья', reverse('garden_furniture_rotang_material', args=('wooden', 'chairs'))),
     )
     products = Product.active.filter(Q(style=u'Садовые'))
-    products = products.filter(Q(material__name=u'Дерево'))
+    products = products.filter(Q(material__name__icontains=u'Дерево'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1303,13 +1522,13 @@ def garden_furniture_rotang_material(request, type1, type2, template_name="catal
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(material__name__icontains=u'Ротанг'))
     if type1 == 'artificial':
-        products = products.filter(Q(material__name=u'Ротанг искусственный'))
+        products = products.filter(Q(material__name__icontains=u'Ротанг искусственный'))
         category_name += u' - Ротанг искусственный'
     elif type1 == 'natural':
-        products = products.filter(Q(material__name=u'Ротанг натуральный'))
+        products = products.filter(Q(material__name__icontains=u'Ротанг натуральный'))
         category_name += u' - Ротанг натуральный'
     elif type1 == 'wooden':
-        products = products.filter(Q(material__name=u'Дерево'))
+        products = products.filter(Q(material__name__icontains=u'Дерево'))
         category_name += u' - Дерево'
     if type2 == 'sofas':
         products = products.filter(Q(module_mebel=u'Диван'))
@@ -1327,6 +1546,7 @@ def garden_furniture_rotang_material(request, type1, type2, template_name="catal
         (u'Мини', reverse('garden_furniture_rotang', args=(type1, type2, 'mini'))),
         (u'Стандарт', reverse('garden_furniture_rotang', args=(type1, type2, 'standard'))),
     )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1334,11 +1554,11 @@ def garden_furniture_rotang(request, type1, type2, type3, template_name="catalog
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(material__name__icontains=u'Ротанг'))
     if type1 == 'artificial':
-        products = products.filter(Q(material__name=u'Ротанг искусственный'))
+        products = products.filter(Q(material__name__icontains=u'Ротанг искусственный'))
     elif type1 == 'natural':
-        products = products.filter(Q(material__name=u'Ротанг натуральный'))
+        products = products.filter(Q(material__name__icontains=u'Ротанг натуральный'))
     elif type1 == 'wooden':
-        products = products.filter(Q(material__name=u'Дерево'))
+        products = products.filter(Q(material__name__icontains=u'Дерево'))
     if type2 == 'sofas':
         products = products.filter(Q(module_mebel=u'Диван'))
     elif type2 == 'tables':
@@ -1351,41 +1571,47 @@ def garden_furniture_rotang(request, type1, type2, type3, template_name="catalog
         products = products.filter(Q(architecture_type__name=u'Мини'))
     elif type3 == 'standard':
         products = products.filter(Q(architecture_type__name=u'Стандарт'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def garden_furniture_kacheli(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(module_other=u'Качели'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def garden_furniture_raskladushka(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(module_other=u'Раскладушка'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def garden_furniture_armchair(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(module_mebel=u'Кресло'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def garden_furniture_shezlong(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Садовые'))
     products = products.filter(Q(module_other=u'Шезлонг'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def garden_furniture_others(request, template_name="catalog/category.html"):
     products = Product.active.filter(Q(style=u'Садовые'))
-    products = products.filter(Q(rotang=False) &
+    products = products.filter(~Q(material__name__icontains=u'Ротанг') &
                                ~Q(module_other=u'Качели') &
                                ~Q(module_other=u'Раскладушка') &
                                ~Q(module_mebel=u'Кресло') &
                                ~Q(module_other=u'Шезлонг')
                                )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1401,6 +1627,7 @@ def bars_restaurants_base(request, template_name="catalog/category.html"):
         (u'Стойки', reverse('bars_restaurants', args=('stoyki',))),
     )
     products = Product.active.filter(Q(style=u'Для баров и ресторанов'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1424,6 +1651,7 @@ def bars_restaurants(request, type, template_name="catalog/category.html"):
         subcategories = (
             (u'Прилавки', reverse('bars_restaurants_prilavki')),
         )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1431,6 +1659,7 @@ def bars_restaurants_prilavki(request, template_name="catalog/category.html"):
     category_name = u'Для баров и ресторанов - Стойки - Прилавки'
     products = Product.active.filter(Q(style=u'Для баров и ресторанов'))
     products = products.filter(Q(module_mebel=u'Прилавок'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1439,6 +1668,7 @@ def bars_restaurants_prilavki(request, template_name="catalog/category.html"):
 def case_kupe(request, template_name="catalog/category.html"):
     category_name = u'Шкафы-купе'
     products = Product.active.filter(Q(architecture_type__name=u'Шкаф-купе'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1447,6 +1677,7 @@ def case_kupe(request, template_name="catalog/category.html"):
 def hotels(request, template_name="catalog/category.html"):
     category_name = u'Гостиничные номера'
     products = Product.active.filter(Q(style=u'Гостиничные номера'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1462,6 +1693,7 @@ def interier_base(request, template_name="catalog/category.html"):
         (u'Корзины', reverse('interier', args=('buckets',))),
     )
     products = Product.active.filter(Q(module_komplekt=u'Интерьер'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1489,6 +1721,7 @@ def interier(request, type, template_name="catalog/category.html"):
             (u'Стекло', reverse('interier_vases', args=('glass',))),
             (u'Плетенка', reverse('interier_vases', args=('pletenie',))),
         )
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1496,11 +1729,12 @@ def interier_vases(request, type, template_name="catalog/category.html"):
     products = Product.active.filter(Q(module_komplekt=u'Интерьер'))
     products = products.filter(Q(module_other=u'Ваза'))
     if type == 'glass':
-        products = products.filter(Q(material__name=u'Стекло'))
+        products = products.filter(Q(material__name__icontains=u'Стекло'))
         category_name = u'Интерьер - Вазы - Стекло'
     elif type == 'pletenie':
-        products = products.filter(Q(material__name=u'Плетенка'))
+        products = products.filter(Q(material__name__icontains=u'Плетенка'))
         category_name = u'Интерьер - Вазы - Плетенка'
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1508,6 +1742,7 @@ def interier_buckets(request, template_name="catalog/category.html"):
     category_name = u'Интерьер - Корзины - Сундуки'
     products = Product.active.filter(Q(module_komplekt=u'Интерьер'))
     products = products.filter(Q(module_other=u'Сундук'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1516,6 +1751,7 @@ def interier_buckets(request, template_name="catalog/category.html"):
 def others(request, template_name="catalog/category.html"):
     category_name = u'Разное'
     products = Product.active.filter(Q(module_other=u'Разное'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1532,6 +1768,7 @@ def associated_goods_base(request, template_name="catalog/category.html"):
         (u'Фартуки', reverse('associated_goods', args=('aprons',))),
     )
     products = Product.active.filter(Q(module_komplekt=u'Сопутствующие товары'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1549,6 +1786,7 @@ def associated_goods(request, type, template_name="catalog/category.html"):
         products = products.filter(Q(module_other=u'Мойка'))
     elif type == 'aprons':
         products = products.filter(Q(module_other=u'Фартук'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
@@ -1557,6 +1795,16 @@ def associated_goods(request, type, template_name="catalog/category.html"):
 def individual_orders(request, template_name="catalog/category.html"):
     category_name = u'Индивидуальные заказы'
     products = Product.active.filter(Q(on_order=True))
+    products, paginator, page = paginate_products(request, products)
+    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
+
+######################## Обеденные группы ##############################
+
+def dinner_groups(request, template_name="catalog/category.html"):
+    category_name = u'Обеденные группы'
+    products = Product.active.filter(Q(komplekt_mebel=u'Обеденная группа'))
+    products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 

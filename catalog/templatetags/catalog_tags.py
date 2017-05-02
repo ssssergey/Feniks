@@ -82,6 +82,10 @@ def category_list(request_path):
             'link': reverse('chairs_base'),
         },
         {
+            'title': u'Обеденные группы',
+            'link': reverse('dinner_groups'),
+        },
+        {
             'title': u'Кухонные уголки',
             'link': reverse('kitchen_corners_base'),
         },
