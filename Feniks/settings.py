@@ -111,7 +111,7 @@ WSGI_APPLICATION = 'Feniks.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'feniks',
+        'NAME': 'feniks_utf8',
         'USER': pg_username,
         'PASSWORD': pg_password,
         'HOST': 'localhost',
