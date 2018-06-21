@@ -39,6 +39,7 @@ cushioned_furniture = [
 
 office_furniture = [
     url(r'^$', office_furniture_base, name='office_furniture_base'),
+    url(r'^komplekts$', office_furniture_komplekts_base, name='office_furniture_komplekts_base'),
     url(r'^sofas$', office_furniture_sofas_base, name='office_furniture_sofas_base'),
     url(r'^tables$', office_furniture_tables, name='office_furniture_tables'),
     url(r'^cases$', office_furniture_cases, name='office_furniture_cases'),
