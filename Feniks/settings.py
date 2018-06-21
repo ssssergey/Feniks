@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import socket
-from secret import *
+from .secret import *
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# CURRENT_PATH = os.path.abspath(os.path.dirname(__file__).decode('utf-8')).replace('\\', '/')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 SECRET_KEY = secret_key
@@ -13,8 +12,6 @@ SECRET_KEY = secret_key
 ENABLE_SSL = False
 
 LOGIN_REDIRECT_URL = '/'
-
-# AUTH_PROFILE_MODULE = 'accounts.userprofile'
 
 AUTH_USER_MODEL = 'accounts.UserProfile'
 
@@ -104,7 +101,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Feniks.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
@@ -136,7 +132,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -171,4 +166,9 @@ SITE_NAME = u'Феникс'
 META_KEYWORDS = u'мебель, мягкая мебель, офисная мебель, купить мебель, диваны, кресла, прохладный, кабардино-балкария'
 META_DESCRIPTION = u'Мебельный Салон Феникс'
 
-ADMINS = [('feniks', 'feniks-kbr@yandex.ru'),('lse', 'lse1983@mail.ru')]
+ADMINS = [('feniks', 'feniks-kbr@yandex.ru'), ('lse', 'lse1983@mail.ru')]
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

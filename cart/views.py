@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.template.loader import render_to_string, get_template
-from django.core.mail import send_mail, BadHeaderError, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.shortcuts import get_current_site
-from Feniks.settings import EMAIL_HOST_USER
-# from forms import ContactForm
-import cart
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
+from django.contrib import messages
+
+from Feniks.settings import EMAIL_HOST_USER
+import cart
 from .forms import CheckoutForm
 from .models import Order, OrderItem
-
-from django.contrib import messages
 
 
 def show_cart(request, template_name="cart/cart.html"):
@@ -49,14 +48,9 @@ def confirm_order(request):
     form = CheckoutForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
-            # telephone_1 = form.cleaned_data['telephone_1']
-            # email = form.cleaned_data['email']
             recipients = ['lse1983@mail.ru', 'feniks-kbr@yandex.ru']
             # Send email
             mail_template = 'mail/mail_order.html'
-            # mail_txt = 'cart/mail.txt'
-            # plaintext = get_template(mail_txt)
-            # text_content = plaintext.render(d)
             context_dict_0 = {'cart_items': cart_items, 'cart_item_count': cart_item_count, 'cart_total': cart_total,
                               'domain_url': domain_url}
             context_dict = dict(context_dict_0.items() + form.cleaned_data.items())
@@ -97,7 +91,6 @@ def confirm_order(request):
 
 
 def push_mail(context_dict, mail_theme, recipients, mail_template, f_silent):
-    # d = Context(context_dict)
     subject, from_email, to = mail_theme, EMAIL_HOST_USER, recipients
     htmly = get_template(mail_template)
     html_content = htmly.render(context_dict)
@@ -105,34 +98,6 @@ def push_mail(context_dict, mail_theme, recipients, mail_template, f_silent):
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
     msg.send(fail_silently=f_silent)
-
-
-################################# Checkout Views ########################################
-
-
-
-
-# def show_checkout(request, template_name='checkout/checkout.html'):
-#     if cart.is_empty(request):
-#         cart_url = urlresolvers.reverse('show_cart')
-#         return HttpResponseRedirect(cart_url)
-#     if request.method == 'POST':
-#         postdata = request.POST.copy()
-#         form = CheckoutForm(postdata)
-#         if form.is_valid():
-#             response = checkout.process(request)
-#             order_number = response.get('order_number', 0)
-#             error_message = response.get('message', '')
-#             if order_number:
-#                 request.session['order_number'] = order_number
-#                 receipt_url = urlresolvers.reverse('checkout_receipt')
-#                 return HttpResponseRedirect(receipt_url)
-#         else:
-#             error_message = 'Correct the errors below'
-#     else:
-#         form = CheckoutForm()
-#     page_title = 'Checkout'
-#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def receipt(request, template_name='checkout/receipt.html'):

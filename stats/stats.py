@@ -3,7 +3,6 @@ import base64
 
 from search.models import SearchTerm
 from Feniks.settings import PRODUCTS_PER_ROW
-
 from catalog.models import Product
 from models import ProductView
 
@@ -25,7 +24,7 @@ def recommended_from_search(request):
     for word in common_words:
         results = search.products(word).get('products', [])
         for r in results:
-            if len(matching) < PRODUCTS_PER_ROW and not r in matching:
+            if len(matching) < PRODUCTS_PER_ROW and r not in matching:
                 matching.append(r)
     return matching
 
@@ -67,8 +66,8 @@ def log_product_view(request, product):
             v.user = request.user
         v.save()
 
+
 def recommended_from_views(request):
-    t_id = tracking_id(request)
     # get recently viewed products
     viewed = get_recently_viewed(request)
     # if there are previously viewed products, get other tracking ids that have
@@ -85,6 +84,7 @@ def recommended_from_views(request):
                 other_viewed = ProductView.objects.filter(product__in=all_viewed).exclude(product__in=viewed)
                 if other_viewed:
                     return Product.active.filter(productview__in=other_viewed).distinct()[0:PRODUCTS_PER_ROW]
+
 
 def get_recently_viewed(request):
     t_id = tracking_id(request)

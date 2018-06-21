@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
-
-from .models import CartItem, Schet
-from catalog.models import Product
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
-
 import random
+from datetime import datetime, timedelta
 
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
 from django.conf import settings
 from django.db.models import Max
-from Feniks.settings import SESSION_AGE_DAYS
-from datetime import datetime, timedelta
-from myutils.num2t4ru import num2text
+from django.core import urlresolvers
 
+from myutils.num2t4ru import num2text
+from .models import CartItem, Schet
+from catalog.models import Product
+from .models import Order, OrderItem
+from .forms import CheckoutForm
 
 CART_ID_SESSION_KEY = 'cart_id'
+
+
 # get the current user's cart id, sets new one if blank
 def _cart_id(request):
     if request.session.get(CART_ID_SESSION_KEY, '') == '':
@@ -35,12 +37,15 @@ def _generate_cart_id():
 def get_cart_items(request):
     return CartItem.objects.filter(cart_id=_cart_id(request))
 
+
 def is_empty(request):
     return cart_item_count(request) == 0
+
 
 def empty_cart(request):
     user_cart = get_cart_items(request)
     user_cart.delete()
+
 
 # add an item to the cart
 def add_to_cart(request):
@@ -69,10 +74,6 @@ def add_to_cart(request):
         ci.price = p.price
         ci.cart_id = _cart_id(request)
         ci.save()
-    # p.quantity -= int(quantity)
-    # p.save()
-    # print "Now {}".format(p.quantity)
-    # returns the total number of items in the user's cart
 
 
 def cart_distinct_item_count(request):
@@ -98,14 +99,9 @@ def update_cart(request):
     cart_item.save()
     if cart_item:
         if int(quantity) > 0:
-            # delta_quantity = int(quantity) - cart_item.quantity
             cart_item.quantity = int(quantity)
             cart_item.save()
-            # product = Product.active.get(cartitem=cart_item)
-            # print "Was {}".format(product.quantity)
-            # product.quantity -= delta_quantity
-            # product.save()
-            # print "Now {}".format(product.quantity)
+
         else:
             remove_from_cart(request)
 
@@ -116,14 +112,9 @@ def remove_from_cart(request):
     item_id = postdata['item_id']
     cart_item = get_single_item(request, item_id)
     if cart_item:
-        # product = Product.active.get(cartitem=cart_item)
-        # print "Was {}".format(product.quantity)
-        # product.quantity += cart_item.quantity
-        # product.save()
-        # print "Now {}".format(product.quantity)
         cart_item.delete()
 
-from django.contrib import messages
+
 def remove_from_orders(request):
     postdata = request.POST.copy()
     item_id = postdata['order_id']
@@ -135,6 +126,7 @@ def remove_from_orders(request):
     else:
         message = u'Вы не можете удалить этот заказ.'
         messages.warning(request, message)
+
 
 # gets the total cost for the current cart
 def cart_total(request):
@@ -160,11 +152,6 @@ def remove_old_cart_items():
     to_remove.delete()
     print str(len(cart_ids)) + " carts were removed"
 
-################################# Checkout Views ########################################
-
-from .models import Order, OrderItem
-from .forms import CheckoutForm
-from django.core import urlresolvers
 
 # returns the URL from the checkout module for cart
 def get_checkout_url(request):
@@ -175,33 +162,23 @@ def create_order(request):
     order = Order()
     checkout_form = CheckoutForm(request.POST, instance=order)
     order = checkout_form.save(commit=False)
-    # order.transaction_id = order.id
     order.ip_address = request.META.get('REMOTE_ADDR')
     order.user = None
     if request.user.is_authenticated():
         order.user = request.user
     order.status = Order.PROCESSED
     order.save()
-    # if the order save succeeded
     if order.pk:
         cart_items = get_cart_items(request)
         for ci in cart_items:
-            # create order item for each cart item
             oi = OrderItem()
             oi.order = order
             oi.quantity = ci.quantity
-            oi.price = ci.price  # now using @property
+            oi.price = ci.price
             oi.product = ci.product
             oi.save()
-        # all set, empty cart
         empty_cart(request)
-    # # save profile info for future orders
-    # if request.user.is_authenticated():
-    #     from accounts import profile
-    #     profile.set(request)
-    # return the new order object
     return order
-
 
 
 def create_schet(order):

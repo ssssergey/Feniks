@@ -1,30 +1,16 @@
 # -*- coding: utf-8 -*-
-from forms import UserLoginForm, UserRegisterForm
+import time
+
+from django.contrib.auth.decorators import login_required
+from cart.cart import remove_from_orders
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, redirect, render
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, authenticate, logout
-# import profile
 
-# # CUSTOM REGISTER VIEW
-# def register(request, template_name="registration/register.html"):
-#     if request.method == 'POST':
-#         postdata = request.POST.copy()
-#         form = RegisterForm(postdata)
-#         if form.is_valid():
-#             form.save()
-#             un = postdata.get('username', '')
-#             pw = postdata.get('password1', '')
-#             new_user = authenticate(username=un, password=pw)
-#             if new_user and new_user.is_active:
-#                 login(request, new_user)
-#                 url = urlresolvers.reverse('catalog_home')
-#                 return HttpResponseRedirect(url)
-#     else:
-#         form = RegisterForm()
-#     page_title = u'Регистрация пользователя'
-#     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+from .forms import UserLoginForm, UserRegisterForm
+from cart.models import Order, OrderItem
 
 
 # ALTERNATIVE CUSTOM REGISTER VIEW
@@ -63,20 +49,10 @@ def logout_view(request):
     return render(request, "catalog/index.html", {})
 
 
-from cart.models import Order, OrderItem
-from django.contrib.auth.decorators import login_required
-import time
-from cart.cart import remove_from_orders
-# from django.db import connection
-# from django.db.models.aggregates import Count, Sum
-# from django.db.models import Q
-from django.contrib.messages import get_messages
-
 @login_required
 def my_account(request, template_name="registration/my_account.html"):
     if request.method == 'POST':
         postdata = request.POST.copy()
-        print postdata
         if postdata['submit'] == u'Удалить':
             remove_from_orders(request)
     name = request.user.get_full_name()
@@ -100,7 +76,7 @@ def my_account(request, template_name="registration/my_account.html"):
         data = []
         for couple in last_months:
             month_obj = {
-                'month':couple,
+                'month': couple,
                 'products_aggregated': [],
                 'product_items': [],
                 'month_total': 0,
@@ -115,7 +91,7 @@ def my_account(request, template_name="registration/my_account.html"):
 
             for p in month_oi_qs:
                 month_obj['month_total'] += p.total
-                p.margin = (p.price-p.product.price_bulk1)*p.quantity
+                p.margin = (p.price - p.product.price_bulk1) * p.quantity
                 month_obj['month_margin'] += p.margin
                 month_obj['product_items'].append(p)
             month_obj['percent'] = 0
@@ -129,7 +105,7 @@ def my_account(request, template_name="registration/my_account.html"):
                 month_obj['percent'] = 80
             elif month_obj['month_total'] > 2000000:
                 month_obj['percent'] = 100
-            month_obj['profit'] = month_obj['month_margin']/100  * month_obj['percent']
+            month_obj['profit'] = month_obj['month_margin'] / 100 * month_obj['percent']
             data.append(month_obj)
     # storage = get_messages(request)
     # for message in storage:

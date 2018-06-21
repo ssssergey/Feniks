@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import AbstractUser
 
 
 class UserProfile(AbstractUser):
@@ -10,7 +10,8 @@ class UserProfile(AbstractUser):
     patronymic = models.CharField(u'Отчество', max_length=250, blank=True, null=True)
     country = models.CharField(u'Страна', max_length=250, default=u'Российская Федерация', null=True)
     region = models.CharField(u'Край, область, республика', max_length=250, blank=True, null=True)
-    city = models.CharField(u'Населенный пункт', max_length=250, null=True, help_text=u'Например: г. Прохладный или с. Московское')
+    city = models.CharField(u'Населенный пункт', max_length=250, null=True,
+                            help_text=u'Например: г. Прохладный или с. Московское')
     adress = models.CharField(u'Улица, дом', max_length=250, blank=True, null=True,
                               help_text=u'Например: ул. Ленина 10 или пер. Красный 5')
     index = models.CharField(u'Почтовый индекс', max_length=250, blank=True, null=True)

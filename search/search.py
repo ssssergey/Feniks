@@ -6,6 +6,8 @@ from django.db.models import Q
 from stats import stats
 
 STRIP_WORDS = [u'в', u'и', u'или', u'для', u'по', u'на', u'из', u'с', u'со', u'под']
+
+
 # store the search text in the database
 def store(request, q):
     # if search term is at least three chars long, store in db
@@ -32,7 +34,6 @@ def products(search_text):
                                    Q(description__icontains=word) |
                                    Q(brand__icontains=word) |
                                    Q(country__icontains=word) |
-                                   # Q(color__icontains=word) |
                                    Q(meta_description__icontains=word) |
                                    Q(meta_keywords__icontains=word))
         results['products'] = products

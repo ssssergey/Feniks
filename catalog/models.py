@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User, AbstractUser
 
 from django.db import models
 from django_thumbs.db.models import ImageWithThumbsField
 from django.utils import timezone
 
-from Feniks import settings
 from django.utils.text import slugify
 from unidecode import unidecode
-from django.db.models import Q
 
 
 class ActiveCategoryManager(models.Manager):
@@ -130,16 +127,6 @@ class Product(models.Model):
                      )
     soft_komplekt = models.CharField(u'Комплект мягкой мебели', max_length=100, blank=True, choices=SOFT_KOMPLEKT)
 
-    # ARCHITECTURE_TYPE = (
-    #     (u'Выкатные', u'Выкатные'), (u'Раскладные', u'Раскладные'), (u'Классические', u'Классические'),
-    #     (u'Евро', u'Евро'), (u'Металлокаркас', u'Металлокаркас'), (u'Мини', u'Мини'),
-    #     (u'Евро-книжка', u'Евро-книжка'), (u'Книжка', u'Книжка'), (u'Стандарт', u'Стандарт'), (u'Шкаф-купе', u'Шкаф-купе'),
-    #     (u'Кресла-кровати', u'Кресла-кровати'), (u'Кресла-качалки', u'Кресла-качалки'), (u'Банкетки', u'Банкетки'),
-    #     (u'Офисные', u'Офисные'), (u'Двухъярусная кровать', u'Двухъярусная кровать'), (u'Пружинные', u'Пружинные'),
-    #     (u'Ортопедические', u'Ортопедические'), (u'Анатомические', u'Анатомические'), (u'Беспружинные', u'Беспружинные'),
-    #     (u'Комплектующие', u'Комплектующие'), (u'Независимые пружины', u'Независимые пружины'),
-    # )
-    # architecture_type = models.CharField(u'Конструкция', max_length=100, blank=True, choices=ARCHITECTURE_TYPE)
     architecture_type = models.ManyToManyField(Architecture, verbose_name=u'Конструкция', blank=True)
 
     ARMCHAIRE_ROLE = (
@@ -162,7 +149,6 @@ class Product(models.Model):
                 (u'Полимерный камень', u'Полимерный камень'), (u'МДФ', u'МДФ'), (u'Плетеные', u'Плетеные'),
                 (u'Ротанг', u'Ротанг'),
                 (u'Ротанг искусственный', u'Ротанг искусственный'), (u'Ротанг натуральный', u'Ротанг натуральный'))
-    # material = models.CharField(u'Материал', max_length=100, blank=True, choices=MATERIAL)
     material = models.ManyToManyField(Material, verbose_name=u'Материал', blank=True)
 
     SHAPE = ((u'Круглые', u'Круглые'), (u'Овальные', u'Овальные'), (u'Прямоугольные', u'Прямоугольные'),
@@ -197,10 +183,6 @@ class Product(models.Model):
     country = models.CharField(u'Страна-производитель', max_length=50, blank=True)
     price = models.IntegerField(u'Цена', null=True)
     price_bulk1 = models.IntegerField(u'Оптовая цена 1', blank=True, null=True)
-    # price_bulk2 = models.IntegerField(u'Оптовая цена 2', blank=True, null=True)
-    # price_bulk3 = models.IntegerField(u'Оптовая цена 3', blank=True, null=True)
-    # categories = models.ManyToManyField(Category, verbose_name=u'Категории')
-    # quantity = models.IntegerField(u'Количество', default=1)
     description = models.TextField(u'Описание', blank=True)
     garantee = models.IntegerField(u'Гарантийный срок', blank=True, default=12)
     on_order = models.BooleanField(u'Под заказ', default=False)
@@ -247,7 +229,3 @@ class Product(models.Model):
     def get_related_modules(self):
         modules = Product.active.filter(peace_of=self)
         return modules
-
-        # def get_parent_komplekt(self):
-        #     komplekt = self.peace_of
-        #     return komplekt

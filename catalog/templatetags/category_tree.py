@@ -95,31 +95,31 @@ cushioned_furniture_komplekts = (
 
 # Угловые
 cushioned_furniture_corners = (
-    (u'Выкатные','rollable'),
-    (u'Классические','classic'),
-    (u'Металлокарскас','metalkarkas'),
-    (u'Евро','euro'),
+    (u'Выкатные', 'rollable'),
+    (u'Классические', 'classic'),
+    (u'Металлокарскас', 'metalkarkas'),
+    (u'Евро', 'euro'),
 )
 
 # Диваны
 cushioned_furniture_sofas = (
-    (u'Классические','classic'),
-    (u'Евро-книжка','euro_book'),
-    (u'Книжка','book'),
-    (u'Выкатной','rollable'),
-    (u'Металлокаркас','metalkarkas'),
-    (u'Мини','mini'),
-    (u'Офисный','office'),
-    (u'Ротанг','rotang'),
+    (u'Классические', 'classic'),
+    (u'Евро-книжка', 'euro_book'),
+    (u'Книжка', 'book'),
+    (u'Выкатной', 'rollable'),
+    (u'Металлокаркас', 'metalkarkas'),
+    (u'Мини', 'mini'),
+    (u'Офисный', 'office'),
+    (u'Ротанг', 'rotang')
 )
 
 # Кресла
 cushioned_furniture_armchairs = (
-    (u'Кресла','classic'),
-    (u'Кресла-кровати','euro_book'),
-    (u'Кресла-качалки','book'),
-    (u'Офисные кресла','rollable'),
-    (u'Банкетки','metalkarkas'),
+    (u'Кресла', 'classic'),
+    (u'Кресла-кровати', 'euro_book'),
+    (u'Кресла-качалки', 'book'),
+    (u'Офисные кресла', 'rollable'),
+    (u'Банкетки', 'metalkarkas')
 )
 
 # КОНЕЦ мягкая мебель ####

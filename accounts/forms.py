@@ -1,31 +1,16 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from django.contrib.auth import (authenticate, login, logout, get_user_model)
-from django.contrib.auth.models import Group
+from django.contrib.auth import (authenticate, get_user_model)
 
 User = get_user_model()
 
 
-# # REGISTER FORM
-# class RegisterForm(UserCreationForm):
-#     torg_pred = forms.BooleanField(label=u'Я хочу быть торговым представителем')
-#
-#     def __init__(self, *args, **kwargs):
-#         super(RegisterForm, self).__init__(*args, **kwargs)
-#         self.fields['username'].help_text = u'Используйте английские буквы'
-
-# widget_torgpred=forms.TextInput(attrs={'placeholder': u'Обязательно для ТП'})
-
 # ALTERNATIVE REGISTER FORM
 class UserRegisterForm(forms.ModelForm):
-    # torgpred = forms.BooleanField(label=u'Я хочу быть торговым представителем (ТП)', required=False)
     username = forms.CharField(label=u'Логин', help_text=u'Используйте в этом поле английские буквы')
     email = forms.EmailField(required=True)
-    # password = forms.CharField(widget=forms.PasswordInput)
     last_name = forms.CharField(label=u'Фамилия', required=True)
     first_name = forms.CharField(label=u'Имя', required=True)
-    # city = forms.CharField(label=u'Город, село', required = True)
 
     telephone_1 = forms.RegexField(label=u'Телефон 1', regex=r'^\+?1?\d{9,15}$', help_text=u'Например: +79999999999',
                                    error_message=(u"Формат номера телефона: '+79999999999'. Разрешено до 15 символов."),
@@ -39,7 +24,6 @@ class UserRegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        # exclude = ['last_login', 'groups', 'is_superuser', 'user_permissions']
         fields = [
             'username',
             'email',
@@ -69,17 +53,7 @@ class UserRegisterForm(forms.ModelForm):
             from cart.views import push_mail
             push_mail(self.cleaned_data, u'Заявка на торгового представителя', ['lse1983@mail.ru', 'feniks-kbr@yandex.ru'],
                       'mail/mail_torgpred.html', False)
-            # group, created = Group.objects.get_or_create(name=u'Торговые представители')
-            # user.groups.add(group)
         return user
-
-        # group = Group.objects.get(name='groupname')
-        # user.groups.add(group)
-
-        # def clean_torgpred(self):
-        #     torgpred = self.cleaned_data.get('torgpred')
-        #     if torgpred:
-        #         if
 
 
 # CUSTOM LOGIN FORM

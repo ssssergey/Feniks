@@ -19,4 +19,3 @@ class SearchTestCase(TestCase):
         self.failUnlessEqual(response.status_code, httplib.OK)
         escaped_term = html.escape(search_term)
         self.assertContains(response, escaped_term)
-

@@ -1,18 +1,19 @@
 from django.conf.urls import url, include
-from views import *
-
+from .views import *
 
 carcass_furniture = [
     url(r'^$', carcass_furniture_base, name='carcass_furniture_base'),
     url(r'^kitchens$', carcass_furniture_kitchens_base, name='carcass_furniture_kitchens_base'),
-    url(r'^gorki_stenki_gestrooms$', carcass_furniture_gorki_stenki_gestrooms_base, name='carcass_furniture_gorki_stenki_gestrooms_base'),
+    url(r'^gorki_stenki_gestrooms$', carcass_furniture_gorki_stenki_gestrooms_base,
+        name='carcass_furniture_gorki_stenki_gestrooms_base'),
     url(r'^bedrooms$', carcass_furniture_bedrooms_base, name='carcass_furniture_bedrooms_base'),
     url(r'^corridors$', carcass_furniture_corridors_base, name='carcass_furniture_corridors_base'),
     url(r'^children_rooms$', carcass_furniture_children_rooms_base, name='carcass_furniture_children_rooms_base'),
     url(r'^cases$', carcass_furniture_cases_base, name='carcass_furniture_cases_base'),
     url(r'^beds$', carcass_furniture_beds_base, name='carcass_furniture_beds_base'),
     url(r'^kitchens/(?P<type>[-_\w]+)$', carcass_furniture_kitchens, name='carcass_furniture_kitchens'),
-    url(r'^gorki_stenki_gestrooms/(?P<type>[-_\w]+)$', carcass_furniture_gorki_stenki_gestrooms, name='carcass_furniture_gorki_stenki_gestrooms'),
+    url(r'^gorki_stenki_gestrooms/(?P<type>[-_\w]+)$', carcass_furniture_gorki_stenki_gestrooms,
+        name='carcass_furniture_gorki_stenki_gestrooms'),
     url(r'^bedrooms/(?P<type>[-_\w]+)$', carcass_furniture_bedrooms, name='carcass_furniture_bedrooms'),
     url(r'^corridors/(?P<type>[-_\w]+)$', carcass_furniture_corridors, name='carcass_furniture_corridors'),
     url(r'^children_rooms/(?P<type>[-_\w]+)$', carcass_furniture_children_rooms, name='carcass_furniture_children_rooms'),
@@ -22,7 +23,6 @@ carcass_furniture = [
     url(r'^tv_tumbs$', carcass_furniture_tv_tumbs_base, name='carcass_furniture_tv_tumbs_base'),
     url(r'^tv_tumbs/(?P<type>[-_\w]+)$', carcass_furniture_tv_tumbs, name='carcass_furniture_tv_tumbs'),
 ]
-
 
 cushioned_furniture = [
     url(r'^$', cushioned_furniture_base, name='cushioned_furniture_base'),
@@ -126,8 +126,10 @@ garden_furniture = [
     url(r'^rotang/artificial$', garden_furniture_rotang_artificial, name='garden_furniture_rotang_artificial'),
     url(r'^rotang/natural$', garden_furniture_rotang_natural, name='garden_furniture_rotang_natural'),
     url(r'^rotang/wooden$', garden_furniture_rotang_wooden, name='garden_furniture_rotang_wooden'),
-    url(r'^rotang/(?P<type1>[-_\w]+)/(?P<type2>[-_\w]+)$', garden_furniture_rotang_material, name='garden_furniture_rotang_material'),
-    url(r'^rotang/(?P<type1>[-_\w]+)/(?P<type2>[-_\w]+)/(?P<type3>[-_\w]+)$', garden_furniture_rotang, name='garden_furniture_rotang'),
+    url(r'^rotang/(?P<type1>[-_\w]+)/(?P<type2>[-_\w]+)$', garden_furniture_rotang_material,
+        name='garden_furniture_rotang_material'),
+    url(r'^rotang/(?P<type1>[-_\w]+)/(?P<type2>[-_\w]+)/(?P<type3>[-_\w]+)$', garden_furniture_rotang,
+        name='garden_furniture_rotang'),
     url(r'^kacheli$', garden_furniture_kacheli, name='garden_furniture_kacheli'),
     url(r'^raskladushka$', garden_furniture_raskladushka, name='garden_furniture_raskladushka'),
     url(r'^armchairs$', garden_furniture_armchair, name='garden_furniture_armchair'),
@@ -172,7 +174,6 @@ individual_orders = [
 dinner_groups = [
     url(r'^$', dinner_groups, name='dinner_groups'),
 ]
-
 
 urlpatterns = [
     url(r'^$', index, {'template_name': 'catalog/index.html'}, 'catalog_home'),

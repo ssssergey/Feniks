@@ -6,21 +6,21 @@ from django.db.models import Q
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse
 
 from cart import cart
-from forms import ProductAddToCartForm
+from .forms import ProductAddToCartForm
 from search.forms import ProductReviewForm
 from stats import stats
 from Feniks.settings import PRODUCTS_PER_ROW, PRODUCTS_PER_PAGE
-from django.core.urlresolvers import reverse
 from catalog.models import Product
 from search.models import ProductReview
+from cart.models import Delivery
+from search.models import Faq
 
-# import cProfile, pstats
 
 def index(request, template_name="catalog/index.html"):
-    # pr = cProfile.Profile()
-    # pr.enable()
+    """ Main, starting page """
     page_title = u'Феникс'
     new_products = Product.active.all().order_by('-created_at')[0:PRODUCTS_PER_ROW]
     search_recs = stats.recommended_from_search(request)
@@ -38,38 +38,35 @@ def index(request, template_name="catalog/index.html"):
         (u'ТВ-тумбы', reverse('carcass_furniture_tv_tumbs_base')),
         (u'Другая мебель', reverse('carcass_furniture_other_furniture')),
     )
-    # pr.disable()
-    # pstats.Stats(pr).sort_stats('time').print_stats()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def about(request, template_name="flatpages/about.html"):
+    """ Shows Feniks shop description. """
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
 def contact(request, template_name="flatpages/contact.html"):
+    """ Shows Feniks contact information. """
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-from cart.models import Delivery
-
-
 def delivery(request, template_name="flatpages/delivery.html"):
+    """ Shows Feniks delivery information. """
     deliveries = Delivery.objects.all()
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-from search.models import Faq
-
-
 def faq(request, template_name="flatpages/faq.html"):
+    """ Shows Feniks FAQ information. """
     faqs = Faq.objects.all()
     return render(request, template_name, {'faqs': faqs})
 
 
-#################### Catalog list ###############################
+# Catalog list
 
 def paginate_products(request, products):
+    """ Helper function to paginate products. """
     try:
         page = int(request.GET.get('page', 1))
     except ValueError:
@@ -82,7 +79,7 @@ def paginate_products(request, products):
     return products, paginator, page
 
 
-################### carcass furniture #########################
+# carcass furniture
 
 def carcass_furniture_base(request, template_name="catalog/category.html"):
     category_name = u'Корпусная мебель'
@@ -122,9 +119,6 @@ def carcass_furniture_kitchens(request, type, template_name="catalog/category.ht
     elif type == 'modules':
         products = products.filter(Q(module_komplekt=u'Модуль'))
         category_name = u'Корпусная мебель - Кухни - Модули'
-    # elif type == 'others':
-    #     products = products.filter(Q(module_komplekt__isnull=True))
-    #     category_name = u'Корпусная мебель - Кухни - Другое'
     products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
@@ -378,7 +372,7 @@ def carcass_furniture_beds(request, type, template_name="catalog/category.html")
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-################### Мягкая мебель ########################3
+# Мягкая мебель
 
 def cushioned_furniture_base(request, template_name="catalog/category.html"):
     category_name = u'Мягкая мебель'
@@ -566,7 +560,7 @@ def cushioned_furniture_on_orders(request, template_name="catalog/category.html"
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################### Офисная мебель ############################
+# Офисная мебель
 
 def office_furniture_base(request, template_name="catalog/category.html"):
     category_name = u'Офисная мебель'
@@ -688,7 +682,7 @@ def office_furniture_divider(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-############################ Камины ###########################
+# Камины
 
 def fireplace_base(request, template_name="catalog/category.html"):
     category_name = u'Камины'
@@ -855,7 +849,7 @@ def fireplace_accesories(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################### Столы ################################
+# Столы
 def tables_base(request, template_name="catalog/category.html"):
     category_name = u'Столы'
     subcategories = (
@@ -888,12 +882,14 @@ def tables_computer_base(request, template_name="catalog/category.html"):
     products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
+
 def tables_writing_base(request, template_name="catalog/category.html"):
     category_name = u'Столы - Письменные'
     products = Product.active.filter(Q(module_mebel=u'Стол'))
     products = products.filter(Q(style=u'Письменные'))
     products, paginator, page = paginate_products(request, products)
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+
 
 def tables_journal_base(request, template_name="catalog/category.html"):
     category_name = u'Столы - Журнальные'
@@ -1168,7 +1164,7 @@ def tables_unfoldable(request, type1, type2, template_name="catalog/category.htm
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-############################# Стулья ################################
+# Стулья
 
 def chairs_base(request, template_name="catalog/category.html"):
     category_name = u'Стулья'
@@ -1256,7 +1252,7 @@ def chairs_others(request, type, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-############################ Кухонные уголки #################################
+# Кухонные уголки
 
 def kitchen_corners_base(request, template_name="catalog/category.html"):
     category_name = u'Кухонные уголки'
@@ -1416,7 +1412,7 @@ def kitchen_corner_from(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-########################### Матрасы ##############################
+# Матрасы
 
 def matrasses_base(request, template_name="catalog/category.html"):
     category_name = u'Матрасы'
@@ -1458,7 +1454,7 @@ def matrasses(request, type, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-########################## Садовая мебель #############################
+# Садовая мебель
 
 def garden_furniture_base(request, template_name="catalog/category.html"):
     category_name = u'Садовая мебель'
@@ -1628,7 +1624,7 @@ def garden_furniture_others(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-################## Для баров и ресторанов #####################
+# Для баров и ресторанов
 
 def bars_restaurants_base(request, template_name="catalog/category.html"):
     category_name = u'Для баров и ресторанов'
@@ -1676,7 +1672,7 @@ def bars_restaurants_prilavki(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-############################## Шкафы-купе ##############################
+# Шкафы-купе
 
 def case_kupe(request, template_name="catalog/category.html"):
     category_name = u'Шкафы-купе'
@@ -1685,7 +1681,7 @@ def case_kupe(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################## Гостиничные номера ##############################
+# Гостиничные номера
 
 def hotels(request, template_name="catalog/category.html"):
     category_name = u'Гостиничные номера'
@@ -1694,7 +1690,7 @@ def hotels(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-###################### Интерьер ############################
+# Интерьер
 
 def interier_base(request, template_name="catalog/category.html"):
     category_name = u'Интерьер'
@@ -1759,7 +1755,7 @@ def interier_buckets(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################## Разное ##############################
+# Разное
 
 def others(request, template_name="catalog/category.html"):
     category_name = u'Разное'
@@ -1768,7 +1764,7 @@ def others(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################## Сопутствующие товары ##############################
+# Сопутствующие товары
 
 def associated_goods_base(request, template_name="catalog/category.html"):
     category_name = u'Сопутствующие товары'
@@ -1803,7 +1799,7 @@ def associated_goods(request, type, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################## Индивидуальные заказы ##############################
+# Индивидуальные заказы
 
 def individual_orders(request, template_name="catalog/category.html"):
     category_name = u'Индивидуальные заказы'
@@ -1812,7 +1808,7 @@ def individual_orders(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################## Обеденные группы ##############################
+# Обеденные группы
 
 def dinner_groups(request, template_name="catalog/category.html"):
     category_name = u'Обеденные группы'
@@ -1821,10 +1817,8 @@ def dinner_groups(request, template_name="catalog/category.html"):
     return render_to_response(template_name, locals(), context_instance=RequestContext(request))
 
 
-######################################################################
-
-
 def show_product(request, product_slug, template_name="catalog/product.html"):
+    """ Show product details. """
     p = get_object_or_404(Product, slug=product_slug)
     page_title = p.name
     meta_keywords = p.meta_keywords
